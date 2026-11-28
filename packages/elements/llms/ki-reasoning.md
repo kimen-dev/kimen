@@ -89,6 +89,8 @@ defineCustomElement();
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-reasoning`: the default, only the tokens ki-reasoning needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `done-label` (string, default 'Thought'): Summary text when done and elapsed time is unavailable.
@@ -118,26 +120,26 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-motion-duration-fast`: Fast interaction transition duration.
-- `--ki-motion-easing-standard`: Standard interaction transition easing curve.
-- `--ki-reasoning-backdrop-filter`: Complete filter behind the disclosure. None keeps the backdrop clear.
-- `--ki-reasoning-bg`: Fill behind the disclosure summary and its steps.
-- `--ki-reasoning-bg-image`: Optional image painted over the disclosure fill.
-- `--ki-reasoning-body-gap`: Block spacing between the summary and the step content.
-- `--ki-reasoning-body-indent`: Inline spacing between the rule and the content.
-- `--ki-reasoning-border`: Ink of the decorative rule at the inline start of the steps.
-- `--ki-reasoning-border-width`: Width of the steps rule.
-- `--ki-reasoning-fg`: Medium-emphasis ink for the disclosure summary and its steps.
-- `--ki-reasoning-list-indent`: Inline space for markers on a slotted list.
-- `--ki-reasoning-shimmer-duration`: Period of the thinking shimmer.
-- `--ki-reasoning-shimmer-easing`: Easing into and out of the thinking highlight.
-- `--ki-reasoning-shimmer-fg`: Readable highlight at the midpoint of the thinking shimmer.
-- `--ki-reasoning-summary-gap`: Space between the summary text and glyphs and between separate step blocks.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-para`: semantic dimension for typography line height para.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring. Default: `var(--ki-space-xxs)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-motion-duration-fast`: Fast interaction transition duration. Default: onmars `var(--ki-duration-fast)`, material3 `100ms`.
+- `--ki-motion-easing-standard`: Standard interaction transition easing curve. Default: onmars `var(--ki-easing-standard)`, material3 `cubic-bezier(0.2,0,0,1)`.
+- `--ki-reasoning-backdrop-filter`: Complete filter behind the disclosure. None keeps the backdrop clear. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-reasoning-bg`: Fill behind the disclosure summary and its steps. Default: `var(--ki-surface-transparent)`.
+- `--ki-reasoning-bg-image`: Optional image painted over the disclosure fill. Default: `var(--ki-surface-image-none)`.
+- `--ki-reasoning-body-gap`: Block spacing between the summary and the step content. Default: `var(--ki-layout-spacing-md)`.
+- `--ki-reasoning-body-indent`: Inline spacing between the rule and the content. Default: `var(--ki-layout-spacing-xl)`.
+- `--ki-reasoning-border`: Ink of the decorative rule at the inline start of the steps. Default: `var(--ki-outline-med-em)`.
+- `--ki-reasoning-border-width`: Width of the steps rule. Default: `var(--ki-activity-size-stroke)`.
+- `--ki-reasoning-fg`: Medium-emphasis ink for the disclosure summary and its steps. Default: `var(--ki-text-supporting)`.
+- `--ki-reasoning-list-indent`: Inline space for markers on a slotted list. Default: `var(--ki-layout-spacing-5xl)`.
+- `--ki-reasoning-shimmer-duration`: Period of the thinking shimmer. Default: `var(--ki-motion-duration-activity-pulse)`.
+- `--ki-reasoning-shimmer-easing`: Easing into and out of the thinking highlight. Default: `var(--ki-motion-easing-activity-pulse)`.
+- `--ki-reasoning-shimmer-fg`: Readable highlight at the midpoint of the thinking shimmer. Default: `var(--ki-text-high-em)`.
+- `--ki-reasoning-summary-gap`: Space between the summary text and glyphs and between separate step blocks. Default: `var(--ki-layout-spacing-xs)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-para`: semantic dimension for typography line height para. Default: `var(--ki-font-line-height-para)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology. Default: `var(--ki-size-border-hairline)`.

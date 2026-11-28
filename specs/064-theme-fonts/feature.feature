@@ -20,3 +20,9 @@ Feature: Theme fonts are available as optional stylesheets
     When the consumer resolves the onmars and Material 3 font stylesheet imports
     Then both stylesheets resolve
     And each bundled font URL resolves to an asset shipped with its full licence
+
+  # S4
+  Scenario: Onmars display text uses the bundled Newsreader weight
+    Given an onmars page using the bundled Newsreader face
+    When the page draws display text using its normal and bold display tokens
+    Then both tokens select the face's weight of 500

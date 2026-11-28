@@ -1,6 +1,5 @@
 :where(:root),
 :where([data-ki-theme]) {
-  --ki-contrast-more-details-border:var(--ki-outline-strong);
   --ki-accordion-divider-width:var(--ki-outline-hairline-width);
   --ki-details-bg:var(--ki-surface-s0);
   --ki-details-fg:var(--ki-text-high-em);
@@ -18,6 +17,7 @@
   --ki-details-disabled-fg:var(--ki-text-med-em);
   --ki-details-motion-duration:var(--ki-motion-duration-fast);
   --ki-details-motion-easing:var(--ki-motion-easing-standard);
+  --ki-contrast-more-details-border:var(--ki-outline-strong);
 }
 
 @media (prefers-contrast: more) {

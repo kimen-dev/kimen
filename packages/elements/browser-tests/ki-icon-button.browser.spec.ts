@@ -841,3 +841,40 @@ describe('ki-icon-button in a real browser', () => {
     },
   );
 });
+
+it('S30 Space paints the shared active palette on an icon button', async () => {
+  cleanup();
+  const el = await mount('Close', { variant: 'quaternary', tone: 'success' });
+  const button = requireButton(el);
+  try {
+    await browserCommands.emulateReducedMotion('reduce');
+    await parkPointer();
+    el.style.setProperty('--ki-button-quaternary-success-active-bg', 'rgb(210, 235, 250)');
+    el.style.setProperty('--ki-button-quaternary-success-active-fg', 'rgb(8, 25, 45)');
+    el.style.setProperty('--ki-button-quaternary-success-active-border', 'rgb(15, 50, 120)');
+    const held = await holdWithKeyboard(el, button);
+    expect(held.state).toMatchObject({ pressed: true, focusRing: true });
+    expect(held.ground).toMatchObject({
+      background: 'rgb(210, 235, 250)',
+      color: 'rgb(8, 25, 45)',
+      borderBlockEnd: 'rgb(15, 50, 120)',
+    });
+  } finally {
+    await browserCommands.emulateReducedMotion(null);
+    cleanup();
+  }
+});
+
+it('S29 a disabled icon button paints its tone-specific border', async () => {
+  cleanup();
+  const el = await mount('Close', { variant: 'quaternary', tone: 'danger', disabled: true });
+  const button = requireButton(el);
+  try {
+    await browserCommands.emulateReducedMotion('reduce');
+    el.style.setProperty('--ki-button-quaternary-danger-disabled-border', 'rgb(15, 50, 120)');
+    expect(getComputedStyle(button).borderBlockStartColor).toBe('rgb(15, 50, 120)');
+  } finally {
+    await browserCommands.emulateReducedMotion(null);
+    cleanup();
+  }
+});

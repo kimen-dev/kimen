@@ -1,5 +1,7 @@
 # Feature Specification: ki-icon-button
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`.
+
 <!-- KIMEN OVERRIDE of spec-template. Resolved with priority 1 by resolve_template().
      Constitutional basis: .specify/memory/constitution.md Art. II (Specs Before Code).
      Kept in sync with constitutional amendments (no-drift rule). -->
@@ -330,17 +332,92 @@ Feature: Icon button
     When the person activates it
     Then the icon button becomes selected and reports the new pressed state
     And the icon button emits a change carrying the new state
+
+  # S20
+  Scenario Outline: Removing an optional state returns the icon button to an ordinary action
+    Given an icon button with the <attribute> attribute set to "false"
+    When the application removes the attribute
+    Then the button no longer exposes the corresponding accessibility state
+
+    Examples:
+      | attribute |
+      | pressed   |
+      | expanded  |
+
+  # Family: core behavior (appended)
+  # S21
+  Scenario: Every unselected icon toggle responds to hover
+    Given an unselected icon toggle in any variant
+    When the pointer rests over the toggle
+    Then the toggle changes its surface
+
+  # S22
+  Scenario: A selected icon toggle keeps its surface on hover
+    Given a selected icon toggle in any variant
+    When the pointer rests over the toggle
+    Then the toggle keeps its selection surface
+
+  # Family: theming (appended)
+  # S23
+  Scenario: Tokens recolor the hovered outline icon button
+    Given an outline icon button with reassigned hover background, foreground and border tokens
+    When the pointer rests over the action
+    Then the surface, icon ink and outline use the reassigned colors
+
+  # S24
+  Scenario: A token recolors the selected outline border
+    Given a selected outline icon toggle with a reassigned selected border token
+    When the page renders
+    Then the selected outline uses the reassigned color
+
+  # S25
+  Scenario: A token recolors the unselected toggle hover wash
+    Given an unselected filled or quiet icon toggle with a reassigned hover overlay token
+    When the pointer rests over the toggle
+    Then the toggle shows the reassigned wash
+
+  # S26
+  Scenario: The icon button size token sizes the glyph
+    Given an icon button of any size with a slotted ki-icon
+    When the page renders
+    Then the glyph matches the default icon-size token
+
+  # S27
+  Scenario: The icon-size token alone resizes the default and selected glyphs
+    Given an icon toggle with a reassigned icon-size token and an explicit ki-icon size in both slots
+    When the page renders the selection states
+    Then each visible glyph matches the reassigned button icon-size token
+
+  # Family: core behavior (appended)
+  # S28
+  Scenario: An outline icon button responds to hover
+    Given an enabled outline icon button
+    When the pointer rests over the action
+    Then the outline action changes its surface
+
+  # Family: theming
+  # S29
+  Scenario: A disabled icon button uses its own tone palette
+    Given a disabled icon button with a custom tone-specific disabled palette
+    When the page renders
+    Then the icon button shows the disabled fill, ink and border for its tone
+
+  # S30
+  Scenario: Holding an icon button uses the shared pressed palette
+    Given an icon button with custom active palette tokens
+    When the user holds the button down with Space
+    Then the icon button shows the themed pressed palette and retains visible focus
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S16, S17, S19 | |
+| Core behavior | S1, S2, S3, S16, S17, S19, S20, S21, S22, S28 | |
 | Keyboard path | S4, S5, S14 | |
 | Assistive-tech outcome | S6, S7, S8, S12, S13 | |
 | Form participation | S9 | |
-| Theming | S10, S11, S15 | |
+| Theming | S10, S11, S15, S23, S24, S25, S26, S27, S29, S30 | |
 
 Form participation is covered by a deliberate negative contract (S9):
 ki-icon-button is not form-associated in v1 and MUST NOT submit or reset an

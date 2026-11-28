@@ -34,6 +34,7 @@ for await (const line of createInterface({ input: process.stdin })) {
   } else if (method === 'tools/list' && initialized) {
     result = {
       tools: [
+        'check_theme',
         'kimen_describe_component',
         'kimen_list_components',
         'kimen_render_spec',

@@ -52,6 +52,8 @@ the application's allowed-origin policy.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-sources`: the default, only the tokens ki-sources needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `open` (boolean, default false): Whether the disclosure is expanded. Set to show the list initially.
@@ -83,33 +85,33 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-source-card-backdrop-filter`: Complete backdrop filter for a source card.
-- `--ki-source-card-bg`: Resting background of a source card.
-- `--ki-source-card-bg-image`: Optional decorative image over a source card.
-- `--ki-source-card-border`: Border color of a source card.
-- `--ki-source-card-border-width`: Border width of a source card.
-- `--ki-source-card-fg`: Text on a resting source card.
-- `--ki-source-card-hover-bg`: Background of a hovered source card.
-- `--ki-source-card-hover-fg`: Text on a hovered source card.
-- `--ki-source-card-padding`: Inset around source card content.
-- `--ki-source-card-radius`: Corner radius of a source card.
-- `--ki-source-number-bg`: Background of the number in a source card.
-- `--ki-source-number-fg`: Text color of the number in a source card.
-- `--ki-source-number-radius`: Corner radius of the number in a source card.
-- `--ki-source-number-size`: Minimum size of the number in a source card.
-- `--ki-sources-list-gap`: Gap between source cards.
-- `--ki-sources-max-inline-size`: Maximum line length of the source disclosure.
-- `--ki-sources-summary-bg`: Background of the source-count control.
-- `--ki-sources-summary-fg`: Text on the source-count control.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
-- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip). Default: `var(--ki-scale-unit)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring. Default: `var(--ki-space-xxs)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-source-card-backdrop-filter`: Complete backdrop filter for a source card. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-source-card-bg`: Resting background of a source card. Default: `var(--ki-surface-s0)`.
+- `--ki-source-card-bg-image`: Optional decorative image over a source card. Default: `var(--ki-surface-image-none)`.
+- `--ki-source-card-border`: Border color of a source card. Default: `var(--ki-outline-low-em)`.
+- `--ki-source-card-border-width`: Border width of a source card. Default: `var(--ki-source-reference-hairline)`.
+- `--ki-source-card-fg`: Text on a resting source card. Default: `var(--ki-text-high-em)`.
+- `--ki-source-card-hover-bg`: Background of a hovered source card. Default: `var(--ki-surface-s1)`.
+- `--ki-source-card-hover-fg`: Text on a hovered source card. Default: `var(--ki-text-high-em)`.
+- `--ki-source-card-padding`: Inset around source card content. Default: `var(--ki-source-reference-card-padding)`.
+- `--ki-source-card-radius`: Corner radius of a source card. Default: `var(--ki-source-reference-card-radius)`.
+- `--ki-source-number-bg`: Background of the number in a source card. Default: `var(--ki-surface-s2)`.
+- `--ki-source-number-fg`: Text color of the number in a source card. Default: `var(--ki-text-high-em)`.
+- `--ki-source-number-radius`: Corner radius of the number in a source card. Default: `var(--ki-source-reference-marker-radius)`.
+- `--ki-source-number-size`: Minimum size of the number in a source card. Default: `var(--ki-glyph-size-lg)`.
+- `--ki-sources-list-gap`: Gap between source cards. Default: `var(--ki-source-reference-list-gap)`.
+- `--ki-sources-max-inline-size`: Maximum line length of the source disclosure. Default: `var(--ki-source-reference-list-width)`.
+- `--ki-sources-summary-bg`: Background of the source-count control. Default: `var(--ki-surface-s0)`.
+- `--ki-sources-summary-fg`: Text on the source-count control. Default: `var(--ki-text-high-em)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-body-1`: semantic dimension for typography line height body 1. Default: `var(--ki-font-line-height-body-1)`.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2. Default: `var(--ki-font-line-height-caption-2)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2. Default: `var(--ki-font-size-caption-2)`.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium. Default: `var(--ki-font-weight-body-medium)`.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold. Default: `var(--ki-font-weight-body-semibold)`.

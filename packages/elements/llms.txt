@@ -157,6 +157,7 @@ methods, CSS custom properties and examples.
 
 ## Guides
 
+- [Boolean attributes](llms/boolean-attributes.md): An absent boolean attribute uses the property's default.
 - [Theming](llms/theming.md): All themes reassign the same `--ki-*` custom properties, so switching themes restyles every component with no code changes.
 - [Agent setup](llms/agent-setup.md): Coding agents can install the Kimen agent skills (`kimen-components` for pages built with these components, `kimen-genui` for agent-generated UI) and connect the `kimen-mcp` server, which lists and describes the catalog, validates UI specs and renders them.
 

@@ -12,10 +12,6 @@ import {
   Prop,
   Watch,
 } from '@stencil/core';
-import {
-  booleanFromAttributePresence,
-  observeAttributePresence,
-} from '../../utils/boolean-presence';
 import tableStyles from './ki-table.css';
 import { TableSelection } from './ki-table.selection';
 import { nextSortDirection } from './ki-table.sort';
@@ -32,7 +28,6 @@ export interface KiTableSelectionDetail {
   keys: string[];
 }
 
-const booleanAttributes = ['selectable', 'sticky-header', 'loading'] as const;
 const styledRoots = new WeakSet<Document | ShadowRoot>();
 
 interface SortControl {
@@ -103,7 +98,6 @@ export class KiTable {
   private placeholder: HTMLTableSectionElement | undefined;
   private previousBusy: string | null = null;
   private mutations?: MutationObserver;
-  private presence?: MutationObserver;
   private resize?: ResizeObserver;
   private frameTabStop = false;
   private frameLabel: string | undefined;
@@ -118,20 +112,6 @@ export class KiTable {
       root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
       styledRoots.add(root);
     }
-    this.selectable = booleanFromAttributePresence(
-      this.selectable,
-      this.host.hasAttribute('selectable'),
-    );
-    this.stickyHeader = booleanFromAttributePresence(
-      this.stickyHeader,
-      this.host.hasAttribute('sticky-header'),
-    );
-    this.loading = booleanFromAttributePresence(this.loading, this.host.hasAttribute('loading'));
-    this.presence = observeAttributePresence(this.host, booleanAttributes, (attribute) => {
-      if (attribute === 'loading') this.loading = true;
-      else if (attribute === 'selectable') this.selectable = true;
-      else this.stickyHeader = true;
-    });
     this.mutations = new MutationObserver(() => {
       this.sync();
     });
@@ -159,7 +139,6 @@ export class KiTable {
 
   disconnectedCallback(): void {
     this.mutations?.disconnect();
-    this.presence?.disconnect();
     this.resize?.disconnect();
   }
 

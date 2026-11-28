@@ -62,6 +62,8 @@ The distance from the viewport edges and the gap between toasts are tokens:
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-toaster`: the default, only the tokens ki-toaster needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `label` (string, default 'Notifications'): Accessible name of the group the toaster exposes while it shows toasts. Override for localization. When to use: provide the name in the document language. When NOT to use: do not put a message here.
@@ -86,8 +88,8 @@ None.
 
 ## CSS custom properties
 
-- `--ki-toast-width`: dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem).
-- `--ki-toaster-gap`: dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014).
-- `--ki-toaster-inset-block`: dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014).
-- `--ki-toaster-inset-inline`: dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014).
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-toast-width`: dimension used by the toast component for the widest a toast gets (issue #353: 22.5rem). Default: `var(--ki-size-toast)`.
+- `--ki-toaster-gap`: dimension used by the toaster component for the gap between stacked toasts (spec 049 FR-014). Default: `var(--ki-space-xl)`.
+- `--ki-toaster-inset-block`: dimension used by the toaster component for the distance between the stack and the top or bottom edge of the viewport (spec 049 FR-014). Default: `var(--ki-space-3xl)`.
+- `--ki-toaster-inset-inline`: dimension used by the toaster component for the distance between the stack and the end edge of the viewport (spec 049 FR-014). Default: `var(--ki-space-3xl)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

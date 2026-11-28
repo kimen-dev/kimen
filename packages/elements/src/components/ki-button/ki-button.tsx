@@ -42,8 +42,8 @@ export type KiButtonType = 'submit' | 'reset' | 'button';
  * the progress of a page or region (use ki-progress).
  *
  * @slot - Label content. This is the accessible name source.
- * @slot start - Leading icon or media. Follows writing direction.
- * @slot end - Trailing icon or media. Follows writing direction.
+ * @slot start - Leading icon or media in writing direction. Button tokens size a ki-icon glyph, overriding its size.
+ * @slot end - Trailing icon or media in writing direction. Uses the start slot's sizing.
  * @part button - Internal native button, or link with `href`.
  * @part label - Label wrapper around the default slot.
  * @part spinner - Loading spinner drawn at the center of the button, in the
@@ -53,6 +53,7 @@ export type KiButtonType = 'submit' | 'reset' | 'button';
   tag: 'ki-button',
   styleUrls: [
     'ki-button.surface.css',
+    'ki-button.tones.css',
     'ki-button.surface.legacy.css',
     'ki-button.toggle.css',
     'ki-button.css',

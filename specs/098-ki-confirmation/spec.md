@@ -11,7 +11,7 @@ identity, resolution, expiry and any conversation-scoped permission.
 
 | Family | Scenario IDs | N/A justification |
 | --- | --- | --- |
-| Core behavior | S1, S2, S3, S4, S5, S6, S18 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S18, S19, S20 | |
 | Keyboard path | S7, S8 | |
 | Assistive-tech outcome | S9, S10, S11 | |
 | Form participation | S12 | The prompt has no form value. The scenario exercises isolation when embedded in a form. |
@@ -181,4 +181,17 @@ Feature: Confirmation asks for a person's decision
     Given a pending request without an action identifier
     When the request appears
     Then there is no available approval
+
+  # S19
+  Scenario: Development reports a pending confirmation without both decision labels
+    Given an app running in development
+    When the app presents a pending confirmation with either decision label missing
+    Then the developer sees a warning asking for both labels
+    And the person sees no decision buttons
+
+  # S20
+  Scenario: A generated confirmation needs both decision labels
+    Given a generated confirmation with either decision label missing
+    When the catalog validates the confirmation
+    Then it rejects the confirmation and identifies the missing label
 ```

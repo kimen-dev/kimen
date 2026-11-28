@@ -94,6 +94,8 @@ with the named placeholders to translate the generated text.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-pagination`: the default, only the tokens ki-pagination needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `boundaries` (number, default 1, minimum 0, maximum 10): Number of pages to display at each end of the numbered list.
@@ -141,25 +143,25 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-pagination-compact-gap`: Gap between the compact count and direction controls.
-- `--ki-pagination-current-bg`: Background of the current page control.
-- `--ki-pagination-current-fg`: Ink for the current page control.
-- `--ki-pagination-gap`: Gap between numbered page controls.
-- `--ki-pagination-item-backdrop-filter`: Complete backdrop filter for the page control.
-- `--ki-pagination-item-bg`: Resting background of a numbered page control.
-- `--ki-pagination-item-bg-image`: Optional image above the page control background color.
-- `--ki-pagination-item-fg`: Resting ink for page labels and status text.
-- `--ki-pagination-item-hover-bg`: Background of a hovered page control.
-- `--ki-pagination-item-hover-fg`: Ink for a hovered page control.
-- `--ki-pagination-item-radius`: Corner radius of numbered page controls and direction links.
-- `--ki-pagination-item-size`: Minimum size of a numbered page control at standard density.
-- `--ki-pagination-more-gap`: Gap between the load-more button and the count.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring. Default: `var(--ki-space-xxs)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-pagination-compact-gap`: Gap between the compact count and direction controls. Default: `var(--ki-layout-spacing-xl)`.
+- `--ki-pagination-current-bg`: Background of the current page control. Default: `var(--ki-surface-primary-med-em)`.
+- `--ki-pagination-current-fg`: Ink for the current page control. Default: `var(--ki-text-primary-on-primary)`.
+- `--ki-pagination-gap`: Gap between numbered page controls. Default: `var(--ki-layout-spacing-xs)`.
+- `--ki-pagination-item-backdrop-filter`: Complete backdrop filter for the page control. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-pagination-item-bg`: Resting background of a numbered page control. Default: `var(--ki-surface-transparent)`.
+- `--ki-pagination-item-bg-image`: Optional image above the page control background color. Default: `var(--ki-surface-image-none)`.
+- `--ki-pagination-item-fg`: Resting ink for page labels and status text. Default: `var(--ki-text-supporting)`.
+- `--ki-pagination-item-hover-bg`: Background of a hovered page control. Default: `var(--ki-surface-s2)`.
+- `--ki-pagination-item-hover-fg`: Ink for a hovered page control. Default: `var(--ki-text-high-em)`.
+- `--ki-pagination-item-radius`: Corner radius of numbered page controls and direction links. Default: `var(--ki-radius-component-sm)`.
+- `--ki-pagination-item-size`: Minimum size of a numbered page control at standard density. Default: `var(--ki-layout-spacing-12xl)`.
+- `--ki-pagination-more-gap`: Gap between the load-more button and the count. Default: `var(--ki-layout-spacing-md)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2. Default: `var(--ki-font-line-height-caption-2)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2. Default: `var(--ki-font-size-caption-2)`.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium. Default: `var(--ki-font-weight-body-medium)`.

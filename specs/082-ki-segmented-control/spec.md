@@ -1,5 +1,7 @@
 # Feature specification for ki-segmented-control
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule for both builds. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`. The same parsing applies to markup and later writes.
+
 **Branch** `feat/381-ki-segmented-control` · **Created** 2026-11-19 · **Issue** [#381](https://github.com/kimen-dev/kimen/issues/381)
 
 People can choose a range, view mode or other setting that takes effect in place. The control presents two to five options and applies one choice at a time.
@@ -105,11 +107,27 @@ Feature: Segmented control applies one in-place choice
     When the control is displayed
     Then every label shows its full text on at most two lines
     And the options keep one height
+
+  # S16
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a segment within a segmented control
+    When an attribute (disabled) is <write> <moment>
+    Then the corresponding property reads <state>
+
+    Examples:
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
 ```
 
 | Family | Scenarios |
 | --- | --- |
-| Core behavior | S1, S2, S12, S13, S14, S15 |
+| Core behavior | S1, S2, S12, S13, S14, S15, S16 |
 | Keyboard path | S3, S4, S10 |
 | Assistive-tech outcome | S5 |
 | Form participation | S6 |

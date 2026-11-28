@@ -86,6 +86,7 @@
   "namedInputs": {
     "componentBudget": [
       "{workspaceRoot}/scripts/lib/bundle-size-budget.mjs",
+      "{workspaceRoot}/packages/adapter-mcp-apps/scripts/surface-profiles.mjs",
       "{workspaceRoot}/packages/elements/scripts/component-metadata.mjs",
       "{workspaceRoot}/packages/elements/src/components/*/component.json"
     ],

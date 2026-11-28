@@ -36,6 +36,14 @@
         "$value": "{ki.layout.spacing.3xl}",
         "$description": "Padding at the inline edges of both bars."
       },
+      "links-gap": {
+        "$value": "{ki.layout.spacing.zero}",
+        "$description": "Column gap between inline primary links."
+      },
+      "links-justify": {
+        "$value": "{ki.foundation.keyword.flex-start}",
+        "$description": "Inline link alignment. Use flex-end for trailing links."
+      },
       "item-bg": {
         "$type": "color",
         "$value": "{ki.surface.s0}",

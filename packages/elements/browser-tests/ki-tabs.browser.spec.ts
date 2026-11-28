@@ -1027,11 +1027,8 @@ describe('ki-tabs theming behavior in a real browser', () => {
   });
 });
 
-// Boolean presence semantics (native HTML parity): a present attribute means
-// true whatever its value. Stencil >= 4.45 removes a host attribute when it
-// reflects a parsed `false`, so these run against the built output.
-describe('ki-tabs boolean presence in a real browser', () => {
-  function presenceFixture(billing: string): string {
+describe('ki-tab boolean attributes', () => {
+  function booleanFixture(billing: string): string {
     return `
       <ki-tabs label="Settings" value="email">
         <ki-tab value="email">Email</ki-tab>
@@ -1048,37 +1045,30 @@ describe('ki-tabs boolean presence in a real browser', () => {
     }
   }
 
-  async function expectBillingInert(tabs: KiTabsElement): Promise<void> {
-    const billing = tab(tabs, 'billing');
-    billing.click();
-    tab(tabs, 'email').focus();
-    await userEvent.keyboard('{ArrowRight}');
-    await frames();
-
-    expect(tabs.value).toBe('email');
-    expect(panel(tabs, 'billing').hasAttribute('hidden')).toBe(true);
-    expect(billing.getAttribute('aria-disabled')).toBe('true');
-    // Presence is normalized: the host attribute stays, with an empty value.
-    expect(billing.getAttribute('disabled')).toBe('');
-  }
-
   afterEach(() => {
     document.body.replaceChildren();
   });
 
-  it('S19 disabled="false" in the markup keeps a tab unselectable', async () => {
-    const tabs = await mount(presenceFixture('disabled="false"'));
+  it('S20 disabled="false" in the markup lets a pointer select a tab', async () => {
+    const tabs = await mount(booleanFixture('disabled="false"'));
+    await frames();
+    tab(tabs, 'billing').click();
     await frames();
 
-    await expectBillingInert(tabs);
+    expect(tabs.value).toBe('billing');
+    expect(panel(tabs, 'billing').hasAttribute('hidden')).toBe(false);
   });
 
-  it('S19 disabled="false" written after the first render makes a tab unselectable', async () => {
-    const tabs = await mount(presenceFixture(''));
+  it('S20 disabled="false" written after the first render makes a tab reachable by keyboard', async () => {
+    const tabs = await mount(booleanFixture('disabled'));
     tab(tabs, 'billing').setAttribute('disabled', 'false');
     await frames();
+    tab(tabs, 'email').focus();
+    await userEvent.keyboard('{ArrowRight}');
+    await frames();
 
-    await expectBillingInert(tabs);
+    expect(tabs.value).toBe('billing');
+    expect(panel(tabs, 'billing').hasAttribute('hidden')).toBe(false);
   });
 });
 

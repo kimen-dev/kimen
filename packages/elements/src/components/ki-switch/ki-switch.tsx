@@ -9,13 +9,9 @@ import {
   State,
   Watch,
 } from '@stencil/core';
-import {
-  booleanFromAttributePresence,
-  observeAttributePresence,
-} from '../../utils/boolean-presence';
 import { FieldMessage, fieldDescribedBy, fieldInvalid, fieldText } from '../../utils/field-message';
 import { forwardHostClick } from '../../utils/host-click';
-import { checkedFromMarkup, resolveSubmittedValue } from './ki-switch.form';
+import { resolveSubmittedValue } from './ki-switch.form';
 
 export type KiSwitchSize = 'sm' | 'md' | 'lg' | 'xl';
 
@@ -33,6 +29,7 @@ export type KiSwitchSize = 'sm' | 'md' | 'lg' | 'xl';
  * choices, and ki-button for actions.
  *
  * @slot - Label content. This is the accessible name source.
+ * @slot end - Trailing value outside the label.
  * @part track - On/off channel.
  * @part thumb - Traveling handle.
  * @part label - Label wrapper around the default slot.
@@ -58,9 +55,7 @@ export class KiSwitch {
   @AttachInternals() private readonly internals!: ElementInternals;
 
   /**
-   * Live on/off state. Boolean presence semantics apply: any present
-   * `checked` attribute value, including `checked="false"` or malformed
-   * agent output, means on. Omit the attribute to express off.
+   * Live on/off state.
    * When to use: set the initial on state for a setting that applies
    * immediately.
    * When NOT to use: do not use a switch for choices saved only on submit;
@@ -149,7 +144,6 @@ export class KiSwitch {
 
   private input: HTMLInputElement | undefined;
   private resetChecked = false;
-  private presenceObserver: MutationObserver | undefined;
   private releaseHostClick: (() => void) | undefined;
 
   private get effectiveDisabled(): boolean {
@@ -227,27 +221,10 @@ export class KiSwitch {
   }
 
   connectedCallback(): void {
-    // Boolean presence semantics must survive hydration. Stencil natively adopts
-    // `checked=""`/removal, but parses a present-but-falsy `checked="false"` set
-    // after load to `false`; restore presence semantics for that case. Armed on
-    // every connection: disconnectedCallback releases the observer, and a
-    // switch that is moved in the document connects again without loading
-    // again.
-    this.presenceObserver?.disconnect();
-    this.presenceObserver = observeAttributePresence(
-      this.host,
-      ['checked', 'disabled'],
-      this.handlePresentAttribute,
-    );
     // `host.click()` and a page <label> for the switch toggle it, as on a
     // native checkbox (S25).
     this.releaseHostClick?.();
     this.releaseHostClick = forwardHostClick(this.host, () => this.input);
-  }
-
-  componentWillLoad(): void {
-    this.checked = checkedFromMarkup(this.host.hasAttribute('checked'), this.checked);
-    this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
   }
 
   componentDidLoad(): void {
@@ -256,22 +233,9 @@ export class KiSwitch {
   }
 
   disconnectedCallback(): void {
-    this.presenceObserver?.disconnect();
-    this.presenceObserver = undefined;
     this.releaseHostClick?.();
     this.releaseHostClick = undefined;
   }
-
-  // Correct ONLY the case Stencil gets wrong: a present-but-falsy attribute set
-  // after hydration. Absence and Stencil's own reflect writes already agree with
-  // the prop, so skipping them avoids fighting the reflection on every toggle.
-  private readonly handlePresentAttribute = (attribute: string): void => {
-    if (attribute === 'checked' && !this.checked) {
-      this.checked = true;
-    } else if (attribute === 'disabled' && !this.disabled) {
-      this.disabled = true;
-    }
-  };
 
   @Watch('checked')
   protected checkedChanged(): void {
@@ -299,7 +263,7 @@ export class KiSwitch {
   }
 
   formAssociatedCallback(): void {
-    this.resetChecked = checkedFromMarkup(this.host.hasAttribute('checked'), this.checked);
+    this.resetChecked = this.checked;
     this.syncFormValue();
   }
 
@@ -412,42 +376,45 @@ export class KiSwitch {
       error: this.userInvalid && !this.effectiveDisabled ? this.message : '',
     };
     return [
-      <label class="base">
-        <input
-          ref={this.setInput}
-          type="checkbox"
-          role="switch"
-          aria-label={this.host.getAttribute('aria-label') ?? undefined}
-          tabIndex={this.effectiveDisabled ? -1 : 0}
-          checked={this.checked}
-          disabled={this.effectiveDisabled}
-          name={this.name ?? ''}
-          value={this.value ?? 'on'}
-          aria-describedby={fieldDescribedBy(messages)}
-          aria-invalid={fieldInvalid(messages)}
-          onInput={this.handleInput}
-          onChange={this.handleChange}
-        />
-        <span part="track">
-          <span part="thumb">
-            {/* State glyphs (MarsUI Toggle master): ON check, OFF dash.
-                Filled rounded vectors adapted from the Figma pointer
-                exports; ink comes from currentColor via CSS. */}
-            <svg class="glyph glyph-check" viewBox="0 0 9.2 7.5" aria-hidden="true">
-              <path
-                d="M8.84 1.71 3.98 6.82c-.17.18-.4.28-.63.28-.24 0-.47-.1-.63-.28L.36 4.34c-.35-.37-.35-.97 0-1.33.35-.37.92-.37 1.27 0l1.72 1.82L7.57.38c.35-.37.92-.37 1.27 0 .35.37.35.96 0 1.33Z"
-                fill="currentColor"
-              />
-            </svg>
-            <svg class="glyph glyph-dash" viewBox="0 0 8 2" aria-hidden="true">
-              <path d="M1 0h6a1 1 0 0 1 0 2H1a1 1 0 0 1 0-2Z" fill="currentColor" />
-            </svg>
+      <div class="base">
+        <label>
+          <input
+            ref={this.setInput}
+            type="checkbox"
+            role="switch"
+            aria-label={this.host.getAttribute('aria-label') ?? undefined}
+            tabIndex={this.effectiveDisabled ? -1 : 0}
+            checked={this.checked}
+            disabled={this.effectiveDisabled}
+            name={this.name ?? ''}
+            value={this.value ?? 'on'}
+            aria-describedby={fieldDescribedBy(messages)}
+            aria-invalid={fieldInvalid(messages)}
+            onInput={this.handleInput}
+            onChange={this.handleChange}
+          />
+          <span part="track">
+            <span part="thumb">
+              {/* State glyphs (MarsUI Toggle master): ON check, OFF dash.
+                  Filled rounded vectors adapted from the Figma pointer
+                  exports; ink comes from currentColor via CSS. */}
+              <svg class="glyph glyph-check" viewBox="0 0 9.2 7.5" aria-hidden="true">
+                <path
+                  d="M8.84 1.71 3.98 6.82c-.17.18-.4.28-.63.28-.24 0-.47-.1-.63-.28L.36 4.34c-.35-.37-.35-.97 0-1.33.35-.37.92-.37 1.27 0l1.72 1.82L7.57.38c.35-.37.92-.37 1.27 0 .35.37.35.96 0 1.33Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <svg class="glyph glyph-dash" viewBox="0 0 8 2" aria-hidden="true">
+                <path d="M1 0h6a1 1 0 0 1 0 2H1a1 1 0 0 1 0-2Z" fill="currentColor" />
+              </svg>
+            </span>
           </span>
-        </span>
-        <span part="label">
-          <slot />
-        </span>
-      </label>,
+          <span part="label">
+            <slot />
+          </span>
+        </label>
+        <slot name="end" />
+      </div>,
       <FieldMessage {...messages} />,
     ];
   }

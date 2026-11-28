@@ -170,6 +170,7 @@
      min-block-size (token-wave handoff) so the field can grow, never clip. */
   min-block-size: max(
     var(--ki-density-target-min),
+    var(--ki-input-min-target),
     calc(var(--_ki-input-height) + var(--ki-density-control-offset))
   );
   padding-inline: var(--_ki-input-padding-inline);
@@ -270,6 +271,10 @@ slot:is([name="start"], [name="end"])::slotted(svg),
 slot:is([name="start"], [name="end"])::slotted(img) {
   inline-size: var(--_ki-input-icon-size);
   block-size: var(--_ki-input-icon-size);
+}
+
+slot:is([name="start"], [name="end"])::slotted(ki-icon) {
+  --_ki-icon-size: var(--_ki-input-icon-size);
 }
 
 /* Replace the row gap and end padding only at the action's edges. A flex

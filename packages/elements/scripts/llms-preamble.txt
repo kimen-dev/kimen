@@ -36,6 +36,12 @@ their labels do not run together.
 
 Human-readable documentation: https://kimen.dev/docs/
 
+## Boolean attributes
+
+An absent boolean attribute uses the property's default. A present one is true
+unless its exact value is `"false"`. This applies to markup and to later
+`setAttribute` and `removeAttribute` calls in both builds.
+
 ## Theming
 
 All themes reassign the same `--ki-*` custom properties, so switching themes

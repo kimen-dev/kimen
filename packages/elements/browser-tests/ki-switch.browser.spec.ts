@@ -1,7 +1,7 @@
 import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 
 // @spec:008-ki-switch
 // Real-browser tests consume the BUILT custom-elements output (what ships is
@@ -311,34 +311,15 @@ describe('ki-switch in a real browser', () => {
     expect(el.checked).toBe(false);
   });
 
-  it('S4 applies boolean presence semantics to checked set after hydration', async () => {
-    const el = await mount();
-    const input = internalInput(el);
-    expect(el.checked).toBe(false);
-
-    // Present-but-falsy attribute set post-hydration means on (presence).
-    el.setAttribute('checked', 'false');
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-    expect(el.checked).toBe(true);
-    expect(input.checked).toBe(true);
-
-    // Reflection is not fought: a normal toggle still turns it off and stays off.
-    await userEvent.click(input);
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-    expect(el.checked).toBe(false);
-    expect(el.hasAttribute('checked')).toBe(false);
-  });
-
-  it('S4 keeps boolean presence semantics after the switch moves to another parent', async () => {
-    const el = await mount();
+  it('S27 clears checked after the switch moves to another parent', async () => {
+    const el = await mount('checked');
     const input = internalInput(el);
 
     moveToNewParent(el);
     el.setAttribute('checked', 'false');
 
-    await expect.poll(() => el.checked).toBe(true);
-    await expect.poll(() => input.checked).toBe(true);
-    await expect.poll(() => el.getAttribute('checked')).toBe('');
+    await expect.poll(() => el.checked).toBe(false);
+    await expect.poll(() => input.checked).toBe(false);
   });
 
   it('S5 Tab reaches the switch and its focus indication is visible', async () => {
@@ -505,13 +486,13 @@ describe('ki-switch in a real browser', () => {
   // control before the fix).
   it('S13 a fieldset-disabled switch adopts the disabled affordance', async () => {
     const enabled = await mount('name="newsletter"');
-    const enabledCursor = getComputedStyle(baseOf(enabled)).cursor;
+    const enabledCursor = getComputedStyle(internalInput(enabled)).cursor;
 
     const directly = await mount('name="newsletter" disabled');
-    const directlyCursor = getComputedStyle(baseOf(directly)).cursor;
+    const directlyCursor = getComputedStyle(internalInput(directly)).cursor;
 
     const { el } = await mountInForm('name="newsletter"', true);
-    const fieldsetCursor = getComputedStyle(baseOf(el)).cursor;
+    const fieldsetCursor = getComputedStyle(internalInput(el)).cursor;
 
     expect(enabledCursor).toBe('pointer');
     expect(directlyCursor).toBe('default');
@@ -770,42 +751,17 @@ describe('ki-switch in a real browser', () => {
   });
 });
 
-// Boolean presence semantics (native HTML parity): a present attribute means
-// true whatever its value. Stencil >= 4.45 removes a host attribute when it
-// reflects a parsed `false`, so these run against the built output.
-describe('ki-switch boolean presence in a real browser', () => {
-  it('S22 disabled="false" in the markup keeps the switch disabled', async () => {
+describe('ki-switch boolean attributes', () => {
+  it('S27 disabled="false" leaves the switch operable', async () => {
     const el = await mount('disabled="false"');
     const counts = eventCounts(el);
-    await new Promise((resolve) => requestAnimationFrame(resolve));
+    expect(internalInput(el).disabled).toBe(false);
 
-    expect(internalInput(el).disabled).toBe(true);
-    await userEvent.click(internalInput(el), { force: true }).catch(() => undefined);
-    expect(el.checked).toBe(false);
-    expect(counts.change()).toBe(0);
-    // Presence is normalized: the host attribute stays, with an empty value.
-    expect(el.getAttribute('disabled')).toBe('');
+    await userEvent.click(internalInput(el));
+    expect(el.checked).toBe(true);
+    expect(counts.change()).toBe(1);
   });
 
-  it('S22 disabled="false" written after the first render disables the switch', async () => {
-    const el = await mount();
-    const counts = eventCounts(el);
-    el.setAttribute('disabled', 'false');
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-
-    expect(internalInput(el).disabled).toBe(true);
-    await userEvent.click(internalInput(el), { force: true }).catch(() => undefined);
-    expect(el.checked).toBe(false);
-    expect(counts.change()).toBe(0);
-    // Presence is normalized: the host attribute stays, with an empty value.
-    expect(el.getAttribute('disabled')).toBe('');
-  });
-
-  // Stencil reflects a prop on its next render, so right after `checked =
-  // false` the `checked` attribute is still on the host. Presence must be
-  // re-read only for the attribute that was actually written: re-reading
-  // every observed one turned an unrelated write into "checked is present".
   it('turning the switch off by property survives another attribute written in the same tick', async () => {
     const el = await mount('checked');
     expect(el.checked).toBe(true);
@@ -820,4 +776,108 @@ describe('ki-switch boolean presence in a real browser', () => {
     expect(el.hasAttribute('checked')).toBe(false);
     expect(el.disabled).toBe(true);
   });
+});
+
+const switchBrowser = commands as unknown as {
+  ariaSnapshot: (selector: string) => Promise<string>;
+  emulateReducedMotion: (mode: 'reduce' | null) => Promise<void>;
+};
+
+it('S28 keeps the base at full width and its empty error line below the row', async () => {
+  const el = await mount();
+  el.style.display = 'block';
+  el.style.inlineSize = '559px';
+  const row = baseOf(el).getBoundingClientRect();
+  const field = el.getBoundingClientRect();
+  const error = el.shadowRoot?.querySelector('[part="error"]')?.getBoundingClientRect();
+
+  expect(row.width).toBeCloseTo(field.width);
+  expect(error?.top).toBeGreaterThanOrEqual(row.bottom);
+});
+
+it.each(['ltr', 'rtl'] as const)(
+  'S28 aligns the value at the inline end and stacks messages (%s)',
+  async (dir) => {
+    const el = await mount();
+    document.documentElement.dir = dir;
+    const grid = document.createElement('div');
+    grid.style.cssText = 'display: grid; inline-size: 559px';
+    el.before(grid);
+    grid.append(el);
+    const value = document.createElement('span');
+    value.slot = 'end';
+    value.textContent = 'On';
+    el.append(value);
+    el.setAttribute('help-text', 'Get receipts and account updates');
+
+    try {
+      const help = page.getByText('Get receipts and account updates');
+      await expect.element(help).toBeVisible();
+      const row = baseOf(el).getBoundingClientRect();
+      const field = el.getBoundingClientRect();
+      const end = dir === 'rtl' ? 'left' : 'right';
+      expect(row.width).toBeCloseTo(field.width);
+      expect(value.getBoundingClientRect()[end]).toBeCloseTo(field[end]);
+      const helpPart = el.shadowRoot?.querySelector('[part="help"]');
+      expect(helpPart?.getBoundingClientRect().top).toBeGreaterThanOrEqual(row.bottom);
+
+      el.setAttribute('custom-error', 'Enter an email address first');
+      await expect.element(page.getByText('Enter an email address first')).toBeVisible();
+      await expect.element(help).not.toBeInTheDocument();
+      const errorPart = el.shadowRoot?.querySelector('[part="error"]');
+      expect(errorPart?.getBoundingClientRect().top).toBeGreaterThanOrEqual(row.bottom);
+    } finally {
+      cleanup();
+    }
+  },
+);
+
+it('S28 keeps an inline switch at its intrinsic width', async () => {
+  const el = await mount();
+  document.body.style.inlineSize = '559px';
+  try {
+    const row = baseOf(el).getBoundingClientRect();
+    expect(row.width).toBeCloseTo(el.getBoundingClientRect().width);
+    expect(row.width).toBeLessThan(document.body.getBoundingClientRect().width);
+  } finally {
+    document.body.style.removeProperty('inline-size');
+  }
+});
+
+it('S29 exposes the label as the switch name and the value as separate content', async () => {
+  const el = await mount();
+  const value = document.createElement('span');
+  value.slot = 'end';
+  value.textContent = 'On';
+  el.append(value);
+
+  await expect
+    .element(page.getByRole('switch', { name: 'Email notifications', exact: true }))
+    .toBeVisible();
+  await expect.element(page.getByText('On', { exact: true })).toBeVisible();
+  expect(await switchBrowser.ariaSnapshot('ki-switch')).toMatch(/(?:text|generic): [^\n]*\bOn\b/u);
+  await userEvent.click(value);
+  expect(el.checked).toBe(false);
+  const label = page.getByText('Email notifications', { exact: true });
+  await label.click();
+  expect(el.checked).toBe(true);
+});
+
+it.each([
+  ['md', '--ki-switch-label-'],
+  ['lg', '--ki-switch-lg-label-'],
+  ['xl', '--ki-switch-xl-label-'],
+])('S30 sizes the %s label independently', async (size, prefix) => {
+  await switchBrowser.emulateReducedMotion('reduce');
+  try {
+    const el = await mount(`size="${size}"`);
+    el.style.setProperty(`${prefix}font-size`, '19px');
+    el.style.setProperty(`${prefix}line-height`, '31px');
+
+    const paint = getComputedStyle(labelPart(el));
+    expect(paint.fontSize).toBe('19px');
+    expect(paint.lineHeight).toBe('31px');
+  } finally {
+    await switchBrowser.emulateReducedMotion(null);
+  }
 });

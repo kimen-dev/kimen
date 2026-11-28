@@ -49,6 +49,8 @@ Use `open` to drive visibility and listen for `ki-open` and `ki-close` to observ
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-popover`: the default, only the tokens ki-popover needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `appearance` ("default" | "rich" | undefined, default 'default'): Rich shares the tooltip's raised surface, body and heading styles. With `kind="toggletip"` it enables actions and moves focus inside on open.
@@ -79,38 +81,38 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-popover-arrow-size`: Side length of an anchored surface pointer before rotation.
-- `--ki-popover-backdrop-filter`: Complete backdrop filter behind an anchored surface.
-- `--ki-popover-bg`: Raised popover surface colour.
-- `--ki-popover-bg-image`: Optional image layer over an anchored surface colour.
-- `--ki-popover-border`: Popover outline colour.
-- `--ki-popover-border-width`: Outline thickness for a small anchored surface.
-- `--ki-popover-fg`: Popover content ink.
-- `--ki-popover-gap`: Space between a floating surface and its trigger.
-- `--ki-popover-max-width`: Maximum inline size of a small anchored surface.
-- `--ki-popover-padding`: Interior padding for a small anchored surface.
-- `--ki-popover-radius`: Corner radius for a small anchored surface.
-- `--ki-popover-shadow`: Popover elevation.
-- `--ki-tooltip-rich-backdrop-filter`: Complete backdrop filter of the rich surface.
-- `--ki-tooltip-rich-bg`: Fill of the rich tooltip or rich popover.
-- `--ki-tooltip-rich-bg-image`: Optional image layer over the rich surface fill.
-- `--ki-tooltip-rich-border-color`: Outline ink of the rich surface.
-- `--ki-tooltip-rich-border-width`: Outline thickness of the rich surface.
-- `--ki-tooltip-rich-fg`: Ink of the rich surface body text.
-- `--ki-tooltip-rich-font-size`: Body text size of the rich surface.
-- `--ki-tooltip-rich-font-weight`: Body text weight of the rich surface.
-- `--ki-tooltip-rich-heading-family`: Typeface of the rich surface heading.
-- `--ki-tooltip-rich-heading-fg`: Ink of the rich surface heading over the shared fill.
-- `--ki-tooltip-rich-heading-gap`: Distance between the rich heading and its body.
-- `--ki-tooltip-rich-heading-size`: Text size of the rich surface heading.
-- `--ki-tooltip-rich-heading-weight`: Text weight of the rich surface heading.
-- `--ki-tooltip-rich-line-height`: Body text line height of the rich surface.
-- `--ki-tooltip-rich-max-width`: Maximum inline size of the rich surface.
-- `--ki-tooltip-rich-padding-block`: Block-axis inset of the rich surface, before density scaling.
-- `--ki-tooltip-rich-padding-inline`: Inline-axis inset of the rich surface, before density scaling.
-- `--ki-tooltip-rich-radius`: Corner radius of the rich surface.
-- `--ki-tooltip-rich-shadow`: Raised elevation of the rich surface.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-para`: semantic dimension for typography line height para.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip). Default: `var(--ki-scale-unit)`.
+- `--ki-popover-arrow-size`: Side length of an anchored surface pointer before rotation. Default: `var(--ki-anchored-surface-arrow-size)`.
+- `--ki-popover-backdrop-filter`: Complete backdrop filter behind an anchored surface. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-popover-bg`: Raised popover surface colour. Default: `var(--ki-surface-raised)`.
+- `--ki-popover-bg-image`: Optional image layer over an anchored surface colour. Default: `var(--ki-surface-image-none)`.
+- `--ki-popover-border`: Popover outline colour. Default: `var(--ki-outline-low-em)`.
+- `--ki-popover-border-width`: Outline thickness for a small anchored surface. Default: `var(--ki-anchored-surface-border-width)`.
+- `--ki-popover-fg`: Popover content ink. Default: `var(--ki-text-high-em)`.
+- `--ki-popover-gap`: Space between a floating surface and its trigger. Default: `var(--ki-anchored-surface-gap)`.
+- `--ki-popover-max-width`: Maximum inline size of a small anchored surface. Default: `var(--ki-anchored-surface-max-width)`.
+- `--ki-popover-padding`: Interior padding for a small anchored surface. Default: `var(--ki-anchored-surface-padding)`.
+- `--ki-popover-radius`: Corner radius for a small anchored surface. Default: `var(--ki-anchored-surface-radius)`.
+- `--ki-popover-shadow`: Popover elevation. Default: `var(--ki-elevation-e3)`.
+- `--ki-tooltip-rich-backdrop-filter`: Complete backdrop filter of the rich surface. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-tooltip-rich-bg`: Fill of the rich tooltip or rich popover. Default: `var(--ki-surface-raised)`.
+- `--ki-tooltip-rich-bg-image`: Optional image layer over the rich surface fill. Default: `var(--ki-surface-image-none)`.
+- `--ki-tooltip-rich-border-color`: Outline ink of the rich surface. Default: `var(--ki-outline-low-em)`.
+- `--ki-tooltip-rich-border-width`: Outline thickness of the rich surface. Default: `var(--ki-anchored-surface-border-width)`.
+- `--ki-tooltip-rich-fg`: Ink of the rich surface body text. Default: `var(--ki-text-supporting)`.
+- `--ki-tooltip-rich-font-size`: Body text size of the rich surface. Default: `var(--ki-typography-size-body-1)`.
+- `--ki-tooltip-rich-font-weight`: Body text weight of the rich surface. Default: `var(--ki-typography-weight-body-normal)`.
+- `--ki-tooltip-rich-heading-family`: Typeface of the rich surface heading. Default: `var(--ki-typography-family-heading)`.
+- `--ki-tooltip-rich-heading-fg`: Ink of the rich surface heading over the shared fill. Default: `var(--ki-text-high-em)`.
+- `--ki-tooltip-rich-heading-gap`: Distance between the rich heading and its body. Default: `var(--ki-layout-spacing-xxs)`.
+- `--ki-tooltip-rich-heading-size`: Text size of the rich surface heading. Default: `var(--ki-typography-size-title-1)`.
+- `--ki-tooltip-rich-heading-weight`: Text weight of the rich surface heading. Default: `var(--ki-typography-weight-body-semibold)`.
+- `--ki-tooltip-rich-line-height`: Body text line height of the rich surface. Default: `var(--ki-typography-line-height-para)`.
+- `--ki-tooltip-rich-max-width`: Maximum inline size of the rich surface. Default: `var(--ki-anchored-surface-rich-max-width)`.
+- `--ki-tooltip-rich-padding-block`: Block-axis inset of the rich surface, before density scaling. Default: `var(--ki-anchored-surface-padding)`.
+- `--ki-tooltip-rich-padding-inline`: Inline-axis inset of the rich surface, before density scaling. Default: `var(--ki-layout-spacing-3xl)`.
+- `--ki-tooltip-rich-radius`: Corner radius of the rich surface. Default: `var(--ki-anchored-surface-radius)`.
+- `--ki-tooltip-rich-shadow`: Raised elevation of the rich surface. Default: `var(--ki-elevation-e2)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-para`: semantic dimension for typography line height para. Default: `var(--ki-font-line-height-para)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.

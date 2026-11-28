@@ -30,11 +30,19 @@ brackets so they remain part of the source.
 <ki-code-block language="html" filename="example.html" wrap copyable="false">&lt;p&gt;Hello&lt;/p&gt;</ki-code-block>
 ```
 
-Color a Gherkin contract in English or Spanish with `language="gherkin"`.
-Keywords count only where they open a line.
+Hide the header with `header-hidden`. The language still selects the grammar,
+and the copy button stays above the source unless `copyable="false"` is set.
 
 ```html
-<ki-code-block language="gherkin" filename="pagos.feature"># language: es
+<ki-code-block language="ts" filename="main.ts" header-hidden>const sample = load(3);</ki-code-block>
+```
+
+Color a Gherkin contract in English or Spanish with `language="gherkin"`.
+Keywords count only where they open a line. Set `--ki-code-keyword-weight`
+on the snippet to give keywords a different weight.
+
+```html
+<ki-code-block language="gherkin" filename="pagos.feature" style="--ki-code-keyword-weight: 500"># language: es
 Característica: Pagar el carrito
   Escenario: Pagar con tarjeta
     Dado un carrito con 3 productos y un cupón
@@ -62,6 +70,8 @@ The guarded catalog accepts source strings in the default slot.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-code-block`: the default, only the tokens ki-code-block needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `copied-label` (string, default 'Copied'): Polite announcement after a successful clipboard write.
@@ -69,10 +79,11 @@ The guarded catalog accepts source strings in the default slot.
 - `copy-label` (string, default 'Copy code'): Accessible name of the copy button.
 - `copyable` (boolean, default true): Show the copy control. Set `copyable="false"` in HTML to hide it.
 - `filename` (string | undefined): File name shown in the header beside the language.
+- `header-hidden` (boolean, default false): Hide the caption. An enabled copy button stays above the source.
 - `highlight` (string | undefined): Comma-separated lines or inclusive ranges, for example `"3,5-7"`.
 - `highlight-label` (string, default 'Highlighted lines'): Localizable prefix for the accessible description of highlighted lines.
 - `label` (string | undefined, default 'Code'): Figure and scroll area label when there is no language or filename.
-- `language` (string | undefined): Visible language label and syntax grammar. Supports JavaScript, TypeScript, JSON and Gherkin (English and Spanish).
+- `language` (string | undefined): Language label and grammar: JavaScript, TypeScript, JSON or Gherkin (English and Spanish). Gherkin inks: `--ki-code-keyword` for keywords and pipes, `--ki-code-comment` for comments, `--ki-code-function` for tags, `--ki-code-string` for quoted text, doc strings and table cells, and `--ki-code-number` for placeholders.
 - `line-numbers` (boolean, default false): Show decorative one-based line numbers.
 - `wrap` (boolean, default false): Soft-wrap long lines within the available width.
 
@@ -98,29 +109,30 @@ None.
 
 ## CSS custom properties
 
-- `--ki-code-backdrop-filter`: Whole backdrop filter for the figure.
-- `--ki-code-bg`: Solid backing for the header and source.
-- `--ki-code-bg-image`: Optional image layer above the solid backing.
-- `--ki-code-border`: Frame and header divider.
-- `--ki-code-border-width`: Width of the frame and header divider.
-- `--ki-code-comment`: Supporting syntax ink for comments.
-- `--ki-code-fg`: Default source ink.
-- `--ki-code-focus-color`: Keyboard focus ring of the scroll area.
-- `--ki-code-focus-width`: Width of the scroll area's focus ring.
-- `--ki-code-font-family`: Typeface for source and line numbers.
-- `--ki-code-font-size`: Compact text size for caption and source.
-- `--ki-code-function`: Syntax ink for function names.
-- `--ki-code-header-fg`: Supporting language and filename ink.
-- `--ki-code-header-padding`: Compact header inset and gap.
-- `--ki-code-highlight-bg`: Fill of a highlighted line.
-- `--ki-code-highlight-marker`: Inline rule identifying a highlighted line.
-- `--ki-code-highlight-marker-width`: Width of the highlighted line rule.
-- `--ki-code-keyword`: Syntax ink for keywords.
-- `--ki-code-line-height`: Line box height for caption and source.
-- `--ki-code-line-number`: Ink for the decorative line numbers.
-- `--ki-code-number`: Syntax ink for numbers.
-- `--ki-code-padding`: Inset of the source and leading caption edge.
-- `--ki-code-radius`: Corner radius of the figure.
-- `--ki-code-string`: Syntax ink for strings.
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-code-backdrop-filter`: Whole backdrop filter for the figure. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-code-bg`: Solid backing for the header and source. Default: `var(--ki-surface-s1)`.
+- `--ki-code-bg-image`: Optional image layer above the solid backing. Default: `var(--ki-surface-image-none)`.
+- `--ki-code-border`: Frame and header divider. Default: `var(--ki-outline-low-em)`.
+- `--ki-code-border-width`: Width of the frame and header divider. Default: `var(--ki-spacing-action-hairline)`.
+- `--ki-code-comment`: Supporting syntax ink for comments. Default: `var(--ki-text-supporting)`.
+- `--ki-code-fg`: Default source ink. Default: `var(--ki-text-high-em)`.
+- `--ki-code-focus-color`: Keyboard focus ring of the scroll area. Default: `var(--ki-focus-ring-color)`.
+- `--ki-code-focus-width`: Width of the scroll area's focus ring. Default: `var(--ki-focus-ring-width)`.
+- `--ki-code-font-family`: Typeface for source and line numbers. Default: `var(--ki-typography-family-mono)`.
+- `--ki-code-font-size`: Compact text size for caption and source. Default: `var(--ki-typography-size-caption-2)`.
+- `--ki-code-function`: Syntax ink for function names. Default: `var(--ki-text-info-high-em)`.
+- `--ki-code-header-fg`: Supporting language and filename ink. Default: `var(--ki-text-supporting)`.
+- `--ki-code-header-padding`: Compact header inset and gap. Default: `var(--ki-layout-spacing-xs)`.
+- `--ki-code-highlight-bg`: Fill of a highlighted line. Default: `var(--ki-surface-s3)`.
+- `--ki-code-highlight-marker`: Inline rule identifying a highlighted line. Default: `var(--ki-outline-primary-high-em)`.
+- `--ki-code-highlight-marker-width`: Width of the highlighted line rule. Default: `var(--ki-focus-ring-width)`.
+- `--ki-code-keyword`: Syntax ink for keywords. Default: `var(--ki-text-primary-high-em)`.
+- `--ki-code-keyword-weight`: Weight of syntax keywords. Defaults to the source weight. Default: `inherit`.
+- `--ki-code-line-height`: Line box height for caption and source. Default: `var(--ki-typography-line-height-caption-2)`.
+- `--ki-code-line-number`: Ink for the decorative line numbers. Default: `var(--ki-text-supporting)`.
+- `--ki-code-number`: Syntax ink for numbers. Default: `var(--ki-text-warning-high-em)`.
+- `--ki-code-padding`: Inset of the source and leading caption edge. Default: `var(--ki-layout-spacing-xl)`.
+- `--ki-code-radius`: Corner radius of the figure. Default: `var(--ki-radius-component-lg)`.
+- `--ki-code-string`: Syntax ink for strings. Default: `var(--ki-text-success-high-em)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

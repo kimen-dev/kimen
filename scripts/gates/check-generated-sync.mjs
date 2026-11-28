@@ -22,6 +22,7 @@ const tokens = Object.freeze([
   ...componentTags.map((tag) => `packages/tokens/dist/css/${tag}.css`),
   'packages/tokens/dist/css/tokens.css',
   'packages/tokens/dist/css/tokens.material3.css',
+  'packages/tokens/generated/theme-checker-data.json',
 ]);
 const catalog = Object.freeze([
   'packages/catalog/src/generated/catalog-guidance.ts',
@@ -83,6 +84,7 @@ const surfaces = Object.freeze([
   'packages/elements/llms.txt',
   ...wrapperTags.map((tag) => `packages/elements/llms/${tag}.md`),
   'packages/elements/llms/agent-setup.md',
+  'packages/elements/llms/boolean-attributes.md',
   'packages/elements/llms/theming.md',
   'packages/elements/src/components.d.ts',
 ]);
@@ -115,6 +117,7 @@ export const generatedGroups = Object.freeze({
     handWritten: Object.freeze([]),
     scopes: Object.freeze([
       'packages/tokens/dist/css',
+      'packages/tokens/generated',
       'packages/elements/docs/tokens-reference.mdx',
     ]),
   }),

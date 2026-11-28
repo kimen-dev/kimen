@@ -82,10 +82,6 @@
           "$value": "{ki.text.high-em}",
           "$description": "Material 3 color used by the textarea component for focus foreground."
         },
-        "border": {
-          "$value": "{ki.outline.primary-high-em}",
-          "$description": "Material 3 color used by the textarea component for focus border."
-        },
         "label-fg": {
           "$value": "{ki.text.primary-high-em}",
           "$description": "Material 3 color used by the textarea component for focus label foreground."

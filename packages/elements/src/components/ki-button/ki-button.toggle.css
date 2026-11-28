@@ -1,5 +1,5 @@
 /* Flat, variant-specific selection palettes shared by the two buttons.
- * Stable fills distinguish the two states through hover and activation.
+ * Selected fills stay fixed through hover and activation.
  * The native button's pressed transform and focus ring still apply. */
 
 /* Primary, secondary and legacy tertiary share the filled inactive palette.
@@ -43,7 +43,31 @@
 :host([toggle][selected]) button:enabled {
   --_ki-button-bg: var(--_ki-button-selected-bg);
   --_ki-button-fg: var(--_ki-button-selected-fg);
-  --_ki-button-border: var(--ki-outline-none);
+  --_ki-button-border: var(--_ki-button-outline-selected-border, var(--ki-outline-none));
+}
+
+@media (hover: hover) {
+  /* Match the layer that paints the flat palettes. A press returns to the
+     resting paint, and loading keeps its existing palette. */
+  :host([variant="outline"]:hover)
+    :is(button:enabled, a[href]):not(
+      :active,
+      [data-ki-pressed],
+      [aria-disabled="true"],
+      [aria-pressed="true"]
+    ) {
+    --_ki-button-bg: var(--_ki-button-hover-bg);
+    --_ki-button-fg: var(--_ki-button-hover-fg);
+    --_ki-button-border: var(--_ki-button-hover-border);
+  }
+
+  :host([toggle]:hover:not([selected], [variant="outline"]))
+    button:enabled:not(:active, [data-ki-pressed], [aria-disabled="true"]) {
+    --_ki-button-overlay-image: linear-gradient(
+      var(--_ki-button-toggle-hover-overlay),
+      var(--_ki-button-toggle-hover-overlay)
+    );
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {

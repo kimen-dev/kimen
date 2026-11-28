@@ -4,7 +4,7 @@
       "checked": {
         "default": "false",
         "deprecatedSince": null,
-        "description": "Live on/off state. Boolean presence semantics apply: any present\n`checked` attribute value, including `checked=\"false\"` or malformed\nagent output, means on. Omit the attribute to express off.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.",
+        "description": "Live on/off state.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.",
         "replacement": null,
         "required": false,
         "type": "boolean"
@@ -299,6 +299,22 @@
         "required": false,
         "type": null
       },
+      "--ki-switch-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Label font size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Label line height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-switch-lg-control-height": {
         "default": null,
         "deprecatedSince": null,
@@ -311,6 +327,22 @@
         "default": null,
         "deprecatedSince": null,
         "description": "dimension used by the switch component for the control footprint width at size lg.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-lg-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Label font size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-lg-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Label line height.",
         "replacement": null,
         "required": false,
         "type": null
@@ -707,6 +739,22 @@
         "required": false,
         "type": null
       },
+      "--ki-switch-xl-label-font-size": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Label font size.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-switch-xl-label-line-height": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Label line height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-switch-xl-min-target": {
         "default": null,
         "deprecatedSince": null,
@@ -811,26 +859,10 @@
         "required": false,
         "type": null
       },
-      "--ki-typography-line-height-body-2": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "semantic dimension for typography line height body 2.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
       "--ki-typography-line-height-caption-2": {
         "default": null,
         "deprecatedSince": null,
         "description": "semantic dimension for typography line height caption 2.",
-        "replacement": null,
-        "required": false,
-        "type": null
-      },
-      "--ki-typography-size-body-2": {
-        "default": null,
-        "deprecatedSince": null,
-        "description": "semantic dimension for typography size body 2.",
         "replacement": null,
         "required": false,
         "type": null
@@ -910,7 +942,7 @@
       "checked": {
         "default": "false",
         "deprecatedSince": null,
-        "description": "Live on/off state. Boolean presence semantics apply: any present\n`checked` attribute value, including `checked=\"false\"` or malformed\nagent output, means on. Omit the attribute to express off.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.",
+        "description": "Live on/off state.\nWhen to use: set the initial on state for a setting that applies\nimmediately.\nWhen NOT to use: do not use a switch for choices saved only on submit;\nuse ki-checkbox for that pattern.",
         "replacement": null,
         "required": false,
         "type": "boolean"
@@ -969,6 +1001,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "Label content. This is the accessible name source.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "end": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Trailing value outside the label.",
         "replacement": null,
         "required": false,
         "type": null

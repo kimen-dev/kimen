@@ -83,6 +83,10 @@ svg,
   block-size: var(--ki-chip-icon-size);
 }
 
+slot[name="start"]::slotted(ki-icon) {
+  --_ki-icon-size: var(--ki-chip-icon-size);
+}
+
 [part="chip"][data-kind="assist"] [part="start"] {
   color: var(--ki-chip-assist-icon-fg);
 }

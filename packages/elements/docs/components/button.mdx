@@ -125,20 +125,18 @@ root. The dialog command takes precedence over form submission or reset.
 
 `--ki-button-justify-content` places the content along the button and
 `--ki-button-text-align` aligns the lines of a multi-line label. Both are
-`center` by default. Set both to `start` for a wide button that reads like a
-card, such as a two-line choice.
+`center` by default. Set both to `start` for a start-aligned choice.
+`--ki-button-inline-size` defaults to `fit-content`. Use `100%` to fill
+the containing block in button or link mode.
 
 <Canvas of={ButtonStories.StartAligned} />
 
 ```html
 <style>
   .choice {
+    --ki-button-inline-size: 100%;
     --ki-button-justify-content: start;
     --ki-button-text-align: start;
-    display: block;
-  }
-  .choice::part(button) {
-    inline-size: 100%;
   }
 </style>
 <ki-button class="choice" variant="outline" toggle>
@@ -153,6 +151,11 @@ card, such as a two-line choice.
 | `--ki-button-primary-neutral-rest-bg`   | Primary variant resting background    |
 | `--ki-button-md-height`                 | Height of the `md` size (per-size)    |
 | `--ki-button-md-radius`                 | Corner radius of the `md` size        |
+| `--ki-button-inline-size` | Host and control inline size (`fit-content`) |
+| `--ki-button-md-icon-size` | Slot box and ki-icon glyph size at `md` |
+| `--ki-button-outline-hover-{bg,fg,border}` | Hover palette for outline actions and unselected outline toggles |
+| `--ki-button-outline-selected-border` | Selected outline edge |
+| `--ki-button-toggle-unselected-hover-overlay` | Hover wash for unselected filled and quiet toggles |
 | `--ki-button-font-weight`               | Label font weight                     |
 | `--ki-button-focus-ring-color`          | Keyboard focus ring color             |
 | `--ki-button-justify-content`           | Content placement (`center`)          |
@@ -168,7 +171,9 @@ wrapper).
 
 Toggle selection uses the `--ki-button-{variant}-selected-bg` and
 `--ki-button-{variant}-selected-fg` pairs. The selected shape is controlled
-by `--ki-button-toggle-selected-radius`.
+by `--ki-button-toggle-selected-radius`. The fill stays fixed on hover.
+The button's per-size icon token takes precedence over an explicit `size`
+on a `ki-icon` in the `start` or `end` slot.
 
 ## Accessibility
 

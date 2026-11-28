@@ -103,6 +103,8 @@ shows nothing.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-checkbox-group`: the default, only the tokens ki-checkbox-group needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted selection ("Pick regions we deliver to"). While it holds text the group is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person toggles an option, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for the `min` and `max` limits the group enforces itself; `error-text` words those. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
@@ -136,15 +138,15 @@ None.
 
 ## CSS custom properties
 
-- `--ki-checkbox-group-gap`: Space between checkbox options and the group label and messages.
-- `--ki-radio-group-label-font-size`: dimension used by the radio group component for label font size.
-- `--ki-radio-group-label-font-weight`: font weight used by the radio group component for label font weight.
-- `--ki-radio-group-label-line-height`: dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement).
-- `--ki-text-danger-high-em`: semantic color for text danger high em.
-- `--ki-text-high-em`: semantic color for text high em.
-- `--ki-text-med-em`: semantic color for text med em.
-- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
+- `--ki-checkbox-group-gap`: Space between checkbox options and the group label and messages. Default: `var(--ki-space-md)`.
+- `--ki-radio-group-label-font-size`: dimension used by the radio group component for label font size. Default: `var(--ki-typography-size-body-1)`.
+- `--ki-radio-group-label-font-weight`: font weight used by the radio group component for label font weight. Default: `var(--ki-typography-weight-body-medium)`.
+- `--ki-radio-group-label-line-height`: dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement). Default: `var(--ki-typography-line-height-para)`.
+- `--ki-text-danger-high-em`: semantic color for text danger high em. Default: onmars `light-dark(#c21a45,var(--ki-color-danger-300))`, material3 `light-dark(#8c1d18,#f2b8b5)`.
+- `--ki-text-high-em`: semantic color for text high em. Default: onmars `light-dark(var(--ki-color-gray-950),#edebe7)`, material3 `light-dark(#1d1b20,#e6e0e9)`.
+- `--ki-text-med-em`: semantic color for text med em. Default: onmars `light-dark(#5e5953,#bfbcb6)`, material3 `light-dark(#49454f,#cac4d0)`.
+- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted). Default: `var(--ki-text-med-em)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2. Default: `var(--ki-font-line-height-caption-2)`.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2. Default: `var(--ki-font-size-caption-2)`.
+- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal. Default: `var(--ki-font-weight-body-normal)`.

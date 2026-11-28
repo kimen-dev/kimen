@@ -109,16 +109,8 @@
       },
       "hover": {
         "bg": {
-          "$value": "{ki.surface.special.light-s2-dark-s3}",
-          "$description": "color used by the select component for hover background (MarsUI hover = rest fill + hover overlay inverse; nearest cross-scheme step that keeps the ramp monotonic in dark).",
-          "$deprecated": "Nothing paints it: on hover the trigger keeps its resting fill under the inverse hover overlay.",
-          "$extensions": {
-            "dev.kimen.deprecation": {
-              "since": "0.1.0",
-              "removal": "1.0.0",
-              "replacement": "--ki-surface-hover-overlay-inverse"
-            }
-          }
+          "$value": "{ki.select.rest.bg}",
+          "$description": "Trigger fill on hover, beneath the hover wash."
         },
         "fg": {
           "$value": "{ki.text.high-em}",
@@ -203,18 +195,6 @@
         "radius": {
           "$value": "{ki.radius.big-component.xs}",
           "$description": "dimension used by the select component for listbox radius (Dropmenu master 12127:30113: Radius/big-component/xs 16px)."
-        },
-        "elevation": {
-          "$value": "{ki.elevation.shadow-med}",
-          "$description": "color used by the select component for listbox elevation. Legacy of the pre-ramp hand-composed listbox shadow, superseded by ki.select.listbox.shadow; kept published because the public-api contract requires deprecation metadata at least one minor before removal.",
-          "$deprecated": "Nothing paints it: the listbox shadow replaced the hand-composed elevation.",
-          "$extensions": {
-            "dev.kimen.deprecation": {
-              "since": "0.1.0",
-              "removal": "1.0.0",
-              "replacement": "--ki-select-listbox-shadow"
-            }
-          }
         },
         "shadow": {
           "$value": "{ki.elevation.e3}",

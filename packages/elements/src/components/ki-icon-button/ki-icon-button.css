@@ -8,6 +8,7 @@
   --_ki-button-selected-fg: var(--ki-icon-button-secondary-selected-fg);
   --_ki-button-toggle-radius: var(--ki-icon-button-toggle-radius);
   --_ki-button-selected-radius: var(--ki-icon-button-toggle-selected-radius);
+  --_ki-button-toggle-hover-overlay: var(--ki-icon-button-toggle-unselected-hover-overlay);
   --_ki-icon-button-size: var(--ki-icon-button-md-size);
   --_ki-icon-button-icon-size: var(--ki-icon-button-md-icon-size);
   --_ki-button-spinner-size: var(--ki-icon-button-md-spinner-size);
@@ -65,6 +66,10 @@
   --_ki-button-selected-bg: var(--ki-icon-button-outline-selected-bg);
   --_ki-button-selected-fg: var(--ki-icon-button-outline-selected-fg);
   --_ki-button-outline-border: var(--ki-icon-button-outline-rest-border);
+  --_ki-button-hover-bg: var(--ki-icon-button-outline-hover-bg);
+  --_ki-button-hover-fg: var(--ki-icon-button-outline-hover-fg);
+  --_ki-button-hover-border: var(--ki-icon-button-outline-hover-border);
+  --_ki-button-outline-selected-border: var(--ki-icon-button-outline-selected-border);
 }
 
 button {
@@ -113,6 +118,10 @@ button {
 [part="icon"] slot::slotted(*) {
   block-size: var(--_ki-icon-button-icon-size);
   inline-size: var(--_ki-icon-button-icon-size);
+}
+
+[part="icon"] slot::slotted(ki-icon) {
+  --_ki-icon-size: var(--_ki-icon-button-icon-size);
 }
 
 .control {

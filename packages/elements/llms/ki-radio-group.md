@@ -85,6 +85,8 @@ shows nothing.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-radio-group`: the default, only the tokens ki-radio-group needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `custom-error` (string | undefined): An error of the application's own, such as a server-side verdict on the submitted choice ("This plan is sold out"). While it holds text the group is invalid, blocks its form, shows the text in place of the help text at once and is announced as invalid. It stops counting when the person chooses another option, or when the form is reset, so it never blocks the corrected answer. It outranks `error-text` and an error set with `setCustomValidity`. When to use: report a verdict from a declarative spec, a live update or a framework binding. Remove it when a new attempt starts. When NOT to use: do not use it for a `required` group left without a choice; `error-text` words that. Setting the same text again while the prop still holds it shows nothing: remove it first, then set it again.
@@ -120,23 +122,23 @@ None.
 
 ## CSS custom properties
 
-- `--ki-radio-group-gap`: dimension used by the radio group component for gap.
-- `--ki-radio-group-label-font-size`: dimension used by the radio group component for label font size.
-- `--ki-radio-group-label-font-weight`: font weight used by the radio group component for label font weight.
-- `--ki-radio-group-label-hint-fg`: color used by the radio group component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text).
-- `--ki-radio-group-label-hint-gap`: dimension used by the radio group component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px).
-- `--ki-radio-group-label-line-height`: dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement).
-- `--ki-radio-sm-control-size`: dimension used by the radio component for the sm circle (Radio 10053:1943 sm: 18px in a 20px cell).
-- `--ki-radio-sm-dot-size`: dimension used by the radio component for the sm dot (Radio 10053:1943 sm: 8px, as at md).
-- `--ki-radio-sm-gap`: dimension used by the radio component for the sm gap between control and label (Radio-label 10100:3931 sm binds Space/md, 8px; spec 050 D4).
-- `--ki-radio-sm-label-font-size`: dimension used by the radio component for the sm label font size (Radio-label 10100:3931 sm: UI/para 13/20; spec 050 D4).
-- `--ki-radio-sm-label-line-height`: dimension used by the radio component for the sm label line height (Radio-label 10100:3931 sm: UI/para 13/20).
-- `--ki-radio-sm-min-target`: dimension used by the radio component for the sm min target: 24px, the WCAG 2.5.8 minimum, above the master's 20px cell.
-- `--ki-text-danger-high-em`: semantic color for text danger high em.
-- `--ki-text-high-em`: semantic color for text high em.
-- `--ki-text-med-em`: semantic color for text med em.
-- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted).
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal.
+- `--ki-radio-group-gap`: dimension used by the radio group component for gap. Default: onmars `var(--ki-space-sm)`, material3 `var(--ki-space-3xl)`.
+- `--ki-radio-group-label-font-size`: dimension used by the radio group component for label font size. Default: `var(--ki-typography-size-body-1)`.
+- `--ki-radio-group-label-font-weight`: font weight used by the radio group component for label font weight. Default: `var(--ki-typography-weight-body-medium)`.
+- `--ki-radio-group-label-hint-fg`: color used by the radio group component for the label hint after the label text (spec 047: the supporting-text role, a declared a11y deviation from the MarsUI Input_label support text Text/low_em, which reads 2.8-3.13:1 on the onmars light surfaces; under more contrast it strengthens with every other supporting text). Default: `var(--ki-text-supporting)`.
+- `--ki-radio-group-label-hint-gap`: dimension used by the radio group component for the gap between the label text and the label hint (MarsUI Input_label: Space/xs 4px). Default: `var(--ki-space-xs)`.
+- `--ki-radio-group-label-line-height`: dimension used by the radio group component for label line height (closest measured analogue: Radio_label sm 13/20; no group-title master exists — low-confidence refinement). Default: `var(--ki-typography-line-height-para)`.
+- `--ki-radio-sm-control-size`: dimension used by the radio component for the sm circle (Radio 10053:1943 sm: 18px in a 20px cell). Default: `var(--ki-space-4xl)`.
+- `--ki-radio-sm-dot-size`: dimension used by the radio component for the sm dot (Radio 10053:1943 sm: 8px, as at md). Default: `var(--ki-space-md)`.
+- `--ki-radio-sm-gap`: dimension used by the radio component for the sm gap between control and label (Radio-label 10100:3931 sm binds Space/md, 8px; spec 050 D4). Default: `var(--ki-space-md)`.
+- `--ki-radio-sm-label-font-size`: dimension used by the radio component for the sm label font size (Radio-label 10100:3931 sm: UI/para 13/20; spec 050 D4). Default: `var(--ki-typography-size-body-1)`.
+- `--ki-radio-sm-label-line-height`: dimension used by the radio component for the sm label line height (Radio-label 10100:3931 sm: UI/para 13/20). Default: `var(--ki-typography-line-height-para)`.
+- `--ki-radio-sm-min-target`: dimension used by the radio component for the sm min target: 24px, the WCAG 2.5.8 minimum, above the master's 20px cell. Default: `var(--ki-space-7xl)`.
+- `--ki-text-danger-high-em`: semantic color for text danger high em. Default: onmars `light-dark(#c21a45,var(--ki-color-danger-300))`, material3 `light-dark(#8c1d18,#f2b8b5)`.
+- `--ki-text-high-em`: semantic color for text high em. Default: onmars `light-dark(var(--ki-color-gray-950),#edebe7)`, material3 `light-dark(#1d1b20,#e6e0e9)`.
+- `--ki-text-med-em`: semantic color for text med em. Default: onmars `light-dark(#5e5953,#bfbcb6)`, material3 `light-dark(#49454f,#cac4d0)`.
+- `--ki-text-supporting`: Supporting text of an enabled control: field labels, placeholders, list secondary lines, quiet button labels and unselected tabs. A role, distinct from the med-em emphasis step it resolves to, so a mode can strengthen enabled supporting text without touching the disabled ink that also draws from med-em (directly, or through text.muted). Default: `var(--ki-text-med-em)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2. Default: `var(--ki-font-line-height-caption-2)`.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2. Default: `var(--ki-font-size-caption-2)`.
+- `--ki-typography-weight-body-normal`: semantic font weight for typography weight body normal. Default: `var(--ki-font-weight-body-normal)`.

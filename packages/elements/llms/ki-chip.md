@@ -59,6 +59,8 @@ Use assist for a contextual action. Handle `ki-activate` in application code.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-chip`: the default, only the tokens ki-chip needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `disabled` (boolean, default false): Prevents activation, removal and moving the chip.
@@ -97,47 +99,52 @@ Use assist for a contextual action. Handle `ki-activate` in application code.
 
 None.
 
-## CSS custom properties
+## Other CSS custom properties
 
-- `--ki-chip-assist-icon-fg`: Decorative glyph in an assist chip.
-- `--ki-chip-backdrop-filter`: Default compact pill surface leaves the backdrop unfiltered.
-- `--ki-chip-bg`: Resting filter and assist surface.
-- `--ki-chip-bg-image`: Default compact pill surface uses a solid color.
-- `--ki-chip-border`: Outline of an unselected filter or assist chip.
-- `--ki-chip-border-width`: Default thickness of a compact pill border.
-- `--ki-chip-disabled-border`: Outline of a disabled chip.
-- `--ki-chip-disabled-ink`: Label on a disabled chip.
-- `--ki-chip-fg`: Resting filter and assist label.
-- `--ki-chip-font-family`: Font family for the visible chip label.
-- `--ki-chip-font-size`: Default chip label size.
-- `--ki-chip-font-size-sm`: Small chip label size.
-- `--ki-chip-font-weight`: Weight for a chip label.
-- `--ki-chip-gap`: Gap between content in a compact pill.
-- `--ki-chip-height`: Default height of a compact pill.
-- `--ki-chip-height-sm`: Small height of a compact pill.
-- `--ki-chip-hover-bg`: Surface under the hovering pointer.
-- `--ki-chip-hover-fg`: Label over the hover surface.
-- `--ki-chip-icon-size`: Icon size inside a compact pill.
-- `--ki-chip-input-bg`: Surface of a picked value.
-- `--ki-chip-input-fg`: Label of a picked value.
-- `--ki-chip-inset`: Default inline padding of a compact pill.
-- `--ki-chip-inset-action`: Trailing inset beside a pill action.
-- `--ki-chip-inset-sm`: Small inline padding of a compact pill.
-- `--ki-chip-line-height`: Default line height of the chip label.
-- `--ki-chip-line-height-sm`: Small line height of the chip label.
-- `--ki-chip-pressed-bg`: Surface while the activation is held.
-- `--ki-chip-pressed-fg`: Label while the activation is held.
-- `--ki-chip-radius`: Fully rounded compact pill shape.
-- `--ki-chip-remove-bg`: Remove button surface inside an input chip.
-- `--ki-chip-remove-fg`: Resting remove glyph.
-- `--ki-chip-remove-hover-bg`: Remove button hover surface.
-- `--ki-chip-remove-hover-fg`: Remove glyph over the hover surface.
-- `--ki-chip-selected-bg`: Selected filter surface.
-- `--ki-chip-selected-border`: Accessible boundary of a selected filter.
-- `--ki-chip-selected-fg`: Selected filter label and check.
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-motion-duration-fast`: Fast interaction transition duration.
-- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
+- `--ki-chip-assist-icon-fg`: Decorative glyph in an assist chip. Default: `var(--ki-text-primary-high-em)`.
+- `--ki-chip-backdrop-filter`: Default compact pill surface leaves the backdrop unfiltered. Default: `var(--ki-control-compact-pill-backdrop-filter)`.
+- `--ki-chip-bg`: Resting filter and assist surface. Default: `var(--ki-surface-transparent)`.
+- `--ki-chip-bg-image`: Default compact pill surface uses a solid color. Default: `var(--ki-control-compact-pill-bg-image)`.
+- `--ki-chip-border`: Outline of an unselected filter or assist chip. Default: `var(--ki-outline-control)`.
+- `--ki-chip-border-width`: Default thickness of a compact pill border. Default: `var(--ki-control-compact-pill-border-width)`.
+- `--ki-chip-fg`: Resting filter and assist label. Default: `var(--ki-text-high-em)`.
+- `--ki-chip-font-family`: Font family for the visible chip label. Default: `var(--ki-typography-family-body)`.
+- `--ki-chip-font-size`: Default chip label size. Default: `var(--ki-typography-size-body-1)`.
+- `--ki-chip-font-size-sm`: Small chip label size. Default: `var(--ki-typography-size-caption-2)`.
+- `--ki-chip-font-weight`: Weight for a chip label. Default: `var(--ki-typography-weight-body-medium)`.
+- `--ki-chip-gap`: Gap between content in a compact pill. Default: `var(--ki-control-compact-pill-gap)`.
+- `--ki-chip-height`: Default height of a compact pill. Default: `var(--ki-control-compact-pill-height)`.
+- `--ki-chip-height-sm`: Small height of a compact pill. Default: `var(--ki-control-compact-pill-height-sm)`.
+- `--ki-chip-icon-size`: Icon size inside a compact pill. Default: `var(--ki-control-compact-pill-icon-size)`.
+- `--ki-chip-input-bg`: Surface of a picked value. Default: `var(--ki-surface-s2)`.
+- `--ki-chip-input-fg`: Label of a picked value. Default: `var(--ki-text-high-em)`.
+- `--ki-chip-inset`: Default inline padding of a compact pill. Default: `var(--ki-control-compact-pill-inset)`.
+- `--ki-chip-inset-action`: Trailing inset beside a pill action. Default: `var(--ki-control-compact-pill-inset-action)`.
+- `--ki-chip-inset-sm`: Small inline padding of a compact pill. Default: `var(--ki-control-compact-pill-inset-sm)`.
+- `--ki-chip-line-height`: Default line height of the chip label. Default: `var(--ki-typography-line-height-body-1)`.
+- `--ki-chip-line-height-sm`: Small line height of the chip label. Default: `var(--ki-typography-line-height-caption-2)`.
+- `--ki-chip-radius`: Fully rounded compact pill shape. Default: `var(--ki-control-compact-pill-radius)`.
+- `--ki-chip-remove-bg`: Remove button surface inside an input chip. Default: `var(--ki-surface-s2)`.
+- `--ki-chip-remove-fg`: Resting remove glyph. Default: `var(--ki-text-supporting)`.
+- `--ki-chip-remove-hover-bg`: Remove button hover surface. Default: `var(--ki-surface-s4)`.
+- `--ki-chip-remove-hover-fg`: Remove glyph over the hover surface. Default: `var(--ki-text-high-em)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring. Default: `var(--ki-space-xxs)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-motion-duration-fast`: Fast interaction transition duration. Default: onmars `var(--ki-duration-fast)`, material3 `100ms`.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve. Default: onmars `var(--ki-easing-out)`, material3 `cubic-bezier(0,0,0,1)`.
+
+## CSS custom properties by variant and state
+
+| Variant | Tone | State | Token | Default | Description |
+| --- | --- | --- | --- | --- | --- |
+| — | — | disabled | `--ki-chip-disabled-border` | `var(--ki-outline-low-em)` | Outline of a disabled chip. |
+| — | — | disabled | `--ki-chip-disabled-ink` | `var(--ki-text-base-em)` | Label on a disabled chip. |
+| — | — | hover | `--ki-chip-hover-bg` | `var(--ki-surface-s2)` | Surface under the hovering pointer. |
+| — | — | hover | `--ki-chip-hover-fg` | `var(--ki-text-high-em)` | Label over the hover surface. |
+| — | — | pressed | `--ki-chip-pressed-bg` | `var(--ki-surface-s3)` | Surface while the activation is held. |
+| — | — | pressed | `--ki-chip-pressed-fg` | `var(--ki-text-high-em)` | Label while the activation is held. |
+| — | — | selected | `--ki-chip-selected-bg` | `var(--ki-surface-primary-low-em)` | Selected filter surface. |
+| — | — | selected | `--ki-chip-selected-border` | `var(--ki-outline-primary-high-em)` | Accessible boundary of a selected filter. |
+| — | — | selected | `--ki-chip-selected-fg` | `var(--ki-text-primary-on-primary-light)` | Selected filter label and check. |

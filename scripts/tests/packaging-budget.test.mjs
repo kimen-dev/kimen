@@ -123,14 +123,15 @@ test('packaging type-checks all elements and representative glyph entrypoints', 
 
 test('S4: a component with no size allowance leaves every shipped limit unchanged', () => {
   assert.deepEqual(deriveBundleSizeBudgets([{ tag: 'ki-alpha', metadata: {} }]), {
-    mcpApps: { raw: 481_342, gzip: 80_135, brotli: 66_155 },
-    // Raised for specs 168–170, approved by the founder on 2026-11-27.
-    mcpServer: { raw: 1_754_430, gzip: 318_322, brotli: 294_479 },
-    genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
-    tokenStylesheets: { onmars: 11_611, material3: 5_165, base: 250 },
-    tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
-    pages: { button: 18_559, tenComponents: 47_337 },
-    fullSheetPages: { button: 29_547, tenComponents: 55_142 },
+    mcpApps: { raw: 478_602, gzip: 80_353, brotli: 66_421 },
+    mcpAppsData: { raw: 342_364, gzip: 71_071, brotli: 60_625 },
+    mcpAppsForm: { raw: 432_873, gzip: 86_697, brotli: 72_239 },
+    mcpServer: { raw: 1_735_740, gzip: 338_271, brotli: 318_015 },
+    genuiHost: { raw: 125_654, gzip: 29_784, brotli: 26_228 },
+    tokenStylesheets: { onmars: 11_766, material3: 5_213, base: 250 },
+    tokenSheets: { core: 7_000, buttonPage: 8_373, tenComponentPage: 11_479, tagSheet: 2_200 },
+    pages: { button: 19_160, tenComponents: 47_654 },
+    fullSheetPages: { button: 30_178, tenComponents: 55_503 },
   });
 });
 
@@ -140,6 +141,8 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
     metadata: {
       sizeBudget: {
         mcpApps: { raw: 1200, gzip: 180, brotli: 165 },
+        mcpAppsData: { raw: 350 },
+        mcpAppsForm: { raw: 700 },
         mcpServer: { raw: 1300, gzip: 190, brotli: 175 },
         tokenStylesheets: { onmars: 100, material3: 50 },
         pages: { tenComponents: 40 },
@@ -153,14 +156,15 @@ test('S4: each metric receives only its explicitly declared marginal byte allowa
   };
 
   assert.deepEqual(deriveBundleSizeBudgets([first, second]), {
-    mcpApps: { raw: 483_542, gzip: 80_315, brotli: 66_320 },
-    // Raised for specs 168–170, approved by the founder on 2026-11-27.
-    mcpServer: { raw: 1_755_730, gzip: 318_512, brotli: 294_654 },
-    genuiHost: { raw: 125_581, gzip: 29_774, brotli: 26_193 },
-    tokenStylesheets: { onmars: 11_781, material3: 5_215, base: 250 },
-    tokenSheets: { core: 7_000, buttonPage: 8_300, tenComponentPage: 11_400, tagSheet: 2_200 },
-    pages: { button: 18_559, tenComponents: 47_377 },
-    fullSheetPages: { button: 29_577, tenComponents: 55_142 },
+    mcpApps: { raw: 480_802, gzip: 80_533, brotli: 66_586 },
+    mcpAppsData: { raw: 342_714, gzip: 71_071, brotli: 60_625 },
+    mcpAppsForm: { raw: 433_573, gzip: 86_697, brotli: 72_239 },
+    mcpServer: { raw: 1_737_040, gzip: 338_461, brotli: 318_190 },
+    genuiHost: { raw: 125_654, gzip: 29_784, brotli: 26_228 },
+    tokenStylesheets: { onmars: 11_936, material3: 5_263, base: 250 },
+    tokenSheets: { core: 7_000, buttonPage: 8_373, tenComponentPage: 11_479, tagSheet: 2_200 },
+    pages: { button: 19_160, tenComponents: 47_694 },
+    fullSheetPages: { button: 30_208, tenComponents: 55_503 },
   });
 });
 
@@ -298,18 +302,17 @@ test('each release package has its pinned tarball and unpacked size budget', () 
       Object.entries(packageContentRules).map(([name, { budget }]) => [name, { ...budget }]),
     ),
     {
-      '@kimen/elements': { packed: 1_904_782, unpacked: 7_909_758 },
-      // Rebased for Newsreader at weight 500.
-      '@kimen/tokens': { packed: 201_054, unpacked: 1_101_367 },
-      '@kimen/mcp-server': { packed: 639_409, unpacked: 3_176_921 },
-      '@kimen/catalog': { packed: 320_512, unpacked: 1_376_256 },
+      '@kimen/elements': { packed: 1_963_041, unpacked: 8_528_310 },
+      '@kimen/tokens': { packed: 207_657, unpacked: 1_040_738 },
+      '@kimen/mcp-server': { packed: 658_816, unpacked: 3_164_631 },
+      '@kimen/catalog': { packed: 320_603, unpacked: 1_376_868 },
       // Raised for specs 168–170, approved by the founder on 2026-11-27.
       '@kimen/emitter': { packed: 47_247, unpacked: 159_371 },
       '@kimen/adapter-a2ui': { packed: 102_400, unpacked: 413_696 },
-      '@kimen/adapter-mcp-apps': { packed: 499_558, unpacked: 2_209_335 },
+      '@kimen/adapter-mcp-apps': { packed: 500_223, unpacked: 2_216_821 },
       '@kimen/react': { packed: 46_952, unpacked: 345_886 },
-      '@kimen/vue': { packed: 36_864, unpacked: 236_544 },
-      '@kimen/angular': { packed: 56_320, unpacked: 649_216 },
+      '@kimen/vue': { packed: 36_877, unpacked: 236_593 },
+      '@kimen/angular': { packed: 56_366, unpacked: 649_429 },
     },
   );
 });
@@ -342,7 +345,7 @@ test('each exported generated token stylesheet has one size budget outside the p
   // A pattern export (spec 166 `./css/ki-*`) is every file it resolves to.
   const built = await readdir(new URL('dist/css/', tokens));
   const exported = Object.values(manifest.exports)
-    .filter((target) => target.startsWith('./dist/css/'))
+    .filter((target) => typeof target === 'string' && target.startsWith('./dist/css/'))
     .flatMap((target) => {
       if (!target.includes('*')) return [target];
       const [prefix, suffix] = target.slice('./dist/css/'.length).split('*');

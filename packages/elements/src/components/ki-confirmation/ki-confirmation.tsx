@@ -9,7 +9,11 @@ import {
   State,
   Watch,
 } from '@stencil/core';
-import { hasText, isDecisionAvailable } from './ki-confirmation.request';
+import {
+  hasText,
+  isDecisionAvailable,
+  warnIfDecisionLabelsMissing,
+} from './ki-confirmation.request';
 
 export type KiConfirmationState = 'pending' | 'approved' | 'denied' | 'expired';
 export type KiConfirmationTone = 'neutral' | 'danger';
@@ -49,10 +53,10 @@ export class KiConfirmation {
    */
   @Prop() action!: string;
 
-  /** Verb or short phrase that describes what approval does, such as "Send email". */
+  /** Approval text, such as "Send email". Required for pending HTML and all generated specs. */
   @Prop() approveLabel!: string;
 
-  /** Verb or short phrase for refusal, such as "Keep draft". */
+  /** Refusal text, such as "Keep draft". Required for pending HTML and all generated specs. */
   @Prop() denyLabel!: string;
 
   /** Use danger when approval is destructive. Unknown values use neutral. */
@@ -247,6 +251,7 @@ export class KiConfirmation {
   }
 
   render() {
+    warnIfDecisionLabelsMissing(this);
     if (!hasText(this.heading)) return null;
     const outcome = this.#outcome;
 

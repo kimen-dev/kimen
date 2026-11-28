@@ -8,7 +8,17 @@ import * as TopNavStories from '../ki-top-nav.stories';
 <Canvas of={TopNavStories.Header} />
 <Controls of={TopNavStories.Header} />
 <Canvas of={TopNavStories.CompactHeader} />
+
+With `collapse-at="none"`, the links use the full width of the bar below
+the brand and actions when they need more room. Tab still reaches the
+actions after the links.
+
 <Canvas of={TopNavStories.WrappingHeader} />
+
+The links gap and alignment tokens set the spacing and place the links
+next to the action.
+
+<Canvas of={TopNavStories.AlignedHeader} />
 <Canvas of={TopNavStories.CollapsingAppBar} />
 <Canvas of={TopNavStories.CenteredTitle} />
 <Canvas of={TopNavStories.SearchAppBar} />

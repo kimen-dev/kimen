@@ -76,6 +76,8 @@ Use this script in a module after the section is mounted. Change the simulated r
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-skeleton`: the default, only the tokens ki-skeleton needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `animated` (boolean, default true): Sweep a highlight while the user permits motion. Set false to use a static placeholder. Shimmer also stops under reduced motion and forced colours.
@@ -103,18 +105,18 @@ None.
 
 ## CSS custom properties
 
-- `--ki-skeleton-backdrop-filter`: Complete backdrop filter behind a loading shape. Defaults to none.
-- `--ki-skeleton-bg`: Base fill of the decorative loading shapes.
-- `--ki-skeleton-bg-image`: Optional image layered over the static fill. Defaults to none.
-- `--ki-skeleton-circle-radius`: Proportional corner radius of the circular shape.
-- `--ki-skeleton-circle-size`: Default diameter of the circle.
-- `--ki-skeleton-highlight`: Peak colour of the animated loading highlight.
-- `--ki-skeleton-last-line-scale`: Fraction of the usual line width occupied by the final line in multiline text.
-- `--ki-skeleton-line-gap`: Block-axis space between text lines.
-- `--ki-skeleton-line-size`: Default height of each text line.
-- `--ki-skeleton-radius`: Corner radius of text lines and rectangles.
-- `--ki-skeleton-rect-size`: Default block size of the rectangle.
-- `--ki-skeleton-shimmer-duration`: Duration of a shimmer sweep.
-- `--ki-skeleton-shimmer-easing`: Easing of the shimmer sweep.
-- `--ki-skeleton-shimmer-image`: Image of the moving highlight. Use currentColor to inherit the highlight colour.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-skeleton-backdrop-filter`: Complete backdrop filter behind a loading shape. Defaults to none. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-skeleton-bg`: Base fill of the decorative loading shapes. Default: `var(--ki-surface-s3)`.
+- `--ki-skeleton-bg-image`: Optional image layered over the static fill. Defaults to none. Default: `var(--ki-surface-image-none)`.
+- `--ki-skeleton-circle-radius`: Proportional corner radius of the circular shape. Default: `var(--ki-placeholder-circle-radius)`.
+- `--ki-skeleton-circle-size`: Default diameter of the circle. Default: `var(--ki-placeholder-circle-size)`.
+- `--ki-skeleton-highlight`: Peak colour of the animated loading highlight. Default: `var(--ki-surface-s1)`.
+- `--ki-skeleton-last-line-scale`: Fraction of the usual line width occupied by the final line in multiline text. Default: `var(--ki-placeholder-last-line-scale)`.
+- `--ki-skeleton-line-gap`: Block-axis space between text lines. Default: `var(--ki-spacing-inline)`.
+- `--ki-skeleton-line-size`: Default height of each text line. Default: `var(--ki-placeholder-line-size)`.
+- `--ki-skeleton-radius`: Corner radius of text lines and rectangles. Default: `var(--ki-placeholder-radius)`.
+- `--ki-skeleton-rect-size`: Default block size of the rectangle. Default: `var(--ki-placeholder-rect-size)`.
+- `--ki-skeleton-shimmer-duration`: Duration of a shimmer sweep. Default: `var(--ki-placeholder-shimmer-duration)`.
+- `--ki-skeleton-shimmer-easing`: Easing of the shimmer sweep. Default: `var(--ki-motion-easing-standard)`.
+- `--ki-skeleton-shimmer-image`: Image of the moving highlight. Use currentColor to inherit the highlight colour. Default: `var(--ki-placeholder-shimmer-image)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

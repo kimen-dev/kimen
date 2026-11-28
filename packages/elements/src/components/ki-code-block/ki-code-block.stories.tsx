@@ -5,7 +5,14 @@ import type { KiCodeBlock } from './ki-code-block';
 
 type Args = Pick<
   KiCodeBlock,
-  'language' | 'filename' | 'lineNumbers' | 'highlight' | 'wrap' | 'copyable' | 'label'
+  | 'language'
+  | 'filename'
+  | 'headerHidden'
+  | 'lineNumbers'
+  | 'highlight'
+  | 'wrap'
+  | 'copyable'
+  | 'label'
 >;
 
 const source = "import { load } from './loader';\n// Fetch the sample once.\nconst size = load(3);";
@@ -19,6 +26,11 @@ export default meta;
 type Story = StoryObj<Args>;
 
 export const Highlighted: Story = {
+  render: (args) => <ki-code-block {...args}>{source}</ki-code-block>,
+};
+
+export const HiddenHeader: Story = {
+  args: { headerHidden: true },
   render: (args) => <ki-code-block {...args}>{source}</ki-code-block>,
 };
 
@@ -54,7 +66,11 @@ const contract = [
 
 export const Gherkin: Story = {
   args: { language: 'gherkin', filename: 'pagos.feature', highlight: '5' },
-  render: (args) => <ki-code-block {...args}>{contract}</ki-code-block>,
+  render: (args) => (
+    <ki-code-block {...args} style={{ '--ki-code-keyword-weight': '500' }}>
+      {contract}
+    </ki-code-block>
+  ),
 };
 
 export const RightToLeft: Story = {

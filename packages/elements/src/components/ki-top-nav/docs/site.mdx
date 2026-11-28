@@ -18,18 +18,24 @@ The navigation collapses into a menu when the header becomes narrower than
 </ki-top-nav>`} />
 
 Set `collapse-at="none"` when the links must stay in the bar at every width.
-The header then never shows a navigation button. Links that do not fit
-between the brand and the actions wrap onto further lines, and the bar grows
-to hold them, so the page never scrolls sideways. With a length instead, the
-bar keeps a single row of fixed height above the breakpoint. An app bar with
-`none` never centers its title.
+When they run out of room, the links wrap across the full width below the
+brand and actions. Tab still goes from the brand through the links to the
+actions. A CSS length keeps the bar at a fixed height above its breakpoint.
+An app bar with `none` has no compact title alignment.
 
-<Demo layout="block" code={`<ki-top-nav label="Documentation" collapse-at="none">
-  <a slot="brand" href="#docs">Kimen</a>
+Set `--ki-top-nav-links-gap` to add space between inline links. Set
+`--ki-top-nav-links-justify: flex-end` to align them next to the actions on
+a shared row or with the trailing edge of their own row.
+
+<Demo layout="block" code={`<ki-top-nav label="Documentation" collapse-at="none"
+  style="--ki-top-nav-links-gap: var(--ki-layout-spacing-xs); --ki-top-nav-links-justify: flex-end">
+  <a slot="brand" href="#docs">Kimen Design System</a>
   <a href="#guide" aria-current="page">Guide</a>
   <a href="#components">Components</a>
   <a href="#tokens">Tokens</a>
-  <a href="#changelog">Changelog</a>
+  <ki-icon-button slot="actions" label="Search" variant="ghost">
+    <ki-icon name="search"></ki-icon>
+  </ki-icon-button>
 </ki-top-nav>`} />
 
 Keep a page-owned skip link first in the Tab order. Mark the current section

@@ -1,5 +1,7 @@
 # Public contract: `<ki-switch>`
 
+Boolean attributes follow the [2026-11-27 founder decision](../spec.md).
+
 The behavior contract is `specs/008-ki-switch/feature.feature` (S1–S21).
 This document freezes the public API surface the scenarios observe. Any
 deviation discovered during implementation re-enters through the spec, not
@@ -20,7 +22,7 @@ live state (see its row).
 
 | Attribute | Type | Default | Contract |
 |---|---|---|---|
-| `checked` | `boolean` | `false` (off) | On/off state, applied immediately. Boolean presence semantics: ANY attribute value — including malformed ones like `"maybe"` or `"false"` — means on; rendering never breaks (S4, FR-001). Reflects live state (a user toggle updates the attribute), so the serialized markup always agrees with the visual state; the reset default is a snapshot taken at form association, NOT the attribute (FR-005). Programmatic changes update state and presentation without dispatching events (FR-002). |
+| `checked` | `boolean` | `false` (off) | On/off state, applied immediately. Reflects live state (a user toggle updates the attribute), so the serialized markup always agrees with the visual state; the reset default is a snapshot taken at form association, NOT the attribute (FR-005). Programmatic changes update state and presentation without dispatching events (FR-002). |
 | `disabled` | `boolean` | `false` | No toggle (S3), out of the tab order (S20), no form contribution, exposed as unavailable to AT (S9); `fieldset[disabled]` honored (S13). |
 | `name` | `string` | — | Form-data key contributed while on (S10). Omitted → no entry. |
 | `value` | `string` | — (submits `"on"`) | Replaces the default submitted value `"on"` (S18, native checkbox parity). An off switch never contributes any value, custom or not (S11). |
@@ -90,9 +92,7 @@ Guarantees:
   use ki-checkbox (the classic confusion: switch = immediate effect,
   checkbox = recorded choice); mutually exclusive choices — use
   ki-radio-group; triggering an action — use ki-button; unlabeled usage
-  (no accessible name). Boolean usage note: `checked` follows presence
-  semantics — `checked="false"` still renders on; omit the attribute to
-  express off.
+  (no accessible name).
 
 ## Compatibility
 

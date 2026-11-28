@@ -1,5 +1,7 @@
 # Table
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule for both builds. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`. The same parsing applies to markup and later writes.
+
 **Issue** #354 · **Branch** `feat/354-ki-table`
 
 Use `ki-table` when people need to compare, scan or sort records with the same fields. Use CSS grid for layout, `ki-list` for simple lists, and a description list for key–value details.
@@ -10,11 +12,11 @@ The author supplies a native table with a caption, column headers and a row head
 
 | Family | S-IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1–S8 (S1, S2, S3, S4, S5, S6, S7, S8) | |
+| Core behavior | S1–S8 (S1, S2, S3, S4, S5, S6, S7, S8), S19 | |
 | Keyboard path | S9, S10, S11 | |
 | Assistive-tech outcome | S12, S13 | |
 | Form participation | | N/A. The table is a data display. Its unnamed selection checkboxes represent table state and contribute no form entries. |
-| Theming | S14, S15, S16, S17, S18 | |
+| Theming | S14, S15, S16, S17, S18, S20 | |
 
 ## Interpretations
 
@@ -100,6 +102,22 @@ Feature: Table
     Then the table has its original columns
     And Billing API no longer has the selection state added by the table
 
+  # S19
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a table
+    When an attribute (selectable, sticky-header, and loading) is <write> <moment>
+    Then the corresponding property reads <state>
+
+    Examples:
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
+
   # Family: keyboard path
   # S9
   Scenario: A keyboard user requests a sort
@@ -169,4 +187,11 @@ Feature: Table
     Given a compact selectable table on a device with a coarse pointer
     When the table appears
     Then its sort buttons and checkboxes have targets at least 44 by 44 pixels
+
+  # Family: theming
+  # S20
+  Scenario: A table themes the background of resting secondary values
+    Given a table with a custom resting background for metadata and numeric cells
+    When the page renders
+    Then the secondary values show their themed background
 ```

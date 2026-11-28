@@ -173,3 +173,9 @@ Feature: ki-carousel presents a sequence of slides
     When a surface renders the spec
     Then the carousel appears with no validation issue
     And its Pause control is available
+
+  # S25
+  Scenario: Removing a boolean override restores its default on state
+    Given a carousel with navigation or pagination set to "false"
+    When the application removes the attribute
+    Then the corresponding property reads true

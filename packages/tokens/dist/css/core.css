@@ -295,6 +295,7 @@
   --ki-size-surface-md:32rem;
   --ki-size-surface-lg:40rem;
   --ki-size-surface-xl:48rem;
+  --ki-size-layout-fit-content:fit-content;
   --ki-size-layout-grid-min:15rem;
   --ki-size-layout-grid-fixed-breakpoint:30rem;
   --ki-size-sidebar-width:15rem;
@@ -668,10 +669,10 @@
   --ki-typography-line-height-display-1:var(--ki-font-line-height-display-1);
   --ki-typography-line-height-display-2:var(--ki-font-line-height-display-2);
   --ki-typography-line-height-display-3:var(--ki-font-line-height-display-3);
-  --ki-typography-weight-display-normal:var(--ki-font-weight-display-normal);
+  --ki-typography-weight-display-normal:var(--ki-font-weight-body-normal);
   --ki-typography-weight-display-medium:var(--ki-font-weight-display-medium);
   --ki-typography-weight-display-semibold:var(--ki-font-weight-body-normal);
-  --ki-typography-weight-display-bold:var(--ki-font-weight-display-bold);
+  --ki-typography-weight-display-bold:var(--ki-font-weight-body-normal);
   --ki-typography-weight-body-normal:var(--ki-font-weight-body-normal);
   --ki-typography-weight-body-medium:var(--ki-font-weight-body-medium);
   --ki-typography-weight-body-semibold:var(--ki-font-weight-body-semibold);

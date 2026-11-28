@@ -41,7 +41,7 @@ const surfaceInventory = resolve(
 const SHORTHAND = /^[a-z][a-z0-9-]*$/u;
 const CHECK = process.argv.includes('--check');
 
-/** `{ name, description }` pairs, sorted by name, from one manifest facet. */
+/** Documented hooks, sorted by name, from one manifest facet. */
 function facet(entries, tag, kind) {
   const pairs = (entries ?? []).map((entry) => {
     if (typeof entry?.name !== 'string' || entry.name === '') {
@@ -50,6 +50,8 @@ function facet(entries, tag, kind) {
     return {
       description: typeof entry.description === 'string' ? entry.description : '',
       name: entry.name,
+      ...(entry.default === undefined ? {} : { default: entry.default }),
+      ...(entry.material3Default === undefined ? {} : { material3Default: entry.material3Default }),
     };
   });
   return pairs.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
@@ -59,6 +61,8 @@ async function manifestModuleSource() {
   const manifest = JSON.parse(await readFile(manifestFile, 'utf8'));
   const { version } = JSON.parse(await readFile(resolve(packageRoot, 'package.json'), 'utf8'));
   const theming = {};
+  const tokenHooks = [];
+  const tokenIndices = new Map();
   for (const module of manifest.modules ?? []) {
     for (const declaration of module.declarations ?? []) {
       if (declaration.customElement !== true || typeof declaration.tagName !== 'string') {
@@ -68,10 +72,19 @@ async function manifestModuleSource() {
       if (!SHORTHAND.test(tag)) {
         throw new Error(`mcp-server: unexpected custom element name "${tag}" in the manifest`);
       }
-      theming[tag] = {
-        parts: facet(declaration.cssParts, tag, 'part'),
-        tokens: facet(declaration.cssProperties, tag, 'custom property'),
-      };
+      const tokens = facet(declaration.cssProperties, tag, 'custom property').map((token) => {
+        if (typeof token.default !== 'string' || token.default === '') {
+          throw new Error(`mcp-server: ${tag} token ${token.name} has no default`);
+        }
+        // Shared CSS hooks have the same description and defaults in every contract.
+        const existing = tokenIndices.get(token.name);
+        if (existing !== undefined) return existing;
+        const index = tokenHooks.length;
+        tokenHooks.push(token);
+        tokenIndices.set(token.name, index);
+        return index;
+      });
+      theming[tag] = { parts: facet(declaration.cssParts, tag, 'part'), tokens };
     }
   }
   const sorted = Object.fromEntries(
@@ -90,13 +103,20 @@ async function manifestModuleSource() {
     '  readonly description: string;',
     '}',
     '',
+    'export interface TokenHook extends ThemingHook {',
+    '  readonly default: string;',
+    '  readonly material3Default?: string;',
+    '}',
+    '',
     '/** The theming surface one custom element documents in its manifest entry. */',
     'export interface ComponentTheming {',
-    '  readonly tokens: readonly ThemingHook[];',
+    '  readonly tokens: readonly number[];',
     '  readonly parts: readonly ThemingHook[];',
     '}',
     '',
     `export const SERVER_VERSION = ${JSON.stringify(version)};`,
+    '',
+    `export const TOKEN_HOOKS: readonly TokenHook[] = ${JSON.stringify(tokenHooks, null, 2)};`,
     '',
     `export const COMPONENT_THEMING: Readonly<Record<string, ComponentTheming>> = ${JSON.stringify(sorted, null, 2)};`,
     '',
@@ -136,6 +156,7 @@ async function bundle() {
     legalComments: 'eof',
     logLevel: 'warning',
     metafile: true,
+    minifySyntax: true,
     outfile: outFile,
     platform: 'node',
     plugins: [tsExtensionPlugin, stockSurfaceIconSelectionPlugin(packageRoot)],

@@ -400,27 +400,17 @@ describe('ki-dialog in a real browser', () => {
     expect(event.detail.reason).toBe('backdrop');
   });
 
-  it('S4 boolean presence: close-on-backdrop="false" opts in and survives hydration', async () => {
+  it('S17 close-on-backdrop="false" keeps the dialog open on a backdrop click', async () => {
     cleanup();
-    // A present-but-falsy attribute value opts IN (presence semantics).
     const el = await mountDialog({ 'close-on-backdrop': 'false' });
-    expect(el.closeOnBackdrop).toBe(true);
+    expect(el.closeOnBackdrop).toBe(false);
 
     await openDialog(el);
     await backdropClick(el, true);
-    const closed = nextClose(el);
     await backdropClick(el);
-    const event = await closed;
-    expect(el.open).toBe(false);
-    expect(event.detail.reason).toBe('backdrop');
-
-    // The same presence semantics apply to an attribute set after hydration.
-    cleanup();
-    const later = await mountDialog();
-    expect(later.closeOnBackdrop).toBe(false);
-    later.setAttribute('close-on-backdrop', 'false');
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-    expect(later.closeOnBackdrop).toBe(true);
+    expect(el.open).toBe(true);
+    expect(internalDialog(el).matches(':modal')).toBe(true);
+    await el.close();
   });
 
   it('S15 programmatic close reports exactly one close event and no-op guards report none', async () => {
@@ -1139,59 +1129,20 @@ describe('ki-dialog in a real browser', () => {
   });
 });
 
-// Boolean presence semantics (native HTML parity): a present attribute means
-// true whatever its value. Stencil >= 4.45 removes a host attribute when it
-// reflects a parsed `false`, so these run against the built output.
-describe('ki-dialog boolean presence in a real browser', () => {
-  it('S16 open="false" in the markup opens the dialog modally', async () => {
+describe('ki-dialog boolean attributes', () => {
+  it('S17 open="false" in the markup leaves the page interactive', async () => {
     cleanup();
     const el = await mountDialog({ open: 'false' });
-    await waitFor(() => internalDialog(el).open, 'dialog opened from open="false"');
-
-    expect(el.open).toBe(true);
-    expect(internalDialog(el).matches(':modal')).toBe(true);
-    // Presence is normalized: the host attribute stays, with an empty value.
-    expect(el.getAttribute('open')).toBe('');
-    await el.close();
+    expect(internalDialog(el).matches(':modal')).toBe(false);
   });
 
-  it('S16 open="false" written after the dialog moved to another parent opens it modally', async () => {
-    cleanup();
-    const el = await mountDialog();
-    moveToNewParent(el);
-
-    el.setAttribute('open', 'false');
-    await waitFor(() => internalDialog(el).open, 'moved dialog opened from open="false"');
-
-    expect(el.open).toBe(true);
-    expect(internalDialog(el).matches(':modal')).toBe(true);
-    // Normalized when the dialog next renders, after the native open above.
-    await expect.poll(() => el.getAttribute('open')).toBe('');
-    await el.close();
-  });
-
-  it('S16 open="false" written after the first render opens the dialog modally', async () => {
-    cleanup();
-    const el = await mountDialog();
-    el.setAttribute('open', 'false');
-    await waitFor(() => internalDialog(el).open, 'dialog opened from a later open="false"');
-
-    expect(el.open).toBe(true);
-    expect(internalDialog(el).matches(':modal')).toBe(true);
-    // Presence is normalized: the host attribute stays, with an empty value,
-    // once the dialog next renders (after the native open above).
-    await expect.poll(() => el.getAttribute('open')).toBe('');
-    await el.close();
-  });
-
-  it('keeps an already open dialog closed when its open attribute is changed to "false"', async () => {
+  it('S17 closes an open modal when open is changed to "false"', async () => {
     cleanup();
     const el = await mountDialog({ open: true });
     const dialog = internalDialog(el);
     expect(dialog.matches(':modal')).toBe(true);
 
     el.setAttribute('open', 'false');
-    // Attribute observers run before the next render can reflect the new value.
     await Promise.resolve();
 
     expect(el.open).toBe(false);

@@ -1,0 +1,16 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersions": {
+    "@kimen/tokens": "0.0.0"
+  },
+  "deltas": {
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1ki-*/sheets/ki-code-block": "183a31ba9d7951a714f4a0e34bfaef9a6dfe398a154d1d7e993df46e9ebde577",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1ki-*/sheets/ki-markdown": "cbfffabe8960086f1c287028d76a94a4ed40ef1a86d31f540d53d33556f2abb2"
+  },
+  "packages": [
+    "@kimen/tokens"
+  ],
+  "reason": "Integrate the settings-row layout, themeable link hover and typography, and optional code-block caption with the shared boolean attribute contract.",
+  "release": "major",
+  "schemaVersion": 2
+}

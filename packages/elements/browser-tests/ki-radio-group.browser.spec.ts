@@ -890,74 +890,42 @@ describe('ki-radio-group with options that arrive after the group', () => {
   });
 });
 
-// Boolean presence semantics (native HTML parity): a present attribute means
-// true whatever its value. Stencil >= 4.45 removes a host attribute when it
-// reflects a parsed `false`, so these run against the built output.
-describe('ki-radio-group boolean presence in a real browser', () => {
-  async function expectNoSelection(el: KiRadioGroupElement, index: number): Promise<void> {
-    await userEvent.click(radioAt(el, index), { force: true }).catch(() => undefined);
-    await settleFrames();
-    expect(el.value).toBe('');
-    expect(radioAt(el, index).checked).toBe(false);
-  }
-
-  it('S26 disabled="false" and required="false" in the markup keep the group disabled and required', async () => {
+describe('ki-radio-group boolean attributes', () => {
+  it('S31 disabled="false" and required="false" leave the group operable and optional', async () => {
     cleanup();
     const el = await mount({ disabled: 'false', required: 'false' });
     await settleFrames();
 
-    expect(radioAt(el, 1).disabled).toBe(true);
-    expect(el.shadowRoot?.querySelector('[role="radiogroup"]')?.getAttribute('aria-required')).toBe(
-      'true',
-    );
-    await expectNoSelection(el, 1);
-    // Presence is normalized: the host attribute stays, with an empty value.
-    expect(el.getAttribute('disabled')).toBe('');
-    expect(el.getAttribute('required')).toBe('');
+    const group = el.shadowRoot?.querySelector('[role="radiogroup"]');
+    expect(group?.getAttribute('aria-required')).toBeNull();
+    expect(radioAt(el, 1).disabled).toBe(false);
+    await userEvent.click(radioAt(el, 1));
+    expect(el.value).toBe('sms');
   });
 
-  it('S26 disabled="false" written after the first render disables the group', async () => {
-    cleanup();
-    const el = await mount();
-    el.setAttribute('disabled', 'false');
-    await settleFrames();
-
-    expect(radioAt(el, 1).disabled).toBe(true);
-    await expectNoSelection(el, 1);
-    // Presence is normalized: the host attribute stays, with an empty value.
-    expect(el.getAttribute('disabled')).toBe('');
-  });
-
-  it('S26 disabled="false" keeps an option unavailable in the markup and after the first render', async () => {
+  it('S31 disabled="false" keeps options selectable in markup and after the first render', async () => {
     cleanup();
     const el = document.createElement('ki-radio-group') as unknown as KiRadioGroupElement;
     el.setAttribute('label', 'Contact preference');
     el.innerHTML = `
       <ki-radio value="email">Email</ki-radio>
       <ki-radio value="sms" disabled="false">SMS</ki-radio>
-      <ki-radio value="phone">Phone</ki-radio>
+      <ki-radio value="phone" disabled>Phone</ki-radio>
     `;
     document.body.append(el);
     await customElements.whenDefined('ki-radio-group');
     await customElements.whenDefined('ki-radio');
     await settleFrames(4);
-    const options = [...el.querySelectorAll('ki-radio')];
-    options[2]?.setAttribute('disabled', 'false');
-    await settleFrames();
 
-    expect(radioAt(el, 1).disabled).toBe(true);
-    expect(radioAt(el, 2).disabled).toBe(true);
-    await expectNoSelection(el, 1);
-    await expectNoSelection(el, 2);
-    // Presence is normalized: the host attribute stays, with an empty value.
-    expect(options[1]?.getAttribute('disabled')).toBe('');
-    expect(options[2]?.getAttribute('disabled')).toBe('');
+    await userEvent.click(radioAt(el, 1));
+    expect(el.value).toBe('sms');
+
+    el.querySelector('[value="phone"]')?.setAttribute('disabled', 'false');
+    await settleFrames();
+    await userEvent.click(radioAt(el, 2));
+    expect(el.value).toBe('phone');
   });
 
-  // Presence semantics are about ATTRIBUTES. Framework wrappers (React, Vue,
-  // Angular) assign PROPERTIES, so a group disabled while its data loads must
-  // come back when the property is cleared: re-reading the attribute Stencil
-  // has not un-reflected yet would pin the group disabled and required forever.
   it('S19 S13 clearing the disabled and required properties re-enables the group and lifts the requirement', async () => {
     cleanup();
     const form = document.createElement('form');
@@ -1138,11 +1106,11 @@ describe('ki-radio-group naming in a real browser', () => {
     await expectAccessible(el);
   });
 
-  it('S28 label-hidden="false" still hides the label, as every boolean attribute does', async () => {
+  it('S31 label-hidden="false" keeps the label visible', async () => {
     cleanup();
     const el = await mount({ label: 'Your answer', 'label-hidden': 'false' });
 
-    expect(el.shadowRoot?.querySelector('[part="label"]')?.getClientRects()).toHaveLength(0);
+    expect(el.shadowRoot?.querySelector('[part="label"]')?.getClientRects()).toHaveLength(1);
     await expect.element(page.getByRole('radiogroup', { name: 'Your answer' })).toBeVisible();
   });
 

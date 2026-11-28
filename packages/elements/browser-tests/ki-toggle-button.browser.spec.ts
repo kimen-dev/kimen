@@ -1,11 +1,13 @@
 // @spec:094-toggle-icon-button
 // @spec:002-ki-button
 // @spec:022-ki-icon-button
+import '../icons/bookmark.js';
 import material3Css from '@kimen/tokens/css/material3?raw';
 import tokensCss from '@kimen/tokens/css?raw';
 import { afterAll, afterEach, beforeAll, expect, it } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 import { defineCustomElement as defineKiButton } from '../dist/components/ki-button.js';
+import { defineCustomElement as defineKiIcon } from '../dist/components/ki-icon.js';
 import { defineCustomElement as defineKiIconButton } from '../dist/components/ki-icon-button.js';
 import { expectAccessible, parkPointer } from './axe';
 import {
@@ -43,6 +45,7 @@ const styles = [tokensCss, material3Css].map((css) => {
 beforeAll(() => {
   defineKiButton();
   defineKiIconButton();
+  defineKiIcon();
   document.head.append(...styles);
 });
 
@@ -411,4 +414,212 @@ it('S11 preserves toggle activation and logical slot positions under RTL', async
   expect(
     Math.abs(glyph.left + glyph.width / 2 - (button.left + button.width / 2)),
   ).toBeLessThanOrEqual(0.5);
+});
+
+async function withReducedMotion(check: () => Promise<void>) {
+  try {
+    await browserCommands.emulateReducedMotion('reduce');
+    await check();
+  } finally {
+    await parkPointer();
+    await browserCommands.emulateReducedMotion(null);
+  }
+}
+
+function surfacePaint(control: HTMLElement) {
+  const { backgroundColor, backgroundImage, borderInlineStartColor, borderBlockEndColor, color } =
+    getComputedStyle(control);
+  return { backgroundColor, backgroundImage, borderInlineStartColor, borderBlockEndColor, color };
+}
+
+async function hoverPaint(control: HTMLElement) {
+  await parkPointer();
+  const rest = surfacePaint(control);
+  await userEvent.hover(control);
+  expect(control.matches(':hover')).toBe(true);
+  return { rest, hover: surfacePaint(control) };
+}
+
+it.each([
+  { tag: 'ki-button', id: 'S27', attrs: 'variant="outline"' },
+  { tag: 'ki-button', id: 'S27', attrs: 'variant="outline" href="#details"' },
+  { tag: 'ki-icon-button', id: 'S28', attrs: 'variant="outline"' },
+] as const)('$id $tag gives the outline action hover feedback ($attrs)', async ({ tag, attrs }) => {
+  await withReducedMotion(async () => {
+    const main = fixture();
+    main.insertAdjacentHTML(
+      'beforeend',
+      `<${tag} ${attrs} label="Details">${tag === 'ki-button' ? 'Details' : BOOKMARK}</${tag}>`,
+    );
+    const host = main.firstElementChild;
+    await expect
+      .poll(() => host?.shadowRoot?.querySelector<HTMLElement>('[part="button"]'))
+      .toBeInstanceOf(HTMLElement);
+    const button = host?.shadowRoot?.querySelector<HTMLElement>('[part="button"]');
+    if (!button) throw new Error('missing outline control');
+    const { rest, hover } = await hoverPaint(button);
+    expect(hover.backgroundColor).not.toBe(rest.backgroundColor);
+  });
+});
+
+it.each(themeCases)(
+  'S28 S21 every unselected toggle responds to hover in $theme $scheme',
+  async ({ theme, scheme }) => {
+    themeDocument(theme, scheme);
+    await withReducedMotion(async () => {
+      const main = fixture();
+      for (const tag of tags) {
+        for (const variant of variants) {
+          const { control } = await mount(tag, `toggle variant="${variant}"`, main);
+          const { rest, hover } = await hoverPaint(control);
+          const property = variant === 'outline' ? 'backgroundColor' : 'backgroundImage';
+          expect(hover[property], `${tag} ${variant} hover ${property}`).not.toBe(rest[property]);
+          expect(textRatio(control), `${tag} ${variant} hovered ink`).toBeGreaterThanOrEqual(4.5);
+        }
+      }
+    });
+  },
+);
+
+it.each(tags)('S29 S22 %s keeps selected paint on hover for every variant', async (tag) => {
+  await withReducedMotion(async () => {
+    const main = fixture();
+    for (const variant of variants) {
+      const { control } = await mount(tag, `toggle selected variant="${variant}"`, main);
+      const { rest, hover } = await hoverPaint(control);
+      expect(hover, variant).toEqual(rest);
+    }
+  });
+});
+
+it.each(tags)('S30 S23 %s uses reassigned outline hover colors', async (tag) => {
+  await withReducedMotion(async () => {
+    const main = fixture();
+    for (const mode of ['', 'toggle']) {
+      const { host, control } = await mount(tag, `${mode} variant="outline"`, main);
+      host.style.setProperty(`--${tag}-outline-hover-bg`, 'rgb(20 30 40)');
+      host.style.setProperty(`--${tag}-outline-hover-fg`, 'rgb(225 230 235)');
+      host.style.setProperty(`--${tag}-outline-hover-border`, 'rgb(65 75 85)');
+      const { rest, hover } = await hoverPaint(control);
+      expect(hover).toMatchObject({
+        backgroundColor: 'rgb(20, 30, 40)',
+        color: 'rgb(225, 230, 235)',
+        borderInlineStartColor: 'rgb(65, 75, 85)',
+        borderBlockEndColor: 'rgb(65, 75, 85)',
+      });
+      expect(rest.backgroundColor).not.toBe(hover.backgroundColor);
+      expect(rest.color).not.toBe(hover.color);
+      expect(rest.borderInlineStartColor).not.toBe(hover.borderInlineStartColor);
+    }
+  });
+});
+
+it.each(tags)('S31 S24 %s uses a reassigned selected outline border', async (tag) => {
+  await withReducedMotion(async () => {
+    const { host, control } = await mount(tag, 'toggle selected variant="outline"');
+    host.style.setProperty(`--${tag}-outline-selected-border`, 'rgb(65 75 85)');
+    const { rest, hover } = await hoverPaint(control);
+    expect(rest.borderInlineStartColor).toBe('rgb(65, 75, 85)');
+    expect(rest.borderBlockEndColor).toBe('rgb(65, 75, 85)');
+    expect(hover).toEqual(rest);
+  });
+});
+
+it.each(tags)('S32 S25 %s uses a reassigned unselected toggle hover wash', async (tag) => {
+  await withReducedMotion(async () => {
+    const main = fixture();
+    for (const variant of ['primary', 'ghost']) {
+      const { host, control } = await mount(tag, `toggle variant="${variant}"`, main);
+      host.style.setProperty(`--${tag}-toggle-unselected-hover-overlay`, 'rgb(20 30 40)');
+      const { rest, hover } = await hoverPaint(control);
+      expect(rest.backgroundImage).toBe('none');
+      expect(hover.backgroundImage).toBe('linear-gradient(rgb(20, 30, 40), rgb(20, 30, 40))');
+      expect(hover.backgroundColor).toBe(rest.backgroundColor);
+    }
+  });
+});
+
+const iconSizes = ['md', 'xs', 'sm', 'lg', 'xl'] as const;
+
+function slotIcons(host: HTMLElement, tag: Tag, explicitSize = false): Element[] {
+  const slots = tag === 'ki-button' ? ['start', 'end'] : ['', 'selected'];
+  const size = explicitSize ? 'size="lg"' : '';
+  host.innerHTML = slots
+    .map((slot) => `<ki-icon ${size} ${slot ? `slot="${slot}"` : ''} name="bookmark"></ki-icon>`)
+    .join('');
+  if (tag === 'ki-button') host.append('Bookmark');
+  return [...host.querySelectorAll('ki-icon')];
+}
+
+async function expectGlyphSize(icon: Element, size: number) {
+  await expect.poll(() => icon.shadowRoot?.querySelector('svg')).toBeInstanceOf(SVGElement);
+  const bounds = icon.shadowRoot?.querySelector('svg')?.getBoundingClientRect();
+  expect(
+    bounds?.width,
+    `glyph inside a ${String(icon.getBoundingClientRect().width)}px slot`,
+  ).toBeCloseTo(size);
+  expect(bounds?.height).toBeCloseTo(size);
+}
+
+it.each(tags)('S33 S26 %s sizes slotted glyphs at every default size', async (tag) => {
+  const main = fixture();
+  const theme = document.createElement('div');
+  main.append(theme);
+  for (const size of iconSizes) {
+    const { host } = await mount(tag, `size="${size}"`, main);
+    const icons = slotIcons(host, tag);
+    theme.style.inlineSize = `var(--${tag}-${size}-icon-size)`;
+    const expected = theme.getBoundingClientRect().width;
+    expect(expected).toBeGreaterThan(0);
+    for (const icon of tag === 'ki-button' ? icons : icons.slice(0, 1)) {
+      await expectGlyphSize(icon, expected);
+    }
+  }
+});
+
+it.each(tags)('S34 S27 %s uses the reassigned glyph size in both slots', async (tag) => {
+  await withReducedMotion(async () => {
+    const main = fixture();
+    for (const size of iconSizes) {
+      const { host, control } = await mount(tag, `size="${size}" toggle`, main);
+      host.style.setProperty(`--${tag}-${size}-icon-size`, '19.5px');
+      const icons = slotIcons(host, tag, size !== 'md');
+      for (const [index, icon] of icons.entries()) {
+        if (tag === 'ki-icon-button' && index === 1) {
+          host.selected = true;
+          await expectSelection(host, control, true);
+        }
+        await expectGlyphSize(icon, 19.5);
+        icon.setAttribute('size', 'lg');
+        await expectGlyphSize(icon, 19.5);
+      }
+    }
+  });
+});
+
+it('S35 the inline-size token fills a grid cell for both button and link', async () => {
+  await withReducedMotion(async () => {
+    const main = fixture();
+    main.style.cssText += 'display:grid; grid-template-columns:240px 300px; gap:16px;';
+    main.insertAdjacentHTML(
+      'beforeend',
+      '<ki-button variant="outline" toggle>Use existing workspace</ki-button>' +
+        '<ki-button href="#setup">Read the setup guide</ki-button>',
+    );
+    for (const [index, host] of [...main.querySelectorAll('ki-button')].entries()) {
+      await expect
+        .poll(() => host.shadowRoot?.querySelector('[part="button"]'))
+        .toBeInstanceOf(index === 0 ? HTMLButtonElement : HTMLAnchorElement);
+      const control = host.shadowRoot?.querySelector('[part="button"]');
+      if (!control) throw new Error('missing grid control');
+      const cellWidth = index === 0 ? 240 : 300;
+      expect(control.getBoundingClientRect().width).toBeLessThan(cellWidth);
+      host.style.setProperty('--ki-button-inline-size', '100%');
+      expect(host.getBoundingClientRect().width).toBeCloseTo(cellWidth);
+      expect(control.getBoundingClientRect().width).toBeCloseTo(cellWidth);
+      host.style.setProperty('--ki-button-inline-size', '50%');
+      expect(host.getBoundingClientRect().width).toBeCloseTo(cellWidth / 2);
+      expect(control.getBoundingClientRect().width).toBeCloseTo(cellWidth / 2);
+    }
+  });
 });

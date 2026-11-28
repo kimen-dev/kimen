@@ -1,7 +1,7 @@
 import '../../../icons/ellipsis.js';
 import '../../../icons/menu.js';
 
-import { Component, Element, Host, Prop, State, Watch, h } from '@stencil/core';
+import { Component, Element, Host, Prop, State, Watch, h, writeTask } from '@stencil/core';
 
 import { AnchoredOverlay } from '../../utils/anchored-overlay';
 import { shadowFocusTarget } from '../../utils/shadow-focus';
@@ -82,7 +82,8 @@ export class KiTopNav {
 
   /**
    * CSS length below which navigation collapses and single-row app bars can center their title.
-   * `none` never collapses: links that do not fit wrap onto more lines.
+   * `none` keeps links visible. If they do not fit beside the brand and actions,
+   * they wrap across the full width below them.
    */
   @Prop() collapseAt = DEFAULT_COLLAPSE_AT;
 
@@ -128,7 +129,8 @@ export class KiTopNav {
   private links: HTMLAnchorElement[] = [];
   private readonly linkAttributes = new Map<HTMLAnchorElement, LinkAttributes>();
   private readonly overlay = new AnchoredOverlay();
-  private resizeObserver?: ResizeObserver;
+  private resizeObserver: ResizeObserver | undefined;
+  private observedHeader: HTMLElement | undefined;
   private contentObserver?: MutationObserver;
   private scrollRoot: Element | Document | undefined;
   private focusAfterLayout: HTMLAnchorElement | 'trigger' | undefined;
@@ -147,6 +149,7 @@ export class KiTopNav {
 
   componentDidRender(): void {
     if (this.appBar) this.syncScroll();
+    this.observeHeader();
     const focus = this.focusAfterLayout;
     this.focusAfterLayout = undefined;
     if (focus === 'trigger') this.trigger?.focus();
@@ -155,6 +158,8 @@ export class KiTopNav {
 
   disconnectedCallback(): void {
     this.resizeObserver?.disconnect();
+    this.resizeObserver = undefined;
+    this.observedHeader = undefined;
     this.contentObserver?.disconnect();
     this.scrollRoot?.removeEventListener('scroll', this.syncScroll);
     this.scrollRoot = undefined;
@@ -173,6 +178,7 @@ export class KiTopNav {
     this.resizeObserver = new ResizeObserver(this.syncCompact);
     this.resizeObserver.observe(this.host);
     if (this.probe) this.resizeObserver.observe(this.probe);
+    this.observeHeader();
     this.contentObserver = new MutationObserver(this.syncContent);
     this.contentObserver.observe(this.host, {
       childList: true,
@@ -203,6 +209,7 @@ export class KiTopNav {
     // host's content box. The host's own inline size would include its padding
     // whenever the page gives it `box-sizing: border-box`.
     const compact = inlineSize(bar) < inlineSize(this.probe);
+    if (bar === this.observedHeader) this.syncHeaderRows(bar);
     if (this.compact === compact) return;
 
     if (!this.appBar) {
@@ -216,6 +223,43 @@ export class KiTopNav {
     this.compact = compact;
     this.syncLinkAttributes();
   };
+
+  private observeHeader(): void {
+    const observer = this.resizeObserver;
+    if (!observer) return;
+    const header = this.host.shadowRoot?.querySelector<HTMLElement>('.header.wrap') ?? undefined;
+    if (header === this.observedHeader) return;
+    if (this.observedHeader) {
+      for (const child of this.observedHeader.children) observer.unobserve(child);
+    }
+    this.observedHeader = header;
+    if (header) {
+      for (const child of header.children) observer.observe(child, { box: 'border-box' });
+    }
+  }
+
+  private syncHeaderRows(header: HTMLElement): void {
+    const [brand, nav, actions] = header.children as HTMLCollectionOf<HTMLElement>;
+    if (!brand || !nav || !actions) return;
+    const horizontal = getComputedStyle(header).writingMode === 'horizontal-tb';
+    const row = (element: HTMLElement) => (horizontal ? element.offsetTop : element.offsetLeft);
+    const stacked = row(brand) !== row(nav) || row(brand) !== row(actions);
+    const actionWidth = getComputedStyle(actions).inlineSize;
+
+    // Read the flex lines before writing. Constraining the brand reserves room
+    // for the actions. Reordering keeps the same intrinsic fit and Tab order.
+    const widthToken = '--_ki-top-nav-actions-width';
+    if (
+      header.style.getPropertyValue(widthToken) === actionWidth &&
+      header.classList.contains('stacked') === stacked
+    )
+      return;
+    writeTask(() => {
+      if (header !== this.observedHeader) return;
+      header.style.setProperty(widthToken, actionWidth);
+      header.classList.toggle('stacked', stacked);
+    });
+  }
 
   private updateScrollRoot(): void {
     this.scrollRoot?.removeEventListener('scroll', this.syncScroll);

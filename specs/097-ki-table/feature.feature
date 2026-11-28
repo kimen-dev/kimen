@@ -68,6 +68,22 @@ Feature: Table
     Then the table has its original columns
     And Billing API no longer has the selection state added by the table
 
+  # S19
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a table
+    When an attribute (selectable, sticky-header, and loading) is <write> <moment>
+    Then the corresponding property reads <state>
+
+    Examples:
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
+
   # Family: keyboard path
   # S9
   Scenario: A keyboard user requests a sort
@@ -137,3 +153,10 @@ Feature: Table
     Given a compact selectable table on a device with a coarse pointer
     When the table appears
     Then its sort buttons and checkboxes have targets at least 44 by 44 pixels
+
+  # Family: theming
+  # S20
+  Scenario: A table themes the background of resting secondary values
+    Given a table with a custom resting background for metadata and numeric cells
+    When the page renders
+    Then the secondary values show their themed background

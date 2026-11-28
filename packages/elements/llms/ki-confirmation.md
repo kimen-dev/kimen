@@ -100,14 +100,16 @@ element if another request for the same tool replaces a pending one.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-confirmation`: the default, only the tokens ki-confirmation needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `action` (string, required): Tool identifier shown to the person and available for reporting by the host.
-- `approve-label` (string, required): Verb or short phrase that describes what approval does, such as "Send email".
+- `approve-label` (string, required): Approval text, such as "Send email". Required for pending HTML and all generated specs.
 - `approved-label` (string, default 'Approved'): Localized outcome text when the host marks the request approved.
 - `consequence` (string | undefined): Cost or irreversible effect to read before deciding, displayed as a warning note.
 - `denied-label` (string, default 'Denied'): Localized outcome text when the host marks the request denied.
-- `deny-label` (string, required): Verb or short phrase for refusal, such as "Keep draft".
+- `deny-label` (string, required): Refusal text, such as "Keep draft". Required for pending HTML and all generated specs.
 - `expired-label` (string, default 'Expired'): Localized outcome text when the host marks the request expired.
 - `heading` (string, required): Question naming the proposed action. Provide it before asking for a decision.
 - `remember` (boolean, default false): Offers an unchecked preference limited to this action in the current conversation.
@@ -140,26 +142,26 @@ element if another request for the same tool replaces a pending one.
 
 ## CSS custom properties
 
-- `--ki-confirmation-backdrop-filter`: Complete backdrop effect behind the confirmation.
-- `--ki-confirmation-bg`: Solid raised background of the confirmation prompt and summary.
-- `--ki-confirmation-bg-image`: Optional image painted over the solid confirmation background.
-- `--ki-confirmation-border`: Boundary of the confirmation surface.
-- `--ki-confirmation-border-width`: Stroke width of the confirmation boundary.
-- `--ki-confirmation-fg`: Text on the confirmation surface.
-- `--ki-confirmation-gap`: Block separation between confirmation rows.
-- `--ki-confirmation-heading-font-family`: Typeface of the pending question.
-- `--ki-confirmation-inline-gap`: Space between text and controls in a row.
-- `--ki-confirmation-padding`: Space between the prompt's edge and its content.
-- `--ki-confirmation-radius`: Corner radius of the confirmation surface.
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-surface-primary-med-em`: semantic color for surface primary med em.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-family-mono`: semantic font family for typography family mono.
-- `--ki-typography-line-height-para`: semantic dimension for typography line height para.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
-- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
+- `--ki-confirmation-backdrop-filter`: Complete backdrop effect behind the confirmation. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-confirmation-bg`: Solid raised background of the confirmation prompt and summary. Default: `var(--ki-surface-s1)`.
+- `--ki-confirmation-bg-image`: Optional image painted over the solid confirmation background. Default: `var(--ki-surface-image-none)`.
+- `--ki-confirmation-border`: Boundary of the confirmation surface. Default: `var(--ki-outline-med-em)`.
+- `--ki-confirmation-border-width`: Stroke width of the confirmation boundary. Default: `var(--ki-size-border-hairline)`.
+- `--ki-confirmation-fg`: Text on the confirmation surface. Default: `var(--ki-text-high-em)`.
+- `--ki-confirmation-gap`: Block separation between confirmation rows. Default: `var(--ki-space-xl)`.
+- `--ki-confirmation-heading-font-family`: Typeface of the pending question. Default: `var(--ki-typography-family-heading)`.
+- `--ki-confirmation-inline-gap`: Space between text and controls in a row. Default: `var(--ki-space-md)`.
+- `--ki-confirmation-padding`: Space between the prompt's edge and its content. Default: `var(--ki-space-3xl)`.
+- `--ki-confirmation-radius`: Corner radius of the confirmation surface. Default: `var(--ki-radius-big-component-xs)`.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip). Default: `var(--ki-scale-unit)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring. Default: `var(--ki-space-xxs)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-surface-primary-med-em`: semantic color for surface primary med em. Default: onmars `light-dark(#1d1a16,#edebe7)`, material3 `light-dark(#6750a4,#d0bcff)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-family-mono`: semantic font family for typography family mono. Default: `var(--ki-font-family-mono)`.
+- `--ki-typography-line-height-para`: semantic dimension for typography line height para. Default: `var(--ki-font-line-height-para)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.
+- `--ki-typography-size-body-2`: semantic dimension for typography size body 2. Default: `var(--ki-font-size-body-2)`.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology. Default: `var(--ki-size-border-hairline)`.

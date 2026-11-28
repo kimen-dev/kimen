@@ -34,6 +34,8 @@ one answer at a time.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-accordion`: the default, only the tokens ki-accordion needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `exclusive` (boolean, default false): Whether the accordion allows at most one direct member to be open.
@@ -56,8 +58,8 @@ None.
 
 ## CSS custom properties
 
-- `--ki-accordion-divider-width`: Width of the separator between accordion rows.
-- `--ki-details-border`: Color of the disclosure frame and accordion separators.
-- `--ki-details-border-width`: Width of the disclosure or accordion frame.
-- `--ki-details-radius`: Corners of a standalone disclosure or the accordion frame.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-accordion-divider-width`: Width of the separator between accordion rows. Default: `var(--ki-outline-hairline-width)`.
+- `--ki-details-border`: Color of the disclosure frame and accordion separators. Default: `var(--ki-outline-low-em)`.
+- `--ki-details-border-width`: Width of the disclosure or accordion frame. Default: `var(--ki-outline-hairline-width)`.
+- `--ki-details-radius`: Corners of a standalone disclosure or the accordion frame. Default: `var(--ki-corner-panel)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

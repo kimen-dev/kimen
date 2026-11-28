@@ -1,5 +1,7 @@
 # Public contract: `<ki-tabs>` + `<ki-tab>` + `<ki-tab-panel>`
 
+Boolean attributes follow the [2026-11-27 founder decision](../spec.md).
+
 The behavior contract is `specs/014-ki-tabs/feature.feature` (S1–S18).
 This document freezes the public API surface the scenarios observe — for
 ALL THREE elements of the composite (the sub-components belong to the
@@ -43,7 +45,7 @@ an undocumented member is a build failure).
 | Attribute | Type | Default | Contract |
 |---|---|---|---|
 | `value` | `string` | `""` (effective when unset) | The pairing identifier shared with the matching `ki-tab-panel` (FR-001). The first tab in document order bearing a value owns it; a later duplicate renders but is never selectable — skipped by pointer, arrows and fallback (FR-014). |
-| `disabled` | `boolean` | `false` | Not selectable by any modality (S2), skipped by arrow navigation and by the fallback (S12, S13), never the tab stop, exposed as unavailable to AT (FR-007). Boolean presence semantics; reflected (the group observes this attribute). |
+| `disabled` | `boolean` | `false` | Not selectable by any modality (S2), skipped by arrow navigation and by the fallback (S12, S13), never the tab stop, exposed as unavailable to AT (FR-007). Reflected (the group observes this attribute). |
 | `selected` | `boolean` | `false` | **OUTPUT-ONLY reflected managed state** (FR-003): written exclusively by the group's resolution so pages and CSS can observe the selected tab; any author-set `selected` is ignored and overwritten on first render. An agent or app that wants a pre-selected tab sets the GROUP's `value`. |
 
 ## Attributes / properties — `ki-tab-panel`

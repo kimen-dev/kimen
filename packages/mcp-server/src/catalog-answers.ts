@@ -8,7 +8,12 @@
 import { type CatalogEntry, catalogData } from '@kimen/catalog';
 import { catalogPrompt, uiSpecJsonSchema } from '@kimen/emitter';
 
-import { COMPONENT_THEMING, type ThemingHook } from './generated/manifest.js';
+import {
+  COMPONENT_THEMING,
+  TOKEN_HOOKS,
+  type ThemingHook,
+  type TokenHook,
+} from './generated/manifest.js';
 
 const components: Readonly<Record<string, CatalogEntry>> = catalogData.components;
 
@@ -31,7 +36,7 @@ export interface ComponentDescription extends ComponentSummary {
   readonly props: CatalogEntry['props'];
   readonly slots: CatalogEntry['slots'];
   readonly events: CatalogEntry['events'];
-  readonly tokens: readonly ThemingHook[];
+  readonly tokens: readonly TokenHook[];
   readonly parts: readonly ThemingHook[];
 }
 
@@ -77,17 +82,36 @@ export function describeComponent(tag: string): ComponentDescription | undefined
     props: entry.props,
     slots: entry.slots,
     tag,
-    tokens: theming?.tokens ?? [],
+    tokens: (theming?.tokens ?? []).map((index) => {
+      const token = TOKEN_HOOKS[index];
+      if (token === undefined) {
+        throw new Error(`kimen-mcp: ${tag} has no token at index ${String(index)}`);
+      }
+      return token;
+    }),
     whenNotToUse: entry.whenNotToUse,
     whenToUse: entry.whenToUse,
   };
 }
 
-function hookLines(title: string, hooks: readonly ThemingHook[]): string[] {
+function hookLines(title: string, hooks: readonly (ThemingHook | TokenHook)[]): string[] {
   if (hooks.length === 0) {
     return [];
   }
-  return ['', `## ${title}`, ...hooks.map((hook) => `- \`${hook.name}\` — ${hook.description}`)];
+  return [
+    '',
+    `## ${title}`,
+    ...hooks.map((hook) => {
+      const line = `- \`${hook.name}\` — ${hook.description}`;
+      if (!('default' in hook)) return line;
+      const base = `\`${hook.default}\``;
+      const defaults =
+        hook.material3Default === undefined
+          ? base
+          : `onmars ${base}, material3 \`${hook.material3Default}\``;
+      return `${line} Default: ${defaults}.`;
+    }),
+  ];
 }
 
 /** The emitter's authoring block for one component, then its theming hooks. */
@@ -101,6 +125,9 @@ export function descriptionText(description: ComponentDescription): string {
       description.tokens,
     ),
     ...hookLines('Parts (styling hooks for ::part())', description.parts),
+    ...(description.tokens.length === 0
+      ? []
+      : ['', `[Published component contract](https://kimen.dev/llms/${description.tag}.md)`]),
   ].join('\n');
 }
 

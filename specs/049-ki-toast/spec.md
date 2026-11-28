@@ -1,5 +1,7 @@
 # Feature Specification: ki-toast and ki-toaster
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`.
+
 <!-- KIMEN OVERRIDE of spec-template. Resolved with priority 1 by resolve_template().
      Constitutional basis: .specify/memory/constitution.md Art. II
      (Proportionate Behavior Contracts).
@@ -362,6 +364,12 @@ Feature: Toast
     When the user clicks "Help"
     Then the "Help" button is activated
 
+  # S46
+  Scenario: Removing a boolean override restores its default on state
+    Given a toast with dismissible set to "false"
+    When the application removes the attribute
+    Then the corresponding property reads true
+
   # Family: keyboard path
   # S22
   Scenario: Tab reaches the action and then the dismiss button, with visible focus
@@ -526,17 +534,24 @@ Feature: Toast
     Given a page declaring the touch density with a toast holding the action "Undo"
     When the toast appears
     Then the dismiss button and "Undo" each offer a target of at least 44 by 44 pixels
+
+  # S47
+  Scenario: The onmars toast and alert share neutral dismiss ink
+    Given an onmars page with a dismissible alert and toast in either color scheme
+    When the page changes only the toast's dismiss ink
+    Then before the change both dismiss glyphs use the same ink
+    And after the change only the toast's dismiss glyph uses the new ink
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20, S21 | |
+| Core behavior | S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S12, S13, S14, S15, S16, S17, S18, S19, S20, S21, S46 | |
 | Keyboard path | S22, S23, S24, S25, S26, S44, S45 | |
 | Assistive-tech outcome | S27, S28, S29, S30, S31, S32, S33, S34 | |
 | Form participation | N/A | Neither element is a form control: a toast reports an event and holds no value, and its action is the application's own button, which takes part in forms on its own terms. |
-| Theming | S35, S36, S37, S38, S39, S40, S41, S42, S43 | |
+| Theming | S35, S36, S37, S38, S39, S40, S41, S42, S43, S47 | |
 
 ## Requirements *(mandatory)*
 

@@ -8,7 +8,7 @@ The default slot is the visible label — the accessible name and a native activ
 </form>
 ```
 
-Boolean attributes use presence semantics — omit `checked` to express unchecked, never write `checked="false"`; without `value` a checked box submits `on`, and unchecked boxes contribute no form entry:
+Without `value` a checked box submits `on`. Unchecked boxes contribute no form entry.
 
 ```html
 <ki-checkbox name="newsletter" checked>Send me the weekly digest</ki-checkbox>

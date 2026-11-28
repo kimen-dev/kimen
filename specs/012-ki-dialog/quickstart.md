@@ -83,7 +83,7 @@ bash scripts/gates/check-traceability.sh specs/012-ki-dialog
 4. **Agent contract (US4)** — open `generated/docs.json`: every ki-dialog
    member carries when-to-use/when-NOT-to-use including the
    dialog-vs-alert/tooltip/full-flow boundaries, the "wire footer actions
-   to close()" and "omit close-on-backdrop instead of setting it false"
+   to close()" and "set close-on-backdrop to false to keep backdrop dismissal off"
    guidance. Render `<ki-dialog variant="fullscreen" open="maybe">`: the
    dialog renders closed with defaults, nothing breaks (S5 — automated).
 5. **Manual APG walkthrough (mandatory, spec Art. V surface)** — walk the

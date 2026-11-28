@@ -6,6 +6,7 @@
 // guardrail runs in a real engine in
 // browser-tests/subset-documents.browser.spec.ts; the bridge under a subset's
 // built-in catalog in ./subset-guardrail.spec.ts.
+import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -32,6 +33,11 @@ const CPU_BOUND_TIMEOUT_MS = 60_000;
 const catalogTags = Object.keys(catalogData.components);
 
 const PROFILES: readonly SurfaceProfile[] = [FORM_PROFILE, DATA_PROFILE];
+const budgetScript = join(process.cwd(), '../../scripts/lib/bundle-size-budget.mjs');
+const { mcpAppsData, mcpAppsForm } = JSON.parse(
+  execFileSync(process.execPath, [budgetScript], { encoding: 'utf8' }),
+) as Record<'mcpAppsData' | 'mcpAppsForm', Record<'raw' | 'gzip' | 'brotli', number>>;
+const profileBudgets = { data: mcpAppsData, form: mcpAppsForm };
 
 /** The body of a document's one inline `<script>` or `<style>`, as the browser hashes it. */
 const inlineElement = (document: string, tag: 'script' | 'style'): string => {
@@ -126,7 +132,7 @@ describe('a subset surface is a predeclared document of its own', () => {
   });
 
   it.each(PROFILES)('S1 keeps the «$name» document inside its own size budget', (profile) => {
-    const budget = SURFACE_PROFILES[profile.name as keyof typeof SURFACE_PROFILES].budget;
+    const budget = profileBudgets[profile.name as keyof typeof profileBudgets];
     const bytes = Buffer.from(profile.document, 'utf8');
 
     expect(bytes.length).toBeLessThanOrEqual(budget.raw);

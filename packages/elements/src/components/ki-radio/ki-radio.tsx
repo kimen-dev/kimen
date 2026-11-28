@@ -1,8 +1,4 @@
 import { Component, Element, h, Prop } from '@stencil/core';
-import {
-  booleanFromAttributePresence,
-  observeAttributePresence,
-} from '../../utils/boolean-presence';
 import { forwardHostClick } from '../../utils/host-click';
 
 /* eslint-disable jsx-a11y/label-has-associated-control -- The slotted option label is the accessible text for the native input inside the shadow label. */
@@ -47,25 +43,9 @@ export class KiRadio {
    */
   @Prop({ reflect: true, mutable: true }) disabled = false;
 
-  // Presence semantics: a present `disabled` attribute disables whatever its
-  // value. Deliberately NOT a @Watch: Stencil un-reflects a cleared property
-  // only at the next render, so a watch re-reading the attribute would undo
-  // `disabled = false` assigned by a framework wrapper.
-  protected normalizeDisabled(): void {
-    this.disabled = booleanFromAttributePresence(this.disabled, this.host.hasAttribute('disabled'));
-  }
-
-  private presenceObserver: MutationObserver | undefined;
   private releaseHostClick: (() => void) | undefined;
 
   connectedCallback(): void {
-    // `disabled="false"` written after hydration: Stencil parses it to `false`
-    // and would remove the attribute on reflect. The observer runs on attribute
-    // mutations alone and reports the attribute only while it is present.
-    this.presenceObserver?.disconnect();
-    this.presenceObserver = observeAttributePresence(this.host, ['disabled'], () => {
-      this.normalizeDisabled();
-    });
     // `radio.click()` selects the option, as on a native radio (S27 of
     // ki-radio-group, which owns the selection and its events).
     this.releaseHostClick?.();
@@ -74,13 +54,7 @@ export class KiRadio {
     );
   }
 
-  componentWillLoad(): void {
-    this.normalizeDisabled();
-  }
-
   disconnectedCallback(): void {
-    this.presenceObserver?.disconnect();
-    this.presenceObserver = undefined;
     this.releaseHostClick?.();
     this.releaseHostClick = undefined;
   }

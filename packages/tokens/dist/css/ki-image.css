@@ -1,6 +1,5 @@
 :where(:root),
 :where([data-ki-theme]) {
-  --ki-contrast-more-image-fallback-fg:var(--ki-text-supporting);
   --ki-image-radius:var(--ki-radius-component-lg);
   --ki-image-radius-md:var(--ki-radius-component-md);
   --ki-image-fallback-bg:var(--ki-surface-s2);
@@ -14,6 +13,7 @@
   --ki-image-caption-font-family:var(--ki-typography-family-body);
   --ki-image-caption-font-size:var(--ki-typography-size-caption-2);
   --ki-image-caption-line-height:var(--ki-typography-line-height-caption-2);
+  --ki-contrast-more-image-fallback-fg:var(--ki-text-supporting);
 }
 
 @media (prefers-contrast: more) {

@@ -46,6 +46,11 @@
         "$type": "color",
         "$description": "Syntax ink for keywords."
       },
+      "keyword-weight": {
+        "$value": "{ki.foundation.keyword.inherit}",
+        "$type": "other",
+        "$description": "Weight of syntax keywords. Defaults to the source weight."
+      },
       "string": {
         "$value": "{ki.text.success-high-em}",
         "$type": "color",

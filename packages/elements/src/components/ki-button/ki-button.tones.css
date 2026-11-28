@@ -1,0 +1,92 @@
+/* Active and disabled palettes for success and danger. The text and icon
+   buttons expose these tones. The copy button only uses neutral. */
+
+:host([variant="primary"][tone="success"]) {
+  --_ki-button-active-bg: var(--ki-button-primary-success-active-bg);
+  --_ki-button-active-fg: var(--ki-button-primary-success-active-fg);
+  --_ki-button-active-border: var(--ki-button-primary-success-active-border);
+  --_ki-button-disabled-bg: var(--ki-button-primary-success-disabled-bg);
+  --_ki-button-disabled-fg: var(--ki-button-primary-success-disabled-fg);
+  --_ki-button-disabled-border: var(--ki-button-primary-success-disabled-border);
+}
+
+:host([variant="primary"][tone="danger"]) {
+  --_ki-button-active-bg: var(--ki-button-primary-danger-active-bg);
+  --_ki-button-active-fg: var(--ki-button-primary-danger-active-fg);
+  --_ki-button-active-border: var(--ki-button-primary-danger-active-border);
+  --_ki-button-disabled-bg: var(--ki-button-primary-danger-disabled-bg);
+  --_ki-button-disabled-fg: var(--ki-button-primary-danger-disabled-fg);
+  --_ki-button-disabled-border: var(--ki-button-primary-danger-disabled-border);
+}
+
+:host([variant="secondary"][tone="success"]) {
+  --_ki-button-active-bg: var(--ki-button-secondary-success-active-bg);
+  --_ki-button-active-fg: var(--ki-button-secondary-success-active-fg);
+  --_ki-button-active-border: var(--ki-button-secondary-success-active-border);
+  --_ki-button-disabled-bg: var(--ki-button-secondary-success-disabled-bg);
+  --_ki-button-disabled-fg: var(--ki-button-secondary-success-disabled-fg);
+  --_ki-button-disabled-border: var(--ki-button-secondary-success-disabled-border);
+}
+
+:host([variant="secondary"][tone="danger"]) {
+  --_ki-button-active-bg: var(--ki-button-secondary-danger-active-bg);
+  --_ki-button-active-fg: var(--ki-button-secondary-danger-active-fg);
+  --_ki-button-active-border: var(--ki-button-secondary-danger-active-border);
+  --_ki-button-disabled-bg: var(--ki-button-secondary-danger-disabled-bg);
+  --_ki-button-disabled-fg: var(--ki-button-secondary-danger-disabled-fg);
+  --_ki-button-disabled-border: var(--ki-button-secondary-danger-disabled-border);
+}
+
+:host([variant="tertiary"][tone="success"]) {
+  --_ki-button-active-bg: var(--ki-button-tertiary-success-active-bg);
+  --_ki-button-active-fg: var(--ki-button-tertiary-success-active-fg);
+  --_ki-button-active-border: var(--ki-button-tertiary-success-active-border);
+  --_ki-button-disabled-bg: var(--ki-button-tertiary-success-disabled-bg);
+  --_ki-button-disabled-fg: var(--ki-button-tertiary-success-disabled-fg);
+  --_ki-button-disabled-border: var(--ki-button-tertiary-success-disabled-border);
+}
+
+:host([variant="tertiary"][tone="danger"]) {
+  --_ki-button-active-bg: var(--ki-button-tertiary-danger-active-bg);
+  --_ki-button-active-fg: var(--ki-button-tertiary-danger-active-fg);
+  --_ki-button-active-border: var(--ki-button-tertiary-danger-active-border);
+  --_ki-button-disabled-bg: var(--ki-button-tertiary-danger-disabled-bg);
+  --_ki-button-disabled-fg: var(--ki-button-tertiary-danger-disabled-fg);
+  --_ki-button-disabled-border: var(--ki-button-tertiary-danger-disabled-border);
+}
+
+:host([variant="quaternary"][tone="success"]) {
+  --_ki-button-active-bg: var(--ki-button-quaternary-success-active-bg);
+  --_ki-button-active-fg: var(--ki-button-quaternary-success-active-fg);
+  --_ki-button-active-border: var(--ki-button-quaternary-success-active-border);
+  --_ki-button-disabled-bg: var(--ki-button-quaternary-success-disabled-bg);
+  --_ki-button-disabled-fg: var(--ki-button-quaternary-success-disabled-fg);
+  --_ki-button-disabled-border: var(--ki-button-quaternary-success-disabled-border);
+}
+
+:host([variant="quaternary"][tone="danger"]) {
+  --_ki-button-active-bg: var(--ki-button-quaternary-danger-active-bg);
+  --_ki-button-active-fg: var(--ki-button-quaternary-danger-active-fg);
+  --_ki-button-active-border: var(--ki-button-quaternary-danger-active-border);
+  --_ki-button-disabled-bg: var(--ki-button-quaternary-danger-disabled-bg);
+  --_ki-button-disabled-fg: var(--ki-button-quaternary-danger-disabled-fg);
+  --_ki-button-disabled-border: var(--ki-button-quaternary-danger-disabled-border);
+}
+
+:host([variant="ghost"][tone="success"]) {
+  --_ki-button-active-bg: var(--ki-button-ghost-success-active-bg);
+  --_ki-button-active-fg: var(--ki-button-ghost-success-active-fg);
+  --_ki-button-active-border: var(--ki-button-ghost-success-active-border);
+  --_ki-button-disabled-bg: var(--ki-button-ghost-success-disabled-bg);
+  --_ki-button-disabled-fg: var(--ki-button-ghost-success-disabled-fg);
+  --_ki-button-disabled-border: var(--ki-button-ghost-success-disabled-border);
+}
+
+:host([variant="ghost"][tone="danger"]) {
+  --_ki-button-active-bg: var(--ki-button-ghost-danger-active-bg);
+  --_ki-button-active-fg: var(--ki-button-ghost-danger-active-fg);
+  --_ki-button-active-border: var(--ki-button-ghost-danger-active-border);
+  --_ki-button-disabled-bg: var(--ki-button-ghost-danger-disabled-bg);
+  --_ki-button-disabled-fg: var(--ki-button-ghost-danger-disabled-fg);
+  --_ki-button-disabled-border: var(--ki-button-ghost-danger-disabled-border);
+}

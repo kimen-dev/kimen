@@ -32,6 +32,8 @@ spacing and symbols. A percent takes a ratio.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-format-number`: the default, only the tokens ki-format-number needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `currency` (string | undefined): ISO 4217 currency code, such as EUR. Selects currency output when format-style is omitted.
@@ -60,4 +62,4 @@ None.
 
 ## CSS custom properties
 
-- `--ki-format-number-font-family`: Default body font family for ki-format-number on a bare page.
+- `--ki-format-number-font-family`: Default body font family for ki-format-number on a bare page. Default: `var(--ki-typography-family-body)`.

@@ -62,13 +62,13 @@ describe('compact catalog guidance', () => {
     expect(compact).toContain('Include {row} for the row header or key.');
   });
 
-  it('S3 produces the same standard prompt captured before compact mode', () => {
+  it('S3 preserves the standard prompt with the current catalog guidance', () => {
     const standard = prompt({ components: ['ki-card', 'ki-button'] });
-    // The catalog includes the elements version in the header. Normalize
-    // its version only so a package release cannot invalidate the fixture.
-    const before = standard.replace(/; elements [^\n]+\.\n/u, '; elements 0.4.0.\n');
-    expect(createHash('sha256').update(before).digest('hex')).toBe(
-      '85b3d722631d085482eba40499c7ddc86e314f9f163d85263b14183182f7b60f',
+    // Normalize the elements version. Refresh the fixture for intentional
+    // catalog guidance changes, such as the button slot sizing descriptions.
+    const normalized = standard.replace(/; elements [^\n]+\.\n/u, '; elements 0.4.0.\n');
+    expect(createHash('sha256').update(normalized).digest('hex')).toBe(
+      '21576c2e6722dc8daa944f2e89278d2fdb96b8e8f316321dae1ea8c0fe05efe5',
     );
   });
 });

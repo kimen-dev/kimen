@@ -31,6 +31,12 @@ Use `toggle` for a persistent action. `selected` sets the starting state and eac
 </script>
 ```
 
+Enabled outline actions use `--ki-button-outline-hover-bg`,
+`--ki-button-outline-hover-fg` and `--ki-button-outline-hover-border` on hover.
+Unselected filled and quiet toggles use `--ki-button-toggle-unselected-hover-overlay`.
+A selected toggle keeps its fill on hover. Use `--ki-button-outline-selected-border`
+to set the selected outline edge.
+
 Programmatic writes to `selected` are silent. A parent coordinating several toggles can listen for their bubbling `ki-change` events and update their `selected` values together.
 
 Open a dialog with `command="show-modal"` and its ID in `commandfor`. The
@@ -58,6 +64,10 @@ saveButton.textContent = 'Save';
 document.body.append(saveButton);
 ```
 
+The leading and trailing slots use `--ki-button-{size}-icon-size` for their
+box and for a directly slotted `ki-icon` glyph. The button token takes
+precedence over an explicit `size` on that icon.
+
 While the action a button started is in progress, set `loading` on it instead of `disabled`: it keeps its width and focus, ignores further activation (it neither submits nor resets its form), draws a spinner in place of its label and announces `loading-label` (default "Loading") as a polite status message. Clear it when the action ends:
 
 ```html
@@ -79,17 +89,16 @@ While the action a button started is in progress, set `loading` on it instead of
 </script>
 ```
 
-A wide button that reads like a card, such as a two-line choice, start-aligns its content and its lines through two tokens (both `center` by default):
+A button or link fits its content by default. Set `--ki-button-inline-size`
+to `100%` to fill the containing block. The alignment tokens start-align the
+content and label lines of this two-line choice.
 
 ```html
 <style>
   .choice {
+    --ki-button-inline-size: 100%;
     --ki-button-justify-content: start;
     --ki-button-text-align: start;
-    display: block;
-  }
-  .choice::part(button) {
-    inline-size: 100%;
   }
 </style>
 <ki-button class="choice" variant="outline" toggle>

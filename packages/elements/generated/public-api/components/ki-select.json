@@ -12,7 +12,7 @@
       "disabled": {
         "default": "false",
         "deprecatedSince": null,
-        "description": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission. Boolean presence semantics apply.",
+        "description": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission.",
         "replacement": null,
         "required": false,
         "type": "boolean"
@@ -463,6 +463,14 @@
         "default": null,
         "deprecatedSince": null,
         "description": "dimension used by the select component for height.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-select-hover-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Trigger fill on hover, beneath the hover wash.",
         "replacement": null,
         "required": false,
         "type": null
@@ -1142,7 +1150,7 @@
       "disabled": {
         "default": "false",
         "deprecatedSince": null,
-        "description": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission. Boolean presence semantics apply.",
+        "description": "Prevents opening, removes the trigger from keyboard reach, and excludes\nthe select from form submission.",
         "replacement": null,
         "required": false,
         "type": "boolean"

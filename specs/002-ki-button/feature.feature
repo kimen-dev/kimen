@@ -178,3 +178,72 @@ Feature: Button
     And the button content and text alignment tokens set to "start"
     When the page renders
     Then both label lines start at the button's inline-start padding
+
+  # Family: core behavior (appended)
+  # S27
+  Scenario: An outline action responds to hover
+    Given an enabled outline action rendered as a button or link
+    When the pointer rests over the action
+    Then the outline action changes its surface
+
+  # S28
+  Scenario: Every unselected toggle button responds to hover
+    Given an unselected toggle button in any variant
+    When the pointer rests over the toggle
+    Then the toggle changes its surface
+
+  # S29
+  Scenario: A selected toggle button keeps its surface on hover
+    Given a selected toggle button in any variant
+    When the pointer rests over the toggle
+    Then the toggle keeps its selection surface
+
+  # Family: theming (appended)
+  # S30
+  Scenario: Tokens recolor the hovered outline action
+    Given an outline action with reassigned hover background, foreground and border tokens
+    When the pointer rests over the action
+    Then the surface, text and outline use the reassigned colors
+
+  # S31
+  Scenario: A token recolors the selected outline border
+    Given a selected outline toggle button with a reassigned selected border token
+    When the page renders
+    Then the selected outline uses the reassigned color
+
+  # S32
+  Scenario: A token recolors the unselected toggle hover wash
+    Given an unselected filled or quiet toggle button with a reassigned hover overlay token
+    When the pointer rests over the toggle
+    Then the toggle shows the reassigned wash
+
+  # S33
+  Scenario: The button icon-size token sizes the glyph
+    Given a button of any size with ki-icon elements in both icon slots
+    When the page renders
+    Then both glyphs match the default icon-size token
+
+  # S34
+  Scenario: The button icon-size token alone resizes the glyph
+    Given a button with a reassigned icon-size token and an explicit ki-icon size in both slots
+    When the page renders
+    Then both glyphs match the reassigned button icon-size token
+
+  # S35
+  Scenario: An inline-size token fills the grid cell in both action modes
+    Given a toggle choice and a button link in separate grid cells with the inline-size token set to "100%"
+    When the page renders
+    Then each button host and control fill its cell
+
+  # Family: theming
+  # S36
+  Scenario: The pressed palette follows variant and tone tokens
+    Given a button with custom active fill, ink, border and shadow tokens
+    When the user holds the button down
+    Then the button shows its themed pressed palette
+
+  # S37
+  Scenario: A disabled button uses its own tone palette
+    Given a disabled button with a custom tone-specific disabled palette
+    When the page renders
+    Then the button shows the disabled fill, ink and border for its tone

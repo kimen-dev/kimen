@@ -1,14 +1,4 @@
-import {
-  AttrDeserialize,
-  Component,
-  Element,
-  Event,
-  type EventEmitter,
-  h,
-  Prop,
-  State,
-  Watch,
-} from '@stencil/core';
+import { Component, Event, type EventEmitter, h, Prop, State, Watch } from '@stencil/core';
 
 import '../../../icons/chevron-down.js';
 import '../../../icons/wrench.js';
@@ -52,8 +42,6 @@ function visibleStatus(status: KiToolCallStatus): KiToolCallStatus {
  */
 @Component({ tag: 'ki-tool-call', styleUrl: 'ki-tool-call.css', shadow: true })
 export class KiToolCall {
-  @Element() private readonly host!: HTMLElement;
-
   /** Tool identifier, such as search_docs, displayed in monospace. */
   @Prop() name!: string;
 
@@ -119,19 +107,6 @@ export class KiToolCall {
 
   @State() private populatedSlots = new Set<string>();
   private details: HTMLDetailsElement | undefined;
-
-  componentWillLoad(): void {
-    // The external custom-elements runtime reads removal of a Boolean attribute
-    // as false. Restore the automatic state when an explicit attribute is removed.
-    new MutationObserver(() => {
-      if (this.open === false && !this.host.hasAttribute('open')) this.open = undefined;
-    }).observe(this.host, { attributeFilter: ['open'] });
-  }
-
-  @AttrDeserialize('open')
-  protected deserializeOpen(value: string | null): boolean | undefined {
-    return value === null ? undefined : value !== 'false';
-  }
 
   @Watch('open')
   protected syncExpansion(): void {

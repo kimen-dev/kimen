@@ -75,6 +75,8 @@ default slot. The host imports the glyph before rendering the surface.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-feature-icon`: the default, only the tokens ki-feature-icon needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `shape` ("circle" | "square", default 'square'): Rounded square or circle. Unknown values use square.
@@ -99,31 +101,31 @@ None.
 
 ## CSS custom properties
 
-- `--ki-feature-icon-backdrop-filter`: Complete filter applied behind the feature icon tile.
-- `--ki-feature-icon-bg`: Background color of a neutral feature icon tile.
-- `--ki-feature-icon-bg-image`: Optional background image painted over the feature icon tile color.
-- `--ki-feature-icon-circle-radius`: Corner radius of a circular feature icon tile.
-- `--ki-feature-icon-danger-bg`: Background color of a danger feature icon tile.
-- `--ki-feature-icon-danger-fg`: Glyph color of a danger feature icon tile.
-- `--ki-feature-icon-fg`: Glyph color of a neutral feature icon tile.
-- `--ki-feature-icon-info-bg`: Background color of an info feature icon tile.
-- `--ki-feature-icon-info-fg`: Glyph color of an info feature icon tile.
-- `--ki-feature-icon-lg-radius`: Corner radius of a large square feature icon tile.
-- `--ki-feature-icon-lg-size`: Edge length of a large feature icon tile.
-- `--ki-feature-icon-primary-bg`: Background color of a primary feature icon tile.
-- `--ki-feature-icon-primary-fg`: Glyph color of a primary feature icon tile.
-- `--ki-feature-icon-primary-light-bg`: Background color of a primary-light feature icon tile.
-- `--ki-feature-icon-primary-light-fg`: Glyph color of a primary-light feature icon tile.
-- `--ki-feature-icon-radius`: Default corner radius of a square feature icon tile.
-- `--ki-feature-icon-size`: Default edge length of a feature icon tile.
-- `--ki-feature-icon-sm-radius`: Corner radius of a small square feature icon tile.
-- `--ki-feature-icon-sm-size`: Edge length of a small feature icon tile.
-- `--ki-feature-icon-success-bg`: Background color of a success feature icon tile.
-- `--ki-feature-icon-success-fg`: Glyph color of a success feature icon tile.
-- `--ki-feature-icon-warning-bg`: Background color of a warning feature icon tile.
-- `--ki-feature-icon-warning-fg`: Glyph color of a warning feature icon tile.
-- `--ki-feature-icon-xl-radius`: Corner radius of an extra-large square feature icon tile.
-- `--ki-feature-icon-xl-size`: Edge length of an extra-large feature icon tile.
-- `--ki-feature-icon-xs-radius`: Corner radius of an extra-small square feature icon tile.
-- `--ki-feature-icon-xs-size`: Edge length of an extra-small feature icon tile.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-feature-icon-backdrop-filter`: Complete filter applied behind the feature icon tile. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-feature-icon-bg`: Background color of a neutral feature icon tile. Default: `var(--ki-surface-s2)`.
+- `--ki-feature-icon-bg-image`: Optional background image painted over the feature icon tile color. Default: `var(--ki-surface-image-none)`.
+- `--ki-feature-icon-circle-radius`: Corner radius of a circular feature icon tile. Default: `var(--ki-corner-feature-tile-circle)`.
+- `--ki-feature-icon-danger-bg`: Background color of a danger feature icon tile. Default: `var(--ki-surface-danger-tint)`.
+- `--ki-feature-icon-danger-fg`: Glyph color of a danger feature icon tile. Default: `var(--ki-text-danger-high-em)`.
+- `--ki-feature-icon-fg`: Glyph color of a neutral feature icon tile. Default: `var(--ki-text-high-em)`.
+- `--ki-feature-icon-info-bg`: Background color of an info feature icon tile. Default: `var(--ki-surface-info-tint)`.
+- `--ki-feature-icon-info-fg`: Glyph color of an info feature icon tile. Default: `var(--ki-text-info-high-em)`.
+- `--ki-feature-icon-lg-radius`: Corner radius of a large square feature icon tile. Default: `var(--ki-corner-feature-tile-lg)`.
+- `--ki-feature-icon-lg-size`: Edge length of a large feature icon tile. Default: `var(--ki-size-feature-tile-lg)`.
+- `--ki-feature-icon-primary-bg`: Background color of a primary feature icon tile. Default: `var(--ki-surface-primary-med-em)`.
+- `--ki-feature-icon-primary-fg`: Glyph color of a primary feature icon tile. Default: `var(--ki-text-primary-on-primary)`.
+- `--ki-feature-icon-primary-light-bg`: Background color of a primary-light feature icon tile. Default: `var(--ki-surface-primary-low-em)`.
+- `--ki-feature-icon-primary-light-fg`: Glyph color of a primary-light feature icon tile. Default: `var(--ki-text-primary-on-primary-light)`.
+- `--ki-feature-icon-radius`: Default corner radius of a square feature icon tile. Default: `var(--ki-corner-feature-tile-md)`.
+- `--ki-feature-icon-size`: Default edge length of a feature icon tile. Default: `var(--ki-size-feature-tile-md)`.
+- `--ki-feature-icon-sm-radius`: Corner radius of a small square feature icon tile. Default: `var(--ki-corner-feature-tile-sm)`.
+- `--ki-feature-icon-sm-size`: Edge length of a small feature icon tile. Default: `var(--ki-size-feature-tile-sm)`.
+- `--ki-feature-icon-success-bg`: Background color of a success feature icon tile. Default: `var(--ki-surface-success-tint)`.
+- `--ki-feature-icon-success-fg`: Glyph color of a success feature icon tile. Default: `var(--ki-text-success-high-em)`.
+- `--ki-feature-icon-warning-bg`: Background color of a warning feature icon tile. Default: `var(--ki-surface-warning-tint)`.
+- `--ki-feature-icon-warning-fg`: Glyph color of a warning feature icon tile. Default: `var(--ki-text-warning-high-em)`.
+- `--ki-feature-icon-xl-radius`: Corner radius of an extra-large square feature icon tile. Default: `var(--ki-corner-feature-tile-xl)`.
+- `--ki-feature-icon-xl-size`: Edge length of an extra-large feature icon tile. Default: `var(--ki-size-feature-tile-xl)`.
+- `--ki-feature-icon-xs-radius`: Corner radius of an extra-small square feature icon tile. Default: `var(--ki-corner-feature-tile-xs)`.
+- `--ki-feature-icon-xs-size`: Edge length of an extra-small feature icon tile. Default: `var(--ki-size-feature-tile-xs)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

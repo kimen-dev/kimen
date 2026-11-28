@@ -75,6 +75,10 @@ button {
   pointer-events: none;
 }
 
+.icon ::slotted(ki-icon) {
+  --_ki-icon-size: var(--ki-segment-icon-size);
+}
+
 /* A label wraps onto a second line rather than truncating, and only text
  * that needs a third line ends in an ellipsis. Every option of the row
  * stretches to the tallest one. */

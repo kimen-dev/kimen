@@ -1,3 +1,5 @@
+import '../../../icons/arrow-right.js';
+
 import { h } from '@stencil/core';
 import type { Meta, StoryObj } from '@stencil/storybook-plugin';
 import type { KiLink } from './ki-link';
@@ -47,4 +49,21 @@ export const Standalone: Story = {
       {h('ki-link', { href: '#changelog', variant: 'neutral', underline: 'hover' }, 'Changelog')}
     </nav>
   ),
+};
+
+export const TrailingIcon: Story = {
+  render: (args) =>
+    h(
+      'ki-link',
+      {
+        ...args,
+        style: {
+          '--ki-link-font-weight': 'var(--ki-typography-weight-body-semibold)',
+          '--ki-link-neutral-hover-fg': 'var(--ki-text-primary-high-em)',
+        },
+      },
+      'Catalog contract',
+      h('ki-icon', { slot: 'end', name: 'arrow-right' }),
+    ),
+  args: { variant: 'neutral', underline: 'hover' },
 };

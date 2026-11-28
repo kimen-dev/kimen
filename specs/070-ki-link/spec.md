@@ -105,14 +105,32 @@ Feature: ki-link provides native navigation in Kimen interfaces
     When the surface evaluates the link
     Then the existing URL policy determines whether the destination is allowed
     And the link declares no component actions
+
+  # S11
+  Scenario: A link places a custom icon after its text
+    Given an external link with a trailing icon
+    When the reader views the link
+    Then the custom icon follows the text at the theme's icon size and gap
+    And the external indicator follows the custom icon
+
+  # S12
+  Scenario Outline: A theme sets link weight and hover ink
+    Given a <variant> link in a theme with custom link weight and <variant> hover ink
+    When a hover-capable pointer rests on the link
+    Then the link uses the custom weight and <variant> hover ink
+
+    Examples:
+      | variant |
+      | primary |
+      | neutral |
 ```
 
 ## Scenario Family Coverage
 
 | Family | Scenarios | N/A justification |
 | --- | --- | --- |
-| Core behavior | S1, S2, S5, S10 | |
+| Core behavior | S1, S2, S5, S10, S11 | |
 | Keyboard path | S3 | |
 | Assistive-tech outcome | S4, S5 | |
 | Form participation | | Links navigate. They contribute no form value or validity state. |
-| Theming | S6, S7, S8, S9 | |
+| Theming | S6, S7, S8, S9, S12 | |

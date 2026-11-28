@@ -139,6 +139,14 @@
         "required": false,
         "type": null
       },
+      "--ki-toast-dismiss-fg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Foreground of the toast dismiss glyph.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-toast-fg": {
         "default": null,
         "deprecatedSince": null,

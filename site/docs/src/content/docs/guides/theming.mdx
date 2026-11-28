@@ -36,6 +36,14 @@ covers each layer in depth):
   every semantic pair is contrast-checked against the theme's palette, and a
   palette step an application changes is checked by nobody.
 
+### Dimension values
+
+Give dimensions a unit, even zero (`0px`), and use keywords such as `auto`
+where the token allows them. Components use tokens in `calc()`, and
+`calc(8px - 0)` is invalid, so the browser silently drops the declaration
+(`--ki-button-label-padding-inline: 0` drops the label-to-icon gap).
+Catch this with `npx @kimen/tokens check-theme theme.css`.
+
 ## Themes
 
 **Onmars** is the default theme — it is the token core and the tag sheets
@@ -256,6 +264,24 @@ query, as earlier versions of this guide advised, now loses to the mode:
 move those values to the mode tokens. A theme on `:root` sets them on
 `:root`.
 
+## Check your theme
+
+Run the checker against the CSS that declares your overrides.
+
+```sh
+npx @kimen/tokens check-theme theme.css
+```
+
+If the package is installed, you can also run `kimen-tokens check-theme theme.css`.
+
+It reports unknown or private tokens, definite value mistakes such as a
+bare `0` where CSS math needs `0px`, and overrides that should use a
+preference-mode token. It warns about component-layer overrides when no
+Kimen component reads the token and no shipped token aliases it. Semantic,
+palette and primitive tokens are available for application CSS without unread
+warnings. Add `--json` for machine-readable findings, or pass the stylesheet
+text to the MCP tool `check_theme`.
+
 ## Density
 
 Any element can make its region compact — a data table, a toolbar, a dense
@@ -347,3 +373,99 @@ if a consumer would ever need `!important`, that is an API bug to report:
    component.
 2. **`::part()`** — style exposed parts for one-off structural tweaks.
 3. **Slots** — replace content entirely.
+
+## Recipes
+
+Load the core and the stylesheet for each tag you use, then register the
+elements. Check your installed component contracts for the recipe APIs.
+
+### Choice cards
+
+Set `--ki-button-inline-size` to fill each grid cell and use the button's
+justify-content and text-align tokens to align both lines to the start.
+The outline selected and hover tokens give pressed cards an accent and
+unpressed cards a distinct hover surface.
+
+<Demo
+  layout="block"
+  code={`<style>
+  .choice-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--ki-layout-spacing-sm);
+  }
+  .choice-cards ki-button {
+    --ki-button-inline-size: 100%;
+    --ki-button-justify-content: flex-start;
+    --ki-button-text-align: start;
+    --ki-button-outline-selected-bg: var(--ki-surface-primary-tint);
+    --ki-button-outline-selected-fg: var(--ki-text-high-em);
+    --ki-button-outline-selected-border: var(--ki-outline-primary-high-em);
+    --ki-button-outline-hover-bg: var(--ki-surface-s1);
+    --ki-button-outline-hover-border: var(--ki-outline-control-hover);
+  }
+</style>
+<div class="choice-cards" role="group" aria-label="Report sections">
+  <ki-button variant="outline" toggle selected>
+    <strong>Summary</strong><br /><small>Key findings</small>
+  </ki-button>
+  <ki-button variant="outline" toggle>
+    <strong>Activity</strong><br /><small>Recent changes</small>
+  </ki-button>
+</div>`}
+/>
+
+### End-aligned header links
+
+Set `--ki-top-nav-links-justify` to `flex-end` and use
+`--ki-top-nav-links-gap` for space between links. With `collapse-at="none"`,
+links stay visible on a phone and move to a full-width row below the brand
+and actions when space runs out.
+
+<Demo
+  layout="block"
+  code={`<ki-top-nav collapse-at="none" style="
+  --ki-top-nav-links-justify: flex-end;
+  --ki-top-nav-links-gap: var(--ki-layout-spacing-sm);
+">
+  <a slot="brand" href="#end-aligned-header-links">Field Notes</a>
+  <a href="#choice-cards">Research notes</a>
+  <a href="#settings-row">Editorial settings</a>
+  <a href="#headerless-gherkin">Writing guide</a>
+</ki-top-nav>`}
+/>
+
+### Settings row
+
+Let the switch span the field so the label and control sit at the start and
+the `end` slot sits at the far edge. Set `--ki-switch-label-font-size` and
+`--ki-switch-label-line-height` to size the label independently of the value.
+
+<Demo
+  layout="block"
+  code={`<ki-switch name="digest" checked style="
+  display: block;
+  --ki-switch-label-font-size: var(--ki-typography-size-body-1);
+  --ki-switch-label-line-height: var(--ki-typography-line-height-body-1);
+">
+  Digest emails
+  <span slot="end">Weekly</span>
+</ki-switch>`}
+/>
+
+### Headerless Gherkin
+
+Use `header-hidden` to omit the caption and `copyable="false"` for a
+source-only block. Set `--ki-code-keyword-weight` to emphasize the Gherkin
+keywords.
+
+<Demo
+  layout="block"
+  code={`<ki-code-block language="gherkin" header-hidden copyable="false" style="
+  --ki-code-keyword-weight: var(--ki-typography-weight-body-semibold);
+">Feature: Email digest
+  Scenario: Turn on digest emails
+    Given digest emails are off
+    When I turn them on
+    Then I receive a weekly digest</ki-code-block>`}
+/>

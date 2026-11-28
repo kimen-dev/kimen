@@ -561,3 +561,220 @@ it('S22: exposes no disclosure, the named landmark and the current page with col
   }
   await expectAccessible(fixture);
 });
+
+const integratorContent = `
+  <a slot="brand" href="#home" style="font-size: 15px">
+    <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+      <circle cx="14" cy="14" r="12" fill="currentColor" />
+    </svg>
+    <span>Gate-Driven Development</span>
+  </a>
+  <a href="#docs" aria-current="page">Documentación</a>
+  <a href="#manifesto">Manifiesto</a>
+  <a href="#english">English</a>
+  ${notifications}`;
+
+function integratorHeader(collapseAt = 'none', width = '100vw'): HTMLElement {
+  return mountHeader(
+    `collapse-at="${collapseAt}" style="inline-size: ${width}; --ki-top-nav-padding-inline: 0px"`,
+    integratorContent,
+  );
+}
+
+const integratorLinks = () =>
+  page.getByRole('link', { name: /^(Documentación|Manifiesto|English)$/ });
+
+async function expectLinksBelowActions(host: HTMLElement): Promise<void> {
+  await expect
+    .poll(
+      () =>
+        part(host, 'navigation').getBoundingClientRect().top -
+        part(host, 'actions').getBoundingClientRect().bottom,
+    )
+    .toBeGreaterThanOrEqual(0);
+}
+
+it('S23: at 375px keeps the SVG brand and icon action above a full-width links row', async () => {
+  await page.viewport(375, 700);
+  const host = integratorHeader();
+  await expect.element(integratorLinks()).toHaveLength(3);
+  await expect.element(page.getByRole('button', { name: 'Notifications, 3 unread' })).toBeVisible();
+  await expectLinksBelowActions(host);
+
+  const bar = part(host, 'bar').getBoundingClientRect();
+  const brandBox = part(host, 'brand').getBoundingClientRect();
+  const actionBox = part(host, 'actions').getBoundingClientRect();
+  const nav = page.getByRole('navigation', { name: 'Main' });
+  const navBox = nav.element().getBoundingClientRect();
+  expect(bar.width).toBe(375);
+  expect(navBox.top).toBeGreaterThanOrEqual(brandBox.bottom);
+  expect(actionBox.top).toBeLessThan(brandBox.bottom);
+  expect(actionBox.bottom).toBeGreaterThan(brandBox.top);
+  expect(navBox.left).toBe(bar.left);
+  expect(navBox.right).toBe(bar.right);
+
+  const destinations = integratorLinks().elements();
+  await expect
+    .element(page.getByRole('link', { name: 'Documentación' }))
+    .toHaveAttribute('aria-current', 'page');
+  expect(destinations.every((link) => link.assignedSlot?.closest('nav') === nav.element())).toBe(
+    true,
+  );
+  required(host.querySelector<HTMLAnchorElement>('[slot="brand"]')).focus();
+  for (const link of destinations) {
+    await userEvent.tab();
+    expect(document.activeElement).toBe(link);
+  }
+  await userEvent.tab();
+  expect(document.activeElement).toBe(host.querySelector('[slot="actions"]'));
+  await expectAccessible(fixture);
+});
+
+it.each([375, 260, 110])(
+  'S24: at %dpx all link text stays inside the bar and away from the action',
+  async (width) => {
+    const host = integratorHeader('none', `${String(width)}px`);
+    await expect.element(integratorLinks()).toHaveLength(3);
+    await expect
+      .element(page.getByRole('button', { name: 'Notifications, 3 unread' }))
+      .toBeVisible();
+    await expectLinksBelowActions(host);
+
+    const bar = part(host, 'bar').getBoundingClientRect();
+    const action = part(host, 'actions').getBoundingClientRect();
+    const brandBox = part(host, 'brand').getBoundingClientRect();
+    expect(action.right).toBe(bar.right);
+    expect(action.top).toBeLessThan(brandBox.bottom);
+    expect(bar.height).toBeGreaterThan(action.height);
+    const range = document.createRange();
+    for (const link of integratorLinks().elements()) {
+      const box = link.getBoundingClientRect();
+      expect(box.top).toBeGreaterThanOrEqual(action.bottom);
+      expect(box.bottom).toBeLessThanOrEqual(bar.bottom);
+      range.selectNodeContents(link);
+      for (const rect of range.getClientRects()) {
+        expect(rect.left).toBeGreaterThanOrEqual(Math.max(bar.left, box.left));
+        expect(rect.right).toBeLessThanOrEqual(Math.min(bar.right, box.right));
+      }
+    }
+    expect(host.scrollWidth).toBe(host.clientWidth);
+  },
+);
+
+function inlineGeometry(host: HTMLElement) {
+  const bar = part(host, 'bar').getBoundingClientRect();
+  return [...host.children].map((child) => {
+    const { x, y, width, height } = child.getBoundingClientRect();
+    return [x - bar.x, y - bar.y, width, height];
+  });
+}
+
+it('S25: when everything fits the brand, links and action match the wide breakpoint header', async () => {
+  const host = integratorHeader('1px', '48rem');
+  await expect.element(integratorLinks()).toHaveLength(3);
+  await expect.element(page.getByRole('button', { name: 'Notifications, 3 unread' })).toBeVisible();
+  const singleRow = inlineGeometry(host);
+
+  host.setAttribute('collapse-at', 'none');
+  await expect.poll(() => inlineGeometry(host)).toEqual(singleRow);
+
+  host.style.inlineSize = '375px';
+  await expectLinksBelowActions(host);
+
+  host.style.inlineSize = '48rem';
+  await expect.poll(() => inlineGeometry(host)).toEqual(singleRow);
+});
+
+it.each(['1px', 'none'])(
+  'S26: links-gap alone sets the visible space between inline links with collapse-at %s',
+  async (collapseAt) => {
+    await media.emulateReducedMotion('reduce');
+    try {
+      const host = integratorHeader(collapseAt, '48rem');
+      await expect.element(integratorLinks()).toHaveLength(3);
+      const gap = () => {
+        const [first, second] = integratorLinks().elements();
+        return (
+          required(second).getBoundingClientRect().left -
+          required(first).getBoundingClientRect().right
+        );
+      };
+      expect(gap()).toBe(0);
+      host.style.setProperty('--ki-top-nav-links-gap', '16px');
+      await expect.poll(gap).toBe(16);
+    } finally {
+      await media.emulateReducedMotion(null);
+    }
+  },
+);
+
+it('S26: increasing only the links gap can move the links to their own row', async () => {
+  await media.emulateReducedMotion('reduce');
+  try {
+    const host = integratorHeader('none', '48rem');
+    await expect.element(integratorLinks()).toHaveLength(3);
+    const singleRow = inlineGeometry(host);
+
+    host.style.setProperty('--ki-top-nav-links-gap', '12rem');
+    await expectLinksBelowActions(host);
+
+    host.style.removeProperty('--ki-top-nav-links-gap');
+    await expect.poll(() => inlineGeometry(host)).toEqual(singleRow);
+  } finally {
+    await media.emulateReducedMotion(null);
+  }
+});
+
+it.each([
+  ['1px', '48rem'],
+  ['none', '48rem'],
+  ['none', '375px'],
+])(
+  'S27: links-justify alone moves inline links to the trailing edge with collapse-at %s at %s',
+  async (collapseAt, width) => {
+    await media.emulateReducedMotion('reduce');
+    try {
+      const host = integratorHeader(collapseAt, width);
+      const last = page.getByRole('link', { name: 'English' });
+      await expect.element(last).toBeVisible();
+      await expect
+        .element(page.getByRole('button', { name: 'Notifications, 3 unread' }))
+        .toBeVisible();
+      if (width === '375px') await expectLinksBelowActions(host);
+      const trailingSpace = () =>
+        part(host, 'navigation').getBoundingClientRect().right -
+        last.element().getBoundingClientRect().right;
+      expect(trailingSpace()).toBeGreaterThan(0);
+
+      host.style.setProperty('--ki-top-nav-links-justify', 'flex-end');
+      await expect.poll(trailingSpace).toBe(0);
+      const nav = part(host, 'navigation').getBoundingClientRect();
+      const action = part(host, 'actions').getBoundingClientRect();
+      if (width === '375px') {
+        expect(nav.right).toBe(action.right);
+        expect(nav.top).toBeGreaterThanOrEqual(action.bottom);
+      } else {
+        expect(nav.right).toBeLessThan(action.left);
+        expect(nav.bottom).toBeGreaterThan(action.top);
+      }
+    } finally {
+      await media.emulateReducedMotion(null);
+    }
+  },
+);
+
+it('S28 the app bar paints its subtitle background before and after scrolling', async () => {
+  const { scroller, bar } = mountScrollBar('scroll-behavior="collapse" size="lg"');
+  await expect.element(heading()).toBeVisible();
+  try {
+    await media.emulateReducedMotion('reduce');
+    bar.style.setProperty('--ki-app-bar-subtitle-bg', 'rgb(210, 235, 250)');
+    bar.style.setProperty('--ki-app-bar-scrolled-subtitle-bg', 'rgb(220, 240, 230)');
+    const subtitle = part(bar, 'subtitle');
+    expect(getComputedStyle(subtitle).backgroundColor).toBe('rgb(210, 235, 250)');
+    scroller.scrollTop = 120;
+    await expect.poll(() => getComputedStyle(subtitle).backgroundColor).toBe('rgb(220, 240, 230)');
+  } finally {
+    await media.emulateReducedMotion(null);
+  }
+});

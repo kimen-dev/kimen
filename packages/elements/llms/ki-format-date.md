@@ -34,6 +34,8 @@ the value is a timestamp. Set `lang` on the surrounding document or section.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-format-date`: the default, only the tokens ki-format-date needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `date` (string | undefined): ISO calendar date (YYYY-MM-DD) or ISO date-time. A timestamp without an offset uses local time.
@@ -60,4 +62,4 @@ None.
 
 ## CSS custom properties
 
-- `--ki-format-date-font-family`: Default body font family for ki-format-date on a bare page.
+- `--ki-format-date-font-family`: Default body font family for ki-format-date on a bare page. Default: `var(--ki-typography-family-body)`.

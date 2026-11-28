@@ -1,5 +1,7 @@
 # Searchable single and multiple choice
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule for both builds. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`. The same parsing applies to markup and later writes.
+
 **Branch** `feat/375-ki-combobox`  
 **Issue** #375  
 **Design source** Kimen design system, Components → Proposed → Combobox
@@ -23,7 +25,7 @@ People can narrow a list by typing, choose an available option, and optionally e
 
 | Family | Scenarios |
 | --- | --- |
-| Core behavior | S1–S4, S18 |
+| Core behavior | S1–S4, S18, S19 |
 | Keyboard path | S5–S7 |
 | Assistive-tech outcome | S8–S9 |
 | Form participation | S10–S12 |
@@ -157,4 +159,20 @@ Feature: Searchable single and multiple choice
     When the adapter translates it
     Then the output exposes each option in a searchable field
     And multiple selection preserves all supplied values when requested
+
+  # S19
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a combobox
+    When an attribute (disabled and required) is <write> <moment>
+    Then the corresponding property reads <state>
+
+    Examples:
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
 ```

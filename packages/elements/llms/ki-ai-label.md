@@ -65,6 +65,8 @@ description. Keep the original in application state and restore it on
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-ai-label`: the default, only the tokens ki-ai-label needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `explanation` (string | undefined): Plain-text explanation of how the content was generated. Supply a nonblank explanation to offer disclosure. Omit it for a static mark.
@@ -103,37 +105,37 @@ None.
 
 ## CSS custom properties
 
-- `--ki-ai-label-backdrop-filter`: Complete filter behind the AI provenance mark. Defaults to none.
-- `--ki-ai-label-bg`: Fill of the AI provenance mark.
-- `--ki-ai-label-bg-image`: Optional image over the AI provenance fill. Defaults to none.
-- `--ki-ai-label-border-width`: Border width of the panel and the forced-colors mark.
-- `--ki-ai-label-fg`: Text and icon ink of the AI provenance mark.
-- `--ki-ai-label-gap`: Gap between the mark and its icon or between provenance metadata items.
-- `--ki-ai-label-md-height`: Minimum painted block size of the medium AI mark.
-- `--ki-ai-label-md-icon-size`: Sparkles icon size in the medium AI mark.
-- `--ki-ai-label-md-padding-inline`: Inline inset of the medium AI mark.
-- `--ki-ai-label-popover-backdrop-filter`: Complete filter behind the provenance explanation. Defaults to none.
-- `--ki-ai-label-popover-bg`: Raised fill of the provenance explanation.
-- `--ki-ai-label-popover-bg-image`: Optional image over the provenance explanation fill. Defaults to none.
-- `--ki-ai-label-popover-border`: Hairline color of the explanation panel.
-- `--ki-ai-label-popover-fg`: Ink of the provenance explanation and metadata.
-- `--ki-ai-label-popover-gap`: Gap between the panel sections and between the panel and trigger.
-- `--ki-ai-label-popover-padding`: Inset of the explanation panel.
-- `--ki-ai-label-popover-radius`: Corner radius of the explanation panel.
-- `--ki-ai-label-popover-shadow`: Elevation of the explanation panel.
-- `--ki-ai-label-popover-width`: Preferred inline size of the explanation panel.
-- `--ki-ai-label-radius`: Corner radius of the AI provenance mark.
-- `--ki-ai-label-sm-height`: Minimum painted block size of the small AI mark.
-- `--ki-ai-label-sm-icon-size`: Sparkles icon size in the small AI mark.
-- `--ki-ai-label-sm-padding-inline`: Inline inset of the small AI mark.
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2.
-- `--ki-typography-line-height-para`: semantic dimension for typography line height para.
-- `--ki-typography-size-body-1`: semantic dimension for typography size body 1.
-- `--ki-typography-size-body-2`: semantic dimension for typography size body 2.
-- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2.
-- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold.
+- `--ki-ai-label-backdrop-filter`: Complete filter behind the AI provenance mark. Defaults to none. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-ai-label-bg`: Fill of the AI provenance mark. Default: `var(--ki-surface-primary-low-em)`.
+- `--ki-ai-label-bg-image`: Optional image over the AI provenance fill. Defaults to none. Default: `var(--ki-surface-image-none)`.
+- `--ki-ai-label-border-width`: Border width of the panel and the forced-colors mark. Default: `var(--ki-outline-hairline-width)`.
+- `--ki-ai-label-fg`: Text and icon ink of the AI provenance mark. Default: `var(--ki-text-primary-on-primary-light)`.
+- `--ki-ai-label-gap`: Gap between the mark and its icon or between provenance metadata items. Default: `var(--ki-layout-spacing-xs)`.
+- `--ki-ai-label-md-height`: Minimum painted block size of the medium AI mark. Default: `var(--ki-layout-spacing-7xl)`.
+- `--ki-ai-label-md-icon-size`: Sparkles icon size in the medium AI mark. Default: `var(--ki-glyph-size-sm)`.
+- `--ki-ai-label-md-padding-inline`: Inline inset of the medium AI mark. Default: `var(--ki-layout-spacing-md)`.
+- `--ki-ai-label-popover-backdrop-filter`: Complete filter behind the provenance explanation. Defaults to none. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-ai-label-popover-bg`: Raised fill of the provenance explanation. Default: `var(--ki-surface-s1)`.
+- `--ki-ai-label-popover-bg-image`: Optional image over the provenance explanation fill. Defaults to none. Default: `var(--ki-surface-image-none)`.
+- `--ki-ai-label-popover-border`: Hairline color of the explanation panel. Default: `var(--ki-outline-low-em)`.
+- `--ki-ai-label-popover-fg`: Ink of the provenance explanation and metadata. Default: `var(--ki-text-high-em)`.
+- `--ki-ai-label-popover-gap`: Gap between the panel sections and between the panel and trigger. Default: `var(--ki-layout-spacing-md)`.
+- `--ki-ai-label-popover-padding`: Inset of the explanation panel. Default: `var(--ki-layout-spacing-xl)`.
+- `--ki-ai-label-popover-radius`: Corner radius of the explanation panel. Default: `var(--ki-corner-anchored-panel)`.
+- `--ki-ai-label-popover-shadow`: Elevation of the explanation panel. Default: `var(--ki-elevation-e3)`.
+- `--ki-ai-label-popover-width`: Preferred inline size of the explanation panel. Default: `var(--ki-surface-size-compact)`.
+- `--ki-ai-label-radius`: Corner radius of the AI provenance mark. Default: `var(--ki-corner-compact-mark)`.
+- `--ki-ai-label-sm-height`: Minimum painted block size of the small AI mark. Default: `var(--ki-layout-spacing-5xl)`.
+- `--ki-ai-label-sm-icon-size`: Sparkles icon size in the small AI mark. Default: `var(--ki-layout-spacing-xl)`.
+- `--ki-ai-label-sm-padding-inline`: Inline inset of the small AI mark. Default: `var(--ki-layout-spacing-sm)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-offset`: Gap between a focusable component and its keyboard focus ring. Default: `var(--ki-space-xxs)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-line-height-caption-2`: semantic dimension for typography line height caption 2. Default: `var(--ki-font-line-height-caption-2)`.
+- `--ki-typography-line-height-para`: semantic dimension for typography line height para. Default: `var(--ki-font-line-height-para)`.
+- `--ki-typography-size-body-1`: semantic dimension for typography size body 1. Default: `var(--ki-font-size-body-1)`.
+- `--ki-typography-size-body-2`: semantic dimension for typography size body 2. Default: `var(--ki-font-size-body-2)`.
+- `--ki-typography-size-caption-2`: semantic dimension for typography size caption 2. Default: `var(--ki-font-size-caption-2)`.
+- `--ki-typography-weight-body-semibold`: semantic font weight for typography weight body semibold. Default: `var(--ki-font-weight-body-semibold)`.

@@ -33,15 +33,18 @@ Link and action destinations belong to the consuming app.
   ordinary links and subtitles. Its standard value is medium emphasis and
   the contrast-more mode strengthens it. Draw the current indicator as a
   logical border so forced colors can preserve the mark.
-- Agent's choice, pending founder confirmation (0.1.3 integrator feedback,
-  item 5). `collapse-at="none"` never collapses: the header shows no
-  navigation button, and its links wrap onto further lines between the brand
-  and the actions, which keep their places, so visual order stays DOM order.
-  The bar grows from its token height to hold the lines. With a length,
-  the row stays one fixed-height line above the breakpoint and clips what
-  does not fit: wrapping there would change the height of every existing
-  header, which sticky layouts rely on. An app bar with `none` never
-  centers its title, since it has no collapse point.
+- Founder decision (2026-11-27, 0.6.0 feedback F2). With `collapse-at="none"`,
+  the brand, links and actions share a row when they fit. If they run out of
+  room, the brand and actions keep the first row, the links wrap across the
+  full width below, and the bar grows to hold them. The DOM and Tab order
+  both stay brand, links, actions. In the stacked layout, Tab reaches the
+  visually earlier actions after the links.
+- Flexbox detects the fit from the intrinsic widths of the three groups,
+  including the themed column gap. The existing ResizeObserver reads the
+  resulting flex lines and queues the visual reorder. The action width caps
+  the brand so they can share the first row on very narrow bars. With a CSS
+  length, the header stays a fixed-height row above the collapse point. An
+  app bar with `none` has no compact title alignment.
 
 - Agent's choice, pending founder confirmation. Record the measured MCP
   Apps and MCP server byte increases in the component budget metadata.
@@ -58,11 +61,11 @@ Link and action destinations belong to the consuming app.
 
 | Family                 | Scenario IDs                            | N/A justification                                                        |
 | ---------------------- | --------------------------------------- | ------------------------------------------------------------------------ |
-| Core behavior          | S1, S2, S3, S4, S5, S6, S7, S20         |                                                                          |
+| Core behavior          | S1, S2, S3, S4, S5, S6, S7, S20, S23–S25 |                                                                         |
 | Keyboard path          | S8, S9, S10, S11, S21                   |                                                                          |
 | Assistive-tech outcome | S12, S13, S14, S22                      |                                                                          |
 | Form participation     | N/A                                     | TopNav owns no value. Slotted controls participate on their own terms.    |
-| Theming                | S15, S16, S17, S18, S19                 |                                                                          |
+| Theming                | S15, S16, S17, S18, S19, S26, S27, S28       |                                                                          |
 
 ## Gherkin contract
 
@@ -219,4 +222,45 @@ Feature: TopNav
     Given a narrow header on a page with a coarse pointer
     When the header appears
     Then the navigation trigger has a target of at least 44 by 44 pixels
+
+  # Family: core behavior
+  # S23
+  Scenario: A phone-width header keeps its brand and actions above a full-width links row
+    Given a 375 px header set never to collapse with the Gate-Driven Development brand, three primary links and a global action
+    When the links cannot fit beside the brand
+    Then the brand and action share the first row
+    And the links occupy the full width below them
+
+  # S24
+  Scenario: Primary links stay readable as the header gets narrower
+    Given a header set never to collapse with Documentación, Manifiesto and English as links
+    When the header narrows
+    Then each link stays fully visible and clear of the global action
+    And the bar grows to hold the links without horizontal scrolling
+
+  # S25
+  Scenario: A header that never collapses keeps the existing layout when everything fits
+    Given wide headers with the same brand, primary links and global action
+    When one header uses a collapse point and the other never collapses
+    Then the brand, links and action have matching positions and dimensions
+
+  # Family: theming
+  # S26
+  Scenario: A theme can space the inline primary links apart
+    Given a header showing its primary links outside the menu
+    When the theme sets --ki-top-nav-links-gap
+    Then the visible space between adjacent links follows that token
+
+  # S27
+  Scenario: A theme can align the primary links to the trailing edge
+    Given a header showing its primary links outside the menu
+    When the theme sets --ki-top-nav-links-justify to flex-end
+    Then the inline links end next to the actions
+    And links on their own row align to that row's trailing edge
+
+  # S28
+  Scenario: An app bar themes its subtitle background as it scrolls
+    Given an app bar with custom rest and scrolled subtitle backgrounds
+    When the user scrolls its content
+    Then the subtitle switches to its scrolled background
 ```

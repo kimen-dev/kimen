@@ -1,6 +1,8 @@
 /* Tokens only (Art. VI): every visual value resolves from --ki-tooltip-*.
  * Logical properties only (Art. IV): direction-agnostic by construction. */
 :host {
+  --_ki-tooltip-show-delay: var(--ki-tooltip-show-delay);
+  --_ki-tooltip-hide-delay: var(--ki-tooltip-hide-delay);
   --_ki-tooltip-radius: var(--ki-tooltip-radius);
   --_ki-tooltip-padding-inline: calc(
     var(--ki-tooltip-padding-inline) *

@@ -61,6 +61,8 @@ message comes from the event's default slot.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-timeline`: the default, only the tokens ki-timeline needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `label` (string | undefined): Accessible name of the ordered list.
@@ -86,10 +88,10 @@ None.
 
 ## CSS custom properties
 
-- `--ki-timeline-dot-size`: Diameter of the timeline marker.
-- `--ki-timeline-gap`: Space between marker and text and between timeline entries.
-- `--ki-timeline-item-fg`: Text color of the event summary and details.
-- `--ki-timeline-line`: Color of the decorative line connecting timeline markers.
-- `--ki-timeline-line-width`: Hairline width of the timeline connector.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
+- `--ki-timeline-dot-size`: Diameter of the timeline marker. Default: `var(--ki-layout-spacing-9xl)`.
+- `--ki-timeline-gap`: Space between marker and text and between timeline entries. Default: `var(--ki-layout-spacing-xl)`.
+- `--ki-timeline-item-fg`: Text color of the event summary and details. Default: `var(--ki-text-high-em)`.
+- `--ki-timeline-line`: Color of the decorative line connecting timeline markers. Default: `var(--ki-outline-low-em)`.
+- `--ki-timeline-line-width`: Hairline width of the timeline connector. Default: `var(--ki-control-border-width)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology. Default: `var(--ki-size-border-hairline)`.

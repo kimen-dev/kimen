@@ -4,7 +4,7 @@
       "collapse-at": {
         "default": "'48rem'",
         "deprecatedSince": null,
-        "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` never collapses: links that do not fit wrap onto more lines.",
+        "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` keeps links visible. If they do not fit beside the brand and actions,\nthey wrap across the full width below them.",
         "replacement": null,
         "required": false,
         "type": "string"
@@ -171,10 +171,26 @@
         "required": false,
         "type": null
       },
+      "--ki-app-bar-scrolled-subtitle-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Scrolled surface behind the app-bar subtitle.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-app-bar-scrolled-subtitle-fg": {
         "default": null,
         "deprecatedSince": null,
         "description": "App-bar subtitle ink when its container scrolls.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-app-bar-subtitle-bg": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Resting surface behind the app-bar subtitle.",
         "replacement": null,
         "required": false,
         "type": null
@@ -451,6 +467,22 @@
         "required": false,
         "type": null
       },
+      "--ki-top-nav-links-gap": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Column gap between inline primary links.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
+      "--ki-top-nav-links-justify": {
+        "default": null,
+        "deprecatedSince": null,
+        "description": "Inline link alignment. Use flex-end for trailing links.",
+        "replacement": null,
+        "required": false,
+        "type": null
+      },
       "--ki-top-nav-menu-radius": {
         "default": null,
         "deprecatedSince": null,
@@ -653,7 +685,7 @@
       "collapseAt": {
         "default": "'48rem'",
         "deprecatedSince": null,
-        "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` never collapses: links that do not fit wrap onto more lines.",
+        "description": "CSS length below which navigation collapses and single-row app bars can center their title.\n`none` keeps links visible. If they do not fit beside the brand and actions,\nthey wrap across the full width below them.",
         "replacement": null,
         "required": false,
         "type": "string"

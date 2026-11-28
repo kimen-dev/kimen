@@ -1,0 +1,48 @@
+{
+  "baselineSha256": "b5cf9427802783f74a2b3467a3f02bb3207a7064be984e086fa2dcbccbfb71c7",
+  "baselineVersions": {
+    "@kimen/elements": "0.0.0",
+    "@kimen/tokens": "0.0.0"
+  },
+  "deltas": {
+    "/packages/@kimen~1elements/components/ki-code-block/attributes/header-hidden": "72e991fb9ce95ec58ee84d4f158993029b9f44e6ec4b740f4e96a2c24c169f95",
+    "/packages/@kimen~1elements/components/ki-code-block/attributes/language": "ac376f96334470f1cd9a408b4c2ef8d64f5934b72ab982d2d38f91b739194301",
+    "/packages/@kimen~1elements/components/ki-code-block/cssProperties/--ki-code-keyword-weight": "93bf674f4c8e4ec5df4306449106eefd27fb4f9d4da84701402c0c5caddb8dba",
+    "/packages/@kimen~1elements/components/ki-code-block/properties/headerHidden": "72e991fb9ce95ec58ee84d4f158993029b9f44e6ec4b740f4e96a2c24c169f95",
+    "/packages/@kimen~1elements/components/ki-code-block/properties/language": "ac376f96334470f1cd9a408b4c2ef8d64f5934b72ab982d2d38f91b739194301",
+    "/packages/@kimen~1elements/modules/.~1components/symbols/Components": "5910c498877c514a88bc04be0029b1cf808fc16c0715f458eec8e8438c9f0258",
+    "/packages/@kimen~1elements/modules/.~1components/symbols/JSX": "f058f6fac06f8497ac0ade4f2fa5828105e4f8b3c89fea761e061dd08e768ec4",
+    "/packages/@kimen~1elements/modules/.~1loader/symbols/Components": "d09eaaad340de5a968ddce5b8e61da33b460cf9d0fe9e33781844797ff082248",
+    "/packages/@kimen~1elements/modules/.~1loader/symbols/JSX": "ec10436f1ccac65b6fa1d05d66c2c472ace236c9d771705965dd6a8e1ccf8a1d",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/compact~1dark/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/compact~1light/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/contrast-more~1dark/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/contrast-more~1light/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/dark/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/light/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/reduced-transparency~1dark/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/reduced-transparency~1light/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/touch~1dark/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css/contexts/touch~1light/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1ki-*/sheets/ki-code-block": "d5b43d9dddae69114b631bf6a89e52726c9a4d6c42fb5973326fb290502a5265",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1ki-*/sheets/ki-markdown": "22d9c3f036d120683c3e6ec4803de35193b5c5f0483878c54f90b676b27f8d63",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/compact~1dark/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/compact~1light/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/contrast-more~1dark/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/contrast-more~1light/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/dark/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/light/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/reduced-transparency~1dark/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/reduced-transparency~1light/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/touch~1dark/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/stylesheets/.~1css~1material3/contexts/touch~1light/--ki-code-keyword-weight": "5f12d4678f21abadfd06cbbace954b27ac0330b7dea81faea91c699c8c7e7553",
+    "/packages/@kimen~1tokens/tokens/--ki-code-keyword-weight": "6cf8acc41159363b6d330190a8dbb2ed8c0e03336d8f2ccdc1940728b233729a"
+  },
+  "packages": [
+    "@kimen/elements",
+    "@kimen/tokens"
+  ],
+  "reason": "Add a hidden header and keyword weight. The new prop changes the loader Components and JSX types.",
+  "release": "major",
+  "schemaVersion": 2
+}

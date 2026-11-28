@@ -1,5 +1,7 @@
 # Feature Specification: Search
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`.
+
 **Issue** #378 · **Branch** `feat/378-ki-search`
 
 Search composes a pill-shaped query field with a view for suggestions, recent
@@ -32,7 +34,7 @@ the visual anatomy. The issue defines the responsive and accessibility contract.
 
 | Family | Scenario IDs | N/A rationale |
 | --- | --- | --- |
-| Core behavior | S1, S2, S3, S4, S5 | |
+| Core behavior | S1, S2, S3, S4, S5, S22 | |
 | Keyboard path | S6, S7, S8, S9, S10, S11 | |
 | Assistive-tech outcome | S12, S13, S14 | |
 | Form participation | S15, S16 | |
@@ -182,4 +184,10 @@ Feature: Search
     Given a coarse pointer and a search view with a removable recent search
     When the recent-search group appears
     Then the remove control offers a target of at least 44 by 44 pixels
+
+  # S22
+  Scenario: Removing a boolean override restores its default on state
+    Given a search field with highlight set to "false"
+    When the application removes the attribute
+    Then the corresponding property reads true
 ```

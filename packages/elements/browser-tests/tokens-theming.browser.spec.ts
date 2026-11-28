@@ -1,4 +1,5 @@
 // @spec:001-tokens-theming
+// @spec:064-theme-fonts
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import onmarsCss from '@kimen/tokens/css?raw';
@@ -11,6 +12,15 @@ import { expectAccessible } from './axe';
 
 const STYLE_ID = 'kimen-tokens-test-style';
 const MATERIAL3_STYLE_ID = 'kimen-material3-tokens-test-style';
+
+// These declarations defer to context. Chromium reports an empty custom
+// property when its root declaration is the CSS-wide keyword inherit.
+const inheritedDefaults = [
+  '--ki-code-keyword-weight',
+  '--ki-link-font-weight',
+  '--ki-link-hover-fg',
+  '--ki-link-neutral-hover-fg',
+] as const;
 
 function injectStylesheet(_css: string, _id = STYLE_ID): void {
   const style = document.createElement('style');
@@ -72,8 +82,9 @@ function extractTokenNames(css: string): string[] {
   return [...new Set([...css.matchAll(/--ki-[\w-]+(?=\s*:)/gu)].map((match) => match[0]))].sort();
 }
 
-/** Every published name must resolve: declared, and with no dangling reference. */
-function expectEveryTokenResolved(names: readonly string[], absent: readonly string[] = []): void {
+/** Required tokens resolve, and optional defaults remain declared. */
+function expectEveryTokenResolved(names: readonly string[], absent: readonly string[]): void {
+  expect(names).toEqual(expect.arrayContaining([...absent]));
   for (const name of names) {
     const value = readToken(name);
     if (absent.includes(name)) {
@@ -128,15 +139,37 @@ describe('S1 onmars light default tokens', () => {
     expectTokenColor('--ki-surface-s0', '#ffffff');
   });
 
-  it('S1 resolves all required tokens and leaves the optional arrow colors unset', () => {
+  it('S1 resolves all required tokens and leaves optional defaults unset', () => {
     injectStylesheet(onmarsCss);
 
     // In Calma the tooltip arrow takes the bubble color through #343's fallback.
     expectEveryTokenResolved(extractTokenNames(onmarsCss), [
+      ...inheritedDefaults,
       '--ki-surface-image-tooltip-arrow-start',
       '--ki-surface-image-tooltip-arrow-end',
     ]);
   });
+});
+
+it.each([
+  ['onmars', '500', '500'],
+  ['material3', '400', '700'],
+])('S4 resolves the normal and bold display weights in %s', (theme, normal, bold) => {
+  injectStylesheet(onmarsCss);
+  injectStylesheet(material3Css, MATERIAL3_STYLE_ID);
+  const sample = document.createElement('span');
+  sample.dataset.kiTheme = theme;
+  sample.style.fontFamily = 'var(--ki-typography-family-display)';
+  sample.textContent = 'Display text';
+  document.body.append(sample);
+  try {
+    sample.style.fontWeight = 'var(--ki-typography-weight-display-normal)';
+    expect(getComputedStyle(sample).fontWeight).toBe(normal);
+    sample.style.fontWeight = 'var(--ki-typography-weight-display-bold)';
+    expect(getComputedStyle(sample).fontWeight).toBe(bold);
+  } finally {
+    sample.remove();
+  }
 });
 
 describe('S3 onmars forced dark scheme', () => {
@@ -157,14 +190,14 @@ describe('material3 theme and fallback', () => {
     expectTokenColor('--ki-color-brand-500', '#6750a4');
   });
 
-  it('S6 resolves every token name of the onmars contract under material3', () => {
+  it('S6 resolves all required onmars tokens and keeps inherited defaults under material3', () => {
     injectStylesheet(onmarsCss);
     injectStylesheet(material3Css, MATERIAL3_STYLE_ID);
     document.documentElement.setAttribute('data-ki-theme', 'material3');
     const contract = extractTokenNames(onmarsCss);
 
     expect(contract.length).toBeGreaterThan(0);
-    expectEveryTokenResolved(contract);
+    expectEveryTokenResolved(contract, inheritedDefaults);
   });
 
   it('S6 reassigns no token name outside the onmars contract', () => {

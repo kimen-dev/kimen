@@ -1,5 +1,7 @@
 # Phase 1 Data Model: ki-radio-group
 
+Boolean attributes follow the [2026-11-27 founder decision](spec.md).
+
 No persistent data. The model is the composite's public state surface and
 its token vocabulary. The normative API contract lives in
 [contracts/radio-group-contract.md](./contracts/radio-group-contract.md);
@@ -12,15 +14,15 @@ this file models values, defaults and transitions for BOTH elements.
 | `name` | string | — | yes (host-level, FACE) | omitted → the group contributes no form entry |
 | `value` | string | `""` (projection of "no selection") | **no** — the attribute is the initial declaration; the live property is a projection of the selection (FR-002; research D4) | a value matching no option leaves every option unselected and the group operable (S4, FR-008); with duplicates, programmatic assignment selects the FIRST match |
 | `label` | string | — | yes | a11y-required: names the radiogroup (S10, FR-009); rendered as visible text (`part="label"`) |
-| `required` | boolean | `false` | yes | presence semantics (normalized at load, 006 D2 helper pattern); no selection → `valueMissing`, blocked submission (S13, S22) |
-| `disabled` | boolean | `false` | yes | presence semantics; every option inert and unfocusable, group exposed unavailable, no form entry (S19, S20) |
+| `required` | boolean | `false` | yes | no selection → `valueMissing`, blocked submission (S13, S22) |
+| `disabled` | boolean | `false` | yes | every option inert and unfocusable, group exposed unavailable, no form entry (S19, S20) |
 
 ## Attribute model — `ki-radio`
 
 | Attribute | Values | Default | Reflected | Invalid/absent behavior |
 |---|---|---|---|---|
 | `value` | string | `"on"` (effective — the prop may be unset; native-radio parity) | yes | the submission value the group projects when this option is selected (S1, S12) |
-| `disabled` | boolean | `false` | **yes — the group's MutationObserver watches this attribute** (research D3) | presence semantics; not selectable, not focusable, exposed unavailable, skipped by arrows (S3, S7, S11) |
+| `disabled` | boolean | `false` | **yes — the group's MutationObserver watches this attribute** (research D3) | not selectable, not focusable, exposed unavailable, skipped by arrows (S3, S7, S11) |
 
 `ki-radio` has NO selected/checked member of any kind — selection is owned
 by the group and never authored on an option (FR-002). Its selected

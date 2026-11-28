@@ -42,6 +42,8 @@ available free space.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-stack`: the default, only the tokens ki-stack needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `align` ("baseline" | "center" | "end" | "start" | "stretch", default 'stretch'): Cross-axis alignment, stretch by default.
@@ -68,6 +70,6 @@ None.
 
 ## CSS custom properties
 
-- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap.
-- `--ki-stack-gap`: Default gap of a stack.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-layout-spacing-md`: The md spacing step for a stack or grid gap. Default: `var(--ki-space-md)`.
+- `--ki-stack-gap`: Default gap of a stack. Default: `var(--ki-layout-spacing-md)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

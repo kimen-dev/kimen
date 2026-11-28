@@ -1,6 +1,5 @@
 import '../../../icons/x.js';
 import { Component, Element, Event, h, Listen, Method, Prop, State, Watch } from '@stencil/core';
-import { booleanFromAttributePresence } from '../../utils/boolean-presence';
 import {
   connectDialogInvokers,
   type DialogCommandEvent,
@@ -85,7 +84,7 @@ export class KiDialog {
 
   /**
    * Opts into backdrop light-dismiss. Omit this attribute for critical
-   * confirmations; `close-on-backdrop="false"` still enables it.
+   * confirmations.
    * When to use: low-risk dialogs where an outside click may safely dismiss.
    * When NOT to use: destructive confirmations or decisions that should not be
    * lost to a stray click; omit the attribute entirely rather than setting it
@@ -145,18 +144,12 @@ export class KiDialog {
   private body: HTMLDivElement | undefined;
   private bodyObserver?: ResizeObserver;
   private backdropArmed = false;
-  private openObserver?: MutationObserver;
   private pendingReason: KiDialogCloseReason = 'method';
   private commandInvoker: HTMLElement | undefined;
   private disconnectInvokers: (() => void) | undefined;
 
   @Watch('open')
   protected handleOpenChange(): void {
-    // A replacement with "false" closes an open dialog. Remove that value
-    // before the presence observer can reopen the dialog ahead of reflection.
-    if (!this.open && this.host.getAttribute('open') === 'false') {
-      this.host.removeAttribute('open');
-    }
     this.syncDialogToHost();
   }
 
@@ -183,26 +176,11 @@ export class KiDialog {
     this.compactMedia = undefined;
   }
 
-  componentWillLoad(): void {
-    this.watchFullscreen();
-    // Boolean presence semantics: any present `close-on-backdrop` attribute
-    // (including `close-on-backdrop="false"` or malformed agent output) opts in;
-    // omit the attribute to opt out. Stencil parses "false" to `false`, so apply
-    // presence here (the observer keeps it true for post-hydration writes).
-    this.closeOnBackdrop = booleanFromAttributePresence(
-      this.closeOnBackdrop,
-      this.host.hasAttribute('close-on-backdrop'),
-    );
-    // Same for `open`: since Stencil 4.45 reflecting the parsed `false` would
-    // remove an authored `open="false"` before the observer below exists.
-    this.open = booleanFromAttributePresence(this.open, this.host.hasAttribute('open'));
-  }
-
   connectedCallback(): void {
     this.disconnectInvokers = connectDialogInvokers(this.host);
     this.watchFullscreen();
     // Back in the document after a move or a removal: disconnectedCallback
-    // released the observer and the document listener, and the dialog loads
+    // released the document listener, and the dialog loads
     // only once. On the first connection there is no native dialog yet:
     // componentDidLoad arms it.
     if (this.dialog) {
@@ -219,7 +197,6 @@ export class KiDialog {
     this.disconnectInvokers?.();
     this.disconnectInvokers = undefined;
     this.backdropArmed = false;
-    this.openObserver?.disconnect();
     this.bodyObserver?.disconnect();
     document.removeEventListener('keydown', this.handleKeyDown, { capture: true });
   }
@@ -230,9 +207,6 @@ export class KiDialog {
    * detached dialog, footer actions added or removed.
    */
   private arm(): void {
-    this.openObserver?.disconnect();
-    this.openObserver = new MutationObserver(this.handleHostMutation);
-    this.openObserver.observe(this.host, { attributeFilter: ['open', 'close-on-backdrop'] });
     document.addEventListener('keydown', this.handleKeyDown, { capture: true });
     this.updateFooterState();
     this.syncDialogToHost();
@@ -516,24 +490,6 @@ export class KiDialog {
       event.preventDefault();
       focusThroughShadow(first);
     }
-  };
-
-  private readonly handleHostMutation = (): void => {
-    const hasOpenAttribute = this.host.hasAttribute('open');
-    if (this.open !== hasOpenAttribute) {
-      this.open = hasOpenAttribute;
-      return;
-    }
-
-    // Restore presence semantics for a present-but-falsy `close-on-backdrop`
-    // set after hydration. Only that case is corrected: absence and Stencil's
-    // own reflect writes already agree with the prop.
-    if (this.host.hasAttribute('close-on-backdrop') && !this.closeOnBackdrop) {
-      this.closeOnBackdrop = true;
-      return;
-    }
-
-    this.syncDialogToHost();
   };
 
   private updateFooterState(): void {

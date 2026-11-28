@@ -53,6 +53,8 @@ The first panel with a given `value` owns it — duplicate or orphan panels stay
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-tab-panel`: the default, only the tokens ki-tab-panel needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `value` (string, default ''): Pairing identifier shared with a `ki-tab`. The first panel with a value owns it; duplicate or orphan panels stay hidden.
@@ -75,15 +77,15 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets.
-- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
-- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
-- `--ki-tab-panel-bg`: color used by the tab panel component for background (Tab_nav masters have no panel chrome: content sits on the ambient surface; the panel never paints a surface it does not own).
-- `--ki-tab-panel-fg`: color used by the tab panel component for foreground (pairs a scheme-correct text color with whatever ground the transparent panel sits on — fixes black-on-black slotted text in dark).
-- `--ki-tab-panel-focus-ring-color`: color used by the tab panel component for focus ring color.
-- `--ki-tab-panel-focus-ring-offset`: dimension used by the tab panel component for focus ring offset.
-- `--ki-tab-panel-focus-ring-width`: dimension used by the tab panel component for focus ring width.
-- `--ki-tab-panel-padding-block`: dimension used by the tab panel component for padding block.
-- `--ki-tab-panel-padding-inline`: dimension used by the tab panel component for padding inline.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip). Default: `var(--ki-scale-unit)`.
+- `--ki-motion-distance-sm`: Motion travel distance sm (4px): small slide/settle offsets. Default: `var(--ki-space-xs)`.
+- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base). Default: onmars `var(--ki-duration-moderate)`, material3 `250ms`.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve. Default: onmars `var(--ki-easing-out)`, material3 `cubic-bezier(0,0,0,1)`.
+- `--ki-tab-panel-bg`: color used by the tab panel component for background (Tab_nav masters have no panel chrome: content sits on the ambient surface; the panel never paints a surface it does not own). Default: `var(--ki-transparent-inverse)`.
+- `--ki-tab-panel-fg`: color used by the tab panel component for foreground (pairs a scheme-correct text color with whatever ground the transparent panel sits on — fixes black-on-black slotted text in dark). Default: `var(--ki-text-high-em)`.
+- `--ki-tab-panel-focus-ring-color`: color used by the tab panel component for focus ring color. Default: `var(--ki-focus-ring-color)`.
+- `--ki-tab-panel-focus-ring-offset`: dimension used by the tab panel component for focus ring offset. Default: `var(--ki-focus-ring-offset)`.
+- `--ki-tab-panel-focus-ring-width`: dimension used by the tab panel component for focus ring width. Default: `var(--ki-focus-ring-width)`.
+- `--ki-tab-panel-padding-block`: dimension used by the tab panel component for padding block. Default: onmars `var(--ki-space-lg)`, material3 `var(--ki-space-7xl)`.
+- `--ki-tab-panel-padding-inline`: dimension used by the tab panel component for padding inline. Default: onmars `var(--ki-space-lg)`, material3 `var(--ki-space-7xl)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

@@ -261,7 +261,7 @@ it.each([false, true])(
   async (fieldset) => {
     const { form, group } = await mount({
       fieldset,
-      attributes: fieldset ? '' : 'disabled="false"',
+      attributes: fieldset ? '' : 'disabled',
       initial: ['eu'],
     });
     await expect.element(option('Europe')).toBeDisabled();
@@ -275,6 +275,19 @@ it.each([false, true])(
     expect([...new FormData(form)]).toEqual([]);
   },
 );
+
+it('S16 disabled="false" leaves the options operable and in the form', async () => {
+  const { form, group } = await mount({ attributes: 'disabled="false"', initial: ['eu'] });
+  await expect.element(option('Europe')).toBeEnabled();
+  expect(new FormData(form).getAll('regions')).toEqual(['eu']);
+
+  group.setAttribute('disabled', 'true');
+  await expect.element(option('Americas')).toBeDisabled();
+  group.setAttribute('disabled', 'false');
+  await option('Americas').click();
+
+  expect(new FormData(form).getAll('regions')).toEqual(['eu', 'am']);
+});
 
 it('S9 re-enables group options without clearing an individually disabled option', async () => {
   const { group } = await mount({

@@ -38,6 +38,33 @@ Full setup, including the `kimen-mcp` server for each client and one-click
 links for Cursor and VS Code:
 <https://kimen.dev/docs/guides/connect-agents/>.
 
+## Update an installed plugin
+
+Refresh the marketplace and update the installed copy from your project.
+
+**Claude Code**
+
+```sh
+claude plugin marketplace update kimen
+claude plugin update kimen@kimen
+claude plugin list
+```
+
+Check the version under `kimen@kimen`, then restart Claude Code.
+[Claude Code plugin updates](https://code.claude.com/docs/en/plugins/install#keep-plugins-updated)
+
+**Codex**
+
+```sh
+codex plugin marketplace upgrade kimen
+codex plugin remove kimen@kimen
+codex plugin add kimen@kimen
+codex plugin list --marketplace kimen --json
+```
+
+Check `version` for `kimen@kimen` in the `installed` list, then start a new
+Codex session. [Codex CLI plugin commands](https://learn.chatgpt.com/docs/cli/reference#codex-plugin)
+
 ## Layout
 
 - `skills/`: the skills, canonical here. The repository's own skill catalog
@@ -58,8 +85,8 @@ links for Cursor and VS Code:
 
 Keep the server command the same in `mcp_config.json` and
 `gemini-extension.json`. The three manifests declare the package release
-`version`; the release pull request sets it, so an installed plugin picks up
-each release's skills.
+`version`. The release pull request sets it, and updating the installed
+plugin picks up that release's skills.
 
 ## Evals
 

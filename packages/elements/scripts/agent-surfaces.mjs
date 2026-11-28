@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { buildStateTokenTable } from './contract-tokens.mjs';
 
 const FACET_KEYS = ['attributes', 'members', 'events', 'slots', 'cssParts', 'cssProperties'];
 const GENUI_FULL_HEADING = '## GenUI layer';
@@ -151,6 +152,14 @@ export function validateDocs(docs) {
 }
 
 export function buildManifest(docs, inputs = {}) {
+  const sources = new Map(
+    (inputs.tokenInventory?.publicTokens ?? [])
+      .filter(({ layer }) => layer === 'component')
+      .map(({ cssName, component, path: tokenPath }) => [
+        cssName,
+        { component, family: tokenPath.split('.')[1] },
+      ]),
+  );
   return {
     schemaVersion: '1.0.0',
     readme: '',
@@ -247,6 +256,9 @@ export function buildManifest(docs, inputs = {}) {
         cssProperties,
       };
 
+      const tokenStates = buildStateTokenTable(declaration, sources);
+      if (tokenStates.length > 0) declaration.tokenStates = tokenStates;
+
       for (const key of FACET_KEYS) {
         declaration[key] ??= [];
       }
@@ -302,6 +314,7 @@ export function buildLlmsTxt(docs, pkg, preamble, inputs = {}) {
         '',
         renderList(label, entries),
       ]),
+      ...stateTokenSection(component, '####'),
     );
   }
 
@@ -412,15 +425,14 @@ export function buildLlmsIndex(docs, pkg, preamble, options = {}) {
  * the preamble template (the guides, FR-015).
  */
 export function buildLlmsDocuments(docs, preamble, inputs = {}) {
+  const { sections } = splitPreamble(preamble);
+  const booleanGuide = sections.find(({ file }) => file === 'boolean-attributes.md');
   return [
     ...(docs.components ?? []).map((component) => [
       componentDocumentFile(component),
-      buildComponentDocument(component, inputs),
+      buildComponentDocument(component, inputs, booleanGuide),
     ]),
-    ...splitPreamble(preamble).sections.map((section) => [
-      section.file,
-      `# ${section.title}\n\n${section.text}\n`,
-    ]),
+    ...sections.map((section) => [section.file, `# ${section.title}\n\n${section.text}\n`]),
   ];
 }
 
@@ -446,7 +458,7 @@ export function buildGenUiDocuments(genUi, packages) {
   });
 }
 
-function buildComponentDocument(component, inputs) {
+function buildComponentDocument(component, inputs, booleanGuide) {
   const usage = usageText(component);
 
   return `${[
@@ -456,9 +468,11 @@ function buildComponentDocument(component, inputs) {
     `## When not to use\n\n${getDocsTag(component, 'whenNotToUse')}`,
     ...(usage === null ? [] : [`## Examples\n\n${usage}`]),
     documentSection('Token stylesheets', tokenStylesheetsFor(component.tag)),
+    ...(booleanGuide ? [`[${booleanGuide.title}](${booleanGuide.file}).`] : []),
     ...componentFacets(component, inputs).map(([label, entries]) =>
       documentSection(label, entries),
     ),
+    ...stateTokenSection(component, '##'),
   ].join('\n\n')}\n`;
 }
 
@@ -474,6 +488,7 @@ function tokenStylesheetsFor(tag) {
 // Every facet of a component as [label, one-line entries], in the order the
 // complete summary and the component document both render them.
 function componentFacets(component, inputs) {
+  const stateTokens = new Set((component.tokenStates ?? []).flatMap(({ tokens }) => tokens));
   return [
     ['Attributes', (component.props ?? []).filter((prop) => prop.attr).map(renderAttribute)],
     [
@@ -497,11 +512,54 @@ function componentFacets(component, inputs) {
     ],
     ['Methods', (component.methods ?? []).map(renderMethod)],
     [
-      'CSS custom properties',
-      cssPropertiesFor(component, inputs).map(
-        (style) => `\`${style.name}\`: ${oneLine(style.description)}`,
-      ),
+      stateTokens.size === 0 ? 'CSS custom properties' : 'Other CSS custom properties',
+      (inputs.cssPropertiesByTag === undefined && component.cssProperties
+        ? component.cssProperties
+        : cssPropertiesFor(component, inputs)
+      )
+        .filter(({ name }) => !stateTokens.has(name))
+        .map((style) => {
+          const description = `\`${style.name}\`: ${oneLine(style.description)}`;
+          return style.default === undefined
+            ? description
+            : `${description} Default: ${tokenDefault(style)}.`;
+        }),
     ],
+  ];
+}
+
+function tokenDefault(property) {
+  const base = `\`${property.default}\``;
+  return property.material3Default === undefined
+    ? base
+    : `onmars ${base}, material3 \`${property.material3Default}\``;
+}
+
+function stateTokenSection(component, level) {
+  const groups = component.tokenStates;
+  if (!groups?.length) return [];
+  const byName = new Map(component.cssProperties.map((property) => [property.name, property]));
+  const rows = groups.flatMap(({ variant, tone, state, tokens }) =>
+    tokens.map((name) => {
+      const property = byName.get(name);
+      return [
+        variant ?? '—',
+        tone ?? '—',
+        state,
+        `\`${name}\``,
+        tokenDefault(property),
+        oneLine(property.description),
+      ];
+    }),
+  );
+  return [
+    [
+      `${level} CSS custom properties by variant and state`,
+      '',
+      '| Variant | Tone | State | Token | Default | Description |',
+      '| --- | --- | --- | --- | --- | --- |',
+      ...rows.map((cells) => `| ${cells.map((cell) => cell.replaceAll('|', '\\|')).join(' | ')} |`),
+    ].join('\n'),
   ];
 }
 
@@ -682,10 +740,13 @@ export function buildRootLlmsTxt(llmsTxt, genUiSection) {
 
 function cssPropertiesFor(component, inputs) {
   if (inputs.cssPropertiesByTag !== undefined) {
-    return (inputs.cssPropertiesByTag[component.tag] ?? []).map((style) => ({
-      name: style.name,
-      description: style.description ?? '',
-    }));
+    return (inputs.cssPropertiesByTag[component.tag] ?? []).map((style) => {
+      const defaults = inputs.tokenDefaults?.get(style.name);
+      if (inputs.tokenDefaults && !defaults) {
+        throw new Error(`${component.tag}: ${style.name} has no default in the built token sheets`);
+      }
+      return { name: style.name, description: style.description ?? '', ...defaults };
+    });
   }
 
   return (component.styles ?? [])

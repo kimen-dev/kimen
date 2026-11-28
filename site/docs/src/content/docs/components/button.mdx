@@ -63,6 +63,12 @@ Programmatic updates to `selected` are silent. Keep the visible label the
 same in both states so assistive technology announces the state under the
 same name.
 
+Enabled outline actions use `--ki-button-outline-hover-bg`,
+`--ki-button-outline-hover-fg` and `--ki-button-outline-hover-border` on hover.
+Unselected filled and quiet toggles use `--ki-button-toggle-unselected-hover-overlay`.
+A selected toggle keeps its fill on hover. Use `--ki-button-outline-selected-border`
+to set the selected outline edge.
+
 ### Link mode
 
 Set `href` for a call to action that navigates. The button renders a native
@@ -81,18 +87,16 @@ its destination and leaves the Tab order, like a disabled button.
 
 `--ki-button-justify-content` places the content along the button and
 `--ki-button-text-align` aligns the lines of a multi-line label. Both are
-`center` by default; `start` turns a wide button into a start-aligned
-choice.
+`center` by default. Set both to `start` for a start-aligned choice.
+`--ki-button-inline-size` defaults to `fit-content`. Use `100%` to fill
+the containing block in button or link mode.
 
 ```html
 <style>
   .choice {
+    --ki-button-inline-size: 100%;
     --ki-button-justify-content: start;
     --ki-button-text-align: start;
-    display: block;
-  }
-  .choice::part(button) {
-    inline-size: 100%;
   }
 </style>
 <ki-button class="choice" variant="outline" toggle>
@@ -112,9 +116,10 @@ choice.
 
 ### Slots and states
 
-The `start` and `end` slots each take one decorative icon, sized to the
-button's icon box; never put text there. The default slot holds the label,
-which is the accessible name. `ki-icon` is hidden from assistive technology
+The `start` and `end` slots each take one decorative icon. The
+`--ki-button-{size}-icon-size` token sizes the slot and the glyph of a
+directly slotted `ki-icon`, including an icon with an explicit `size`.
+The default slot supplies the accessible label. `ki-icon` is hidden from assistive technology
 by default; give other slotted media `aria-hidden="true"`.
 
 <Demo

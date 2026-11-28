@@ -47,6 +47,8 @@ defineCustomElement();
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-spinner`: the default, only the tokens ki-spinner needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `label` (string, required): Localized name of the ongoing activity, such as "Saving changes". Supply a meaningful label for every spinner, even when the text is hidden. Use the activity's name whenever it can be more specific than "Loading".
@@ -74,27 +76,27 @@ None.
 
 ## CSS custom properties
 
-- `--ki-spinner-dot-delay`: Delay between consecutive typing dots.
-- `--ki-spinner-dot-duration`: Typing pulse period.
-- `--ki-spinner-dot-easing`: Easing of the typing pulse.
-- `--ki-spinner-dot-gap`: Gap between dots.
-- `--ki-spinner-dot-scale-min`: Smallest scale of a dot during the pulse.
-- `--ki-spinner-dot-size`: Diameter of each dot at full size.
-- `--ki-spinner-indicator`: Ink of the revolving ring segment.
-- `--ki-spinner-label-bg`: Background of the inline activity label.
-- `--ki-spinner-label-fg`: Ink of the visible label and the typing dots.
-- `--ki-spinner-label-font-family`: Font family of the visible label.
-- `--ki-spinner-label-font-size`: Font size of the visible label.
-- `--ki-spinner-label-gap`: Gap between the graphic and the visible label.
-- `--ki-spinner-label-line-height`: Line height of the visible label.
-- `--ki-spinner-radius`: Round corners of the ring and dots.
-- `--ki-spinner-ring-duration`: Standard ring rotation period.
-- `--ki-spinner-ring-duration-reduced`: Ring rotation period when reduced motion is requested.
-- `--ki-spinner-ring-easing`: Easing for ring rotation.
-- `--ki-spinner-size`: Default ring diameter.
-- `--ki-spinner-size-lg`: Large ring diameter.
-- `--ki-spinner-size-sm`: Small ring diameter.
-- `--ki-spinner-stroke`: Stroke width of the small and medium rings.
-- `--ki-spinner-stroke-lg`: Stroke width of the large ring.
-- `--ki-spinner-track`: Ink of the ring track.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-spinner-dot-delay`: Delay between consecutive typing dots. Default: `var(--ki-motion-duration-activity-stagger)`.
+- `--ki-spinner-dot-duration`: Typing pulse period. Default: `var(--ki-motion-duration-activity-pulse)`.
+- `--ki-spinner-dot-easing`: Easing of the typing pulse. Default: `var(--ki-motion-easing-activity-pulse)`.
+- `--ki-spinner-dot-gap`: Gap between dots. Default: `var(--ki-spacing-activity-dot-gap)`.
+- `--ki-spinner-dot-scale-min`: Smallest scale of a dot during the pulse. Default: `var(--ki-motion-scale-activity-pulse-min)`.
+- `--ki-spinner-dot-size`: Diameter of each dot at full size. Default: `var(--ki-activity-size-dot)`.
+- `--ki-spinner-indicator`: Ink of the revolving ring segment. Default: onmars `var(--ki-surface-primary-high-em)`, material3 `var(--ki-surface-inverse-white)`.
+- `--ki-spinner-label-bg`: Background of the inline activity label. Default: `var(--ki-surface-transparent)`.
+- `--ki-spinner-label-fg`: Ink of the visible label and the typing dots. Default: `var(--ki-text-supporting)`.
+- `--ki-spinner-label-font-family`: Font family of the visible label. Default: `var(--ki-typography-family-body)`.
+- `--ki-spinner-label-font-size`: Font size of the visible label. Default: `var(--ki-typography-size-body-1)`.
+- `--ki-spinner-label-gap`: Gap between the graphic and the visible label. Default: `var(--ki-spacing-activity-label-gap)`.
+- `--ki-spinner-label-line-height`: Line height of the visible label. Default: `var(--ki-typography-line-height-body-1)`.
+- `--ki-spinner-radius`: Round corners of the ring and dots. Default: `var(--ki-corner-activity-mark)`.
+- `--ki-spinner-ring-duration`: Standard ring rotation period. Default: `var(--ki-motion-duration-activity-rotation)`.
+- `--ki-spinner-ring-duration-reduced`: Ring rotation period when reduced motion is requested. Default: `var(--ki-motion-duration-activity-rotation-reduced)`.
+- `--ki-spinner-ring-easing`: Easing for ring rotation. Default: `var(--ki-motion-easing-activity-rotation)`.
+- `--ki-spinner-size`: Default ring diameter. Default: `var(--ki-activity-size-ring-md)`.
+- `--ki-spinner-size-lg`: Large ring diameter. Default: `var(--ki-activity-size-ring-lg)`.
+- `--ki-spinner-size-sm`: Small ring diameter. Default: `var(--ki-activity-size-ring-sm)`.
+- `--ki-spinner-stroke`: Stroke width of the small and medium rings. Default: `var(--ki-activity-size-stroke)`.
+- `--ki-spinner-stroke-lg`: Stroke width of the large ring. Default: `var(--ki-activity-size-stroke-lg)`.
+- `--ki-spinner-track`: Ink of the ring track. Default: `var(--ki-outline-strong)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

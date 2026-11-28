@@ -1,5 +1,8 @@
 # Tasks: ki-checkbox
 
+> The boolean parsing details below describe the original implementation.
+> The [2026-11-27 founder decision](spec.md) supersedes them (F4).
+
 <!-- KIMEN OVERRIDE of tasks-template. Resolved with priority 1 by resolve_template().
      Constitutional basis: .specify/memory/constitution.md Art. II, III, X.
      Kept in sync with constitutional amendments (no-drift rule). -->

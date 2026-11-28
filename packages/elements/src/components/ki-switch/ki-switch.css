@@ -15,8 +15,8 @@
   --_ki-switch-thumb-radius: var(--ki-switch-thumb-radius);
   --_ki-switch-min-target: var(--ki-switch-min-target);
   --_ki-switch-gap: var(--ki-switch-gap);
-  --_ki-switch-label-font-size: var(--ki-typography-size-body-2);
-  --_ki-switch-label-line-height: var(--ki-typography-line-height-body-2);
+  --_ki-switch-label-font-size: var(--ki-switch-label-font-size);
+  --_ki-switch-label-line-height: var(--ki-switch-label-line-height);
   --_ki-switch-track: var(--ki-switch-unchecked-rest-track);
   --_ki-switch-thumb: var(--ki-switch-unchecked-rest-thumb);
   --_ki-switch-border: var(--ki-switch-unchecked-rest-border);
@@ -85,6 +85,8 @@
   --_ki-switch-well-radius: var(--ki-switch-lg-well-radius);
   --_ki-switch-thumb-radius: var(--ki-switch-lg-thumb-radius);
   --_ki-switch-min-target: var(--ki-switch-lg-min-target);
+  --_ki-switch-label-font-size: var(--ki-switch-lg-label-font-size);
+  --_ki-switch-label-line-height: var(--ki-switch-lg-label-line-height);
 }
 
 :host([size="xl"]) {
@@ -99,6 +101,8 @@
   --_ki-switch-well-radius: var(--ki-switch-xl-well-radius);
   --_ki-switch-thumb-radius: var(--ki-switch-xl-thumb-radius);
   --_ki-switch-min-target: var(--ki-switch-xl-min-target);
+  --_ki-switch-label-font-size: var(--ki-switch-xl-label-font-size);
+  --_ki-switch-label-line-height: var(--ki-switch-xl-label-line-height);
 }
 
 /* The HTML hidden attribute outranks the host's own display. */
@@ -150,12 +154,22 @@
   --_ki-switch-border: var(--ki-switch-checked-disabled-border);
 }
 
-.base {
+.base,
+label {
   align-items: center;
-  box-sizing: border-box;
-  cursor: pointer;
-  display: inline-flex;
   gap: var(--_ki-switch-gap);
+}
+
+.base {
+  display: inline-flex;
+  inline-size: 100%;
+}
+
+label {
+  box-sizing: border-box;
+  display: flex;
+  cursor: pointer;
+  flex: auto;
 
   /* The well paints under the track (z-index -1): this keeps it above
      whatever surface the switch sits on. */
@@ -167,7 +181,7 @@
   user-select: none;
 }
 
-:host(:disabled) .base {
+:host(:disabled) label {
   cursor: default;
 }
 

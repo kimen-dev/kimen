@@ -77,3 +77,10 @@ Feature: Conversation suggestions offer a prompt to send or edit
     When the user chooses a suggestion
     Then the composer keeps its draft
     And focus stays under the application's control
+
+  # Family: theming
+  # S13
+  Scenario: A suggestion card themes its description as the action is pressed
+    Given a suggestion card with custom rest, hover and pressed description backgrounds
+    When the user holds down the suggestion action
+    Then the description shows its pressed background

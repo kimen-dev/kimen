@@ -73,6 +73,8 @@ Full item composition — `start` for leading media (decorative beside the visib
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-list`: the default, only the tokens ki-list needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `label` (string | undefined): Accessible name for a list with links, options or trailing controls.
@@ -98,14 +100,14 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip).
-- `--ki-list-bg`: color used by the list component for background.
-- `--ki-list-gap`: dimension used by the list component for gap (MarsUI compositions stack rows contiguously; --ki-list-gap stays as the theme hook).
-- `--ki-list-item-divider-color`: color used by the list component for item divider color.
-- `--ki-list-item-divider-width`: dimension used by the list component for item divider width (no divider renders in any master variant; the color hook ki.list.item.divider-color stays so consumers can opt hairlines back in).
-- `--ki-list-padding`: dimension used by the list component for padding.
-- `--ki-motion-distance-xs`: Motion travel distance xs (2px): hover-lift offsets.
-- `--ki-motion-duration-fast`: Fast interaction transition duration.
-- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base).
-- `--ki-motion-easing-out`: Decelerating interaction transition easing curve.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-density-space-scale`: Multiplies every scaled container padding and gap (card, dialog, alert, list, list item, select listbox, tab panel, tooltip). Default: `var(--ki-scale-unit)`.
+- `--ki-list-bg`: color used by the list component for background. Default: `var(--ki-surface-s0)`.
+- `--ki-list-gap`: dimension used by the list component for gap (MarsUI compositions stack rows contiguously; --ki-list-gap stays as the theme hook). Default: `var(--ki-space-zero)`.
+- `--ki-list-item-divider-color`: color used by the list component for item divider color. Default: onmars `var(--ki-outline-base-em)`, material3 `var(--ki-outline-med-em)`.
+- `--ki-list-item-divider-width`: dimension used by the list component for item divider width (no divider renders in any master variant; the color hook ki.list.item.divider-color stays so consumers can opt hairlines back in). Default: onmars `var(--ki-space-zero)`, material3 `0.0625rem`.
+- `--ki-list-padding`: dimension used by the list component for padding. Default: `var(--ki-space-zero)`.
+- `--ki-motion-distance-xs`: Motion travel distance xs (2px): hover-lift offsets. Default: `var(--ki-space-xxs)`.
+- `--ki-motion-duration-fast`: Fast interaction transition duration. Default: onmars `var(--ki-duration-fast)`, material3 `100ms`.
+- `--ki-motion-duration-medium-1`: M3 md.sys.motion.duration.medium1 (250ms). onmars: MarsUI moderate step (240ms, 2x the 120ms base). Default: onmars `var(--ki-duration-moderate)`, material3 `250ms`.
+- `--ki-motion-easing-out`: Decelerating interaction transition easing curve. Default: onmars `var(--ki-easing-out)`, material3 `cubic-bezier(0,0,0,1)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

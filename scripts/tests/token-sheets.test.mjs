@@ -10,6 +10,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import { MODES, modeValueName } from '../../packages/tokens/scripts/theme-stylesheet.mjs';
 import { buildPublicStylesheetSurface } from '../lib/css-token-surface.mjs';
 
 const root = new URL('../../', import.meta.url);
@@ -109,8 +110,11 @@ test('S1 the ki-button sheet declares the button tokens and no other component t
   const button = [...fullNames].filter(
     (name) => name.startsWith('--ki-button-') && !name.startsWith('--ki-button-group-'),
   );
+  const buttonModeValues = button
+    .flatMap((name) => MODES.map((mode) => modeValueName(mode, name)))
+    .filter((name) => fullNames.has(name));
   assert.ok(button.length > 100);
-  assert.deepEqual([...names].sort(), button.sort());
+  assert.deepEqual([...names].sort(), [...button, ...buttonModeValues].sort());
 });
 
 test('S1 the core declares no component token and no foundation', () => {
@@ -300,10 +304,10 @@ test('S10 the size gate measures the approved budgets of the split', async () =>
   const configPath = fileURLToPath(new URL('packages/tokens/.size-limit.mjs', root));
   const { default: entries } = await import(configPath);
   const limitOf = (name) => entries.find((entry) => entry.name === name)?.limit;
-  assert.equal(limitOf('onmars tokens stylesheet'), '19057 B');
+  assert.equal(limitOf('onmars tokens stylesheet'), '19212 B');
   assert.equal(limitOf('core tokens stylesheet'), '7000 B');
-  assert.equal(limitOf('page with ki-button: core and ki-button sheets'), '8300 B');
-  assert.equal(limitOf('ten-component page: core and their sheets'), '11400 B');
+  assert.equal(limitOf('page with ki-button: core and ki-button sheets'), '8373 B');
+  assert.equal(limitOf('ten-component page: core and their sheets'), '11479 B');
   const tagEntries = entries.filter((entry) => entry.name.startsWith('tag sheet '));
   assert.deepEqual(
     tagEntries.map((entry) => entry.name),

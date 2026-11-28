@@ -1,5 +1,7 @@
 # Feature Specification: ki-select
 
+**2026-11-27 founder decision (F4).** The gate-driven.dev integrator report led to one boolean attribute rule for both builds. An absent attribute uses the property default. A present attribute is true unless its value is exactly `"false"`. The same parsing applies to markup and later writes.
+
 <!-- KIMEN OVERRIDE of spec-template. Resolved with priority 1 by resolve_template().
      Constitutional basis: .specify/memory/constitution.md Art. II (Specs Before Code).
      Kept in sync with constitutional amendments (no-drift rule). -->
@@ -259,20 +261,21 @@ Feature: Select
     Then no option is selected and the trigger shows the placeholder
     And no change event is observed
 
-  # S26
-  Scenario Outline: A boolean attribute written as "false" keeps presence semantics
-    Given a select labeled "Country" offering "Spain", "France" and "Portugal"
-    When the attribute <attribute>="false" is written on <target> <moment>
-    Then <target> behaves as <state>
-    And the attribute stays present on <target> with an empty value
+  # S28
+  Scenario Outline: Boolean attributes read consistently from markup and script
+    Given a select with options
+    When an attribute (disabled, required, and option disabled) is <write> <moment>
+    Then the corresponding property reads <state>
 
     Examples:
-      | attribute | target              | moment                 | state       |
-      | disabled  | the select          | in the initial markup  | disabled    |
-      | disabled  | the select          | after the first render | disabled    |
-      | required  | the select          | in the initial markup  | required    |
-      | disabled  | the option "France" | in the initial markup  | unavailable |
-      | disabled  | the option "France" | after the first render | unavailable |
+      | write                    | moment                 | state        |
+      | absent                   | in the initial markup  | its default  |
+      | set to exactly "false"   | in the initial markup  | false        |
+      | set to an empty value    | in the initial markup  | true         |
+      | set to "true"            | in the initial markup  | true         |
+      | set to exactly "false"   | after the first render | false        |
+      | set to an empty value    | after the first render | true         |
+      | set to "true"            | after the first render | true         |
 
   # Family: keyboard path
   # S6
@@ -405,17 +408,24 @@ Feature: Select
     Given a right-to-left document with a select showing "France"
     When the page renders
     Then the value leads and the dropdown indicator trails the writing direction
+
+  # Family: theming
+  # S29
+  Scenario: The trigger background can be themed on hover
+    Given a select with a custom trigger hover background
+    When the user hovers over the trigger
+    Then the trigger shows the themed hover background
 ```
 
 ### Scenario Family Coverage *(mandatory for UI components, Art. II)*
 
 | Family | Scenario IDs | N/A justification |
 |---|---|---|
-| Core behavior | S1, S2, S3, S4, S5, S20, S25, S26 | |
+| Core behavior | S1, S2, S3, S4, S5, S20, S25, S28 | |
 | Keyboard path | S6, S7, S8, S9, S10, S21, S22, S23, S27 | |
 | Assistive-tech outcome | S11, S12 | |
 | Form participation | S13, S14, S15, S16, S24 | |
-| Theming | S17, S18, S19 | |
+| Theming | S17, S18, S19, S29 | |
 
 ## Requirements *(mandatory)*
 

@@ -429,3 +429,17 @@ it('S17: paints a static loading row with reduced motion', async () => {
     await browser.emulateReducedMotion(null);
   }
 });
+
+it('S20 resting metadata cells use their own background token', async () => {
+  fixture.innerHTML = services();
+  await parkPointer();
+  try {
+    await browser.emulateReducedMotion('reduce');
+    find('ki-table').style.setProperty('--ki-table-meta-bg', 'rgb(210, 235, 250)');
+    expect(getComputedStyle(find('tbody td[data-numeric]')).backgroundColor).toBe(
+      'rgb(210, 235, 250)',
+    );
+  } finally {
+    await browser.emulateReducedMotion(null);
+  }
+});

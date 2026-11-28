@@ -504,6 +504,9 @@ importers:
       '@kimen/emitter':
         specifier: workspace:*
         version: link:../emitter
+      '@kimen/tokens':
+        specifier: workspace:*
+        version: link:../tokens
       '@modelcontextprotocol/client':
         specifier: 2.4.0
         version: 2.4.0
@@ -555,6 +558,10 @@ importers:
         version: 5.1.1(@types/node@26.6.6)(@vitest/browser-playwright@5.1.1)(@vitest/coverage-v8@5.1.1)(@vitest/ui@5.1.1)(happy-dom@21.0.4)(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(less@4.9.1(supports-color@8.1.1))(sass-embedded@1.108.2)(sass@1.108.2)(yaml@2.9.1))
 
   packages/tokens:
+    dependencies:
+      '@csstools/css-tokenizer':
+        specifier: 4.0.3
+        version: 4.0.3
     devDependencies:
       '@size-limit/esbuild':
         specifier: 14.3.0

@@ -3,18 +3,24 @@
 }
 
 a[href] {
+  --_ki-link-fg: var(--ki-link-fg);
+  --_ki-link-hover-fg: var(--ki-link-hover-fg);
+
   background-color: var(--ki-link-bg);
   background-image: var(--ki-link-bg-image);
   border-radius: var(--ki-link-radius);
-  color: var(--ki-link-fg);
+  color: var(--_ki-link-fg);
+  font-weight: var(--ki-link-font-weight, inherit);
   text-decoration-line: underline;
   text-decoration-thickness: var(--ki-link-underline-thickness);
   text-underline-offset: var(--ki-link-underline-offset);
 }
 
 :host([variant="neutral"]) a[href] {
+  --_ki-link-fg: var(--ki-link-neutral-fg);
+  --_ki-link-hover-fg: var(--ki-link-neutral-hover-fg);
+
   background-color: var(--ki-link-neutral-bg);
-  color: var(--ki-link-neutral-fg);
 }
 
 a:focus-visible {
@@ -32,7 +38,8 @@ a:focus-visible {
 }
 
 @media (hover: hover) {
-  a[href]:hover {
+  a[href]:where(:hover) {
+    color: var(--_ki-link-hover-fg, var(--_ki-link-fg));
     text-decoration-thickness: var(--ki-link-underline-thickness-hover);
   }
 
@@ -43,11 +50,23 @@ a:focus-visible {
 
 .external-icon {
   display: inline-block;
+}
+
+.external-icon,
+slot[name="end"]::slotted(*) {
   flex: none;
-  inline-size: var(--ki-link-icon-size);
-  block-size: var(--ki-link-icon-size);
   margin-inline-start: var(--ki-link-icon-gap);
   vertical-align: middle;
+}
+
+.external-icon,
+slot[name="end"]::slotted(svg) {
+  inline-size: var(--ki-link-icon-size);
+  block-size: var(--ki-link-icon-size);
+}
+
+slot[name="end"]::slotted(ki-icon) {
+  font-size: var(--ki-link-icon-size);
 }
 
 .external-label {
@@ -60,8 +79,7 @@ a:focus-visible {
 }
 
 @media (forced-colors: active) {
-  a[href],
-  :host([variant="neutral"]) a[href] {
+  a[href] {
     color: LinkText;
   }
 

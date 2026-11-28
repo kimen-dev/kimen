@@ -34,6 +34,7 @@ export type KiIconButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  * @slot - Exactly one decorative icon. The slot is presentational: its
  * content is hidden from assistive technology and never contributes to the
  * accessible name. Supply `label` or use a named trailing list control.
+ * Button tokens size ki-icon glyphs in both slots, overriding their size.
  * @slot selected - Optional decorative icon shown when the toggle is selected.
  * If omitted, the default icon stays visible and an inline SVG takes a current-colour fill.
  * @slot counter - Decorative ki-counter in the block-start inline-end corner.
@@ -47,6 +48,7 @@ export type KiIconButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   tag: 'ki-icon-button',
   styleUrls: [
     '../ki-button/ki-button.surface.css',
+    '../ki-button/ki-button.tones.css',
     '../ki-button/ki-button.surface.legacy.css',
     '../ki-button/ki-button.toggle.css',
     'ki-icon-button.css',

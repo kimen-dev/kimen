@@ -47,6 +47,8 @@ import '@kimen/elements/icons/file-code';
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-tree-item`: the default, only the tokens ki-tree-item needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `disabled` (boolean, default false): Keep the row discoverable by keyboard while preventing user activation.
@@ -81,26 +83,26 @@ None.
 
 ## CSS custom properties
 
-- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min.
-- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1).
-- `--ki-tree-disclosure-duration`: Disclosure turn duration.
-- `--ki-tree-disclosure-easing`: Disclosure turn easing.
-- `--ki-tree-edge-width`: Width of the surface and checkbox outlines.
-- `--ki-tree-focus-ring-color`: Ink of the focused row outline.
-- `--ki-tree-focus-ring-width`: Width of the focused row outline.
-- `--ki-tree-hover-bg`: Fill of an unselected row hovered by a fine pointer.
-- `--ki-tree-hover-fg`: Text of an unselected row hovered by a fine pointer.
-- `--ki-tree-icon-fg`: Default ink of the decorative row icons.
-- `--ki-tree-indent`: Inline indentation per hierarchy level.
-- `--ki-tree-item-box-radius`: Rounding of the visual checkbox indicator.
-- `--ki-tree-item-box-size`: Size of the visual checkbox indicator.
-- `--ki-tree-item-gap`: Space between an optional item icon and its label.
-- `--ki-tree-item-padding`: Inline-end inset of an item row.
-- `--ki-tree-item-radius`: Rounding of a highlighted item row.
-- `--ki-tree-item-target`: Minimum inline target of a disclosure or checkbox.
-- `--ki-tree-row-height`: Minimum block size before density adjustment.
-- `--ki-tree-selected-bg`: Fill of a selected or checked row.
-- `--ki-tree-selected-fg`: Text and glyph ink on a selected row.
-- `--ki-tree-touch-row-min`: Minimum row block size on a coarse pointer.
-- `--ki-typography-family-body`: semantic font family for typography family body.
-- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium.
+- `--ki-density-control-offset`: Added to the block size of every scaled control and row (button, icon button, field, select, textarea, option, list item, tab). Components floor the result at ki.size.target-min. Default: `var(--ki-space-zero)`.
+- `--ki-density-target-min`: The smallest pointer target any density may produce: 24 x 24 CSS px by default and in compact (WCAG 2.5.8 AA), 44 x 44 in touch (WCAG 2.5.5). It floors a shrinking control but never lifts what a control paints: a control painted smaller extends its target to it, invisibly; rows and tabs grow to it (spec 045 A1). Default: `var(--ki-size-target-min)`.
+- `--ki-tree-disclosure-duration`: Disclosure turn duration. Default: `var(--ki-motion-duration-short-3)`.
+- `--ki-tree-disclosure-easing`: Disclosure turn easing. Default: `var(--ki-motion-easing-standard)`.
+- `--ki-tree-edge-width`: Width of the surface and checkbox outlines. Default: `var(--ki-menu-layout-edge-width)`.
+- `--ki-tree-focus-ring-color`: Ink of the focused row outline. Default: `var(--ki-focus-ring-color)`.
+- `--ki-tree-focus-ring-width`: Width of the focused row outline. Default: `var(--ki-focus-ring-width)`.
+- `--ki-tree-hover-bg`: Fill of an unselected row hovered by a fine pointer. Default: `var(--ki-surface-s2)`.
+- `--ki-tree-hover-fg`: Text of an unselected row hovered by a fine pointer. Default: `var(--ki-text-high-em)`.
+- `--ki-tree-icon-fg`: Default ink of the decorative row icons. Default: `var(--ki-text-med-em)`.
+- `--ki-tree-indent`: Inline indentation per hierarchy level. Default: `var(--ki-tree-layout-indent)`.
+- `--ki-tree-item-box-radius`: Rounding of the visual checkbox indicator. Default: `var(--ki-corner-inline)`.
+- `--ki-tree-item-box-size`: Size of the visual checkbox indicator. Default: `var(--ki-glyph-size-sm)`.
+- `--ki-tree-item-gap`: Space between an optional item icon and its label. Default: `var(--ki-spacing-action-inset)`.
+- `--ki-tree-item-padding`: Inline-end inset of an item row. Default: `var(--ki-spacing-action-gap)`.
+- `--ki-tree-item-radius`: Rounding of a highlighted item row. Default: `var(--ki-tree-layout-row-radius)`.
+- `--ki-tree-item-target`: Minimum inline target of a disclosure or checkbox. Default: `var(--ki-tree-layout-item-target)`.
+- `--ki-tree-row-height`: Minimum block size before density adjustment. Default: `var(--ki-tree-layout-row-min)`.
+- `--ki-tree-selected-bg`: Fill of a selected or checked row. Default: `var(--ki-surface-primary-low-em)`.
+- `--ki-tree-selected-fg`: Text and glyph ink on a selected row. Default: `var(--ki-text-primary-on-primary-light)`.
+- `--ki-tree-touch-row-min`: Minimum row block size on a coarse pointer. Default: `var(--ki-tree-layout-touch-row-min)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.
+- `--ki-typography-weight-body-medium`: semantic font weight for typography weight body medium. Default: `var(--ki-font-weight-body-medium)`.

@@ -8,6 +8,7 @@ import {
   readCanonicalJson,
   readPublicApiCandidate,
   readPublicApiDeclarations,
+  readPublishedTokenDeprecations,
 } from '../gates/check-public-api.mjs';
 
 import { canonicalJsonSha256 } from '../lib/canonical-json.mjs';
@@ -542,11 +543,12 @@ test('[S10] repository inventories agree with the protected baseline and active 
   const candidate = await readPublicApiCandidate(
     fileURLToPath(new URL('../../packages/elements/generated/public-api', import.meta.url)),
   );
-  const declarations = await readPublicApiDeclarations(
-    fileURLToPath(new URL('../../changes/api', import.meta.url)),
-    { baseline },
-  );
-  const result = evaluatePublicApiChange({ baseline, candidate, declarations });
+  const directory = fileURLToPath(new URL('../../changes/api', import.meta.url));
+  const [declarations, publishedTokens] = await Promise.all([
+    readPublicApiDeclarations(directory, { baseline }),
+    readPublishedTokenDeprecations(directory),
+  ]);
+  const result = evaluatePublicApiChange({ baseline, candidate, declarations, publishedTokens });
 
   assert.equal(result.decision, 'passed', result.reasons.join('\n'));
   assert.deepEqual(result.newRootSymbols, []);

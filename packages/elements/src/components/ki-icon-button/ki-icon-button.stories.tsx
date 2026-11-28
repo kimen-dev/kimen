@@ -71,7 +71,7 @@ export const Tones: Story = {
   ),
 };
 
-/** Size scale from xs (24px, the pointer-target floor) to xl (56px). */
+/** Each size has its own icon-size token, which also sizes a slotted ki-icon glyph. */
 export const Sizes: Story = {
   render: (args) => (
     <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
@@ -89,7 +89,7 @@ export const Disabled: Story = {
   args: { disabled: true, label: 'Unavailable' },
 };
 
-/** The selected slot replaces the default glyph when the bookmark is pressed. */
+/** Hover shows the outline palette. Activation keeps a fixed fill and swaps in the selected glyph. */
 export const Toggle: Story = {
   args: { toggle: true, variant: 'outline', label: 'Bookmark' },
   render: (args) => (

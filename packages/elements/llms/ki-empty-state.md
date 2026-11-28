@@ -54,6 +54,8 @@ Put a decorative illustration in `media` to replace the icon.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-empty-state`: the default, only the tokens ki-empty-state needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `announce` (boolean, default false): Put the heading and description in a polite status, with actions outside the region. Set before mounting a message that reports changed results.
@@ -87,39 +89,39 @@ None.
 
 ## CSS custom properties
 
-- `--ki-empty-state-backdrop-filter`: Complete filter applied behind the empty view.
-- `--ki-empty-state-bg`: Background behind the empty view.
-- `--ki-empty-state-bg-image`: Optional image above the background color.
-- `--ki-empty-state-description-bg`: Background layer behind the supporting copy.
-- `--ki-empty-state-description-fg`: Supporting text ink, strengthened in contrast-more mode.
-- `--ki-empty-state-description-line-height`: Line height of the supporting copy.
-- `--ki-empty-state-description-size`: Font size of the supporting copy.
-- `--ki-empty-state-fg`: Foreground ink for the heading.
-- `--ki-empty-state-gap`: Gap between the decorative media, message and action row.
-- `--ki-empty-state-gap-sm`: Gap between regions in a compact empty view.
-- `--ki-empty-state-heading-font-family`: Typeface for the native heading.
-- `--ki-empty-state-heading-line-height`: Heading line height in a regular empty view.
-- `--ki-empty-state-heading-line-height-sm`: Heading line height in a compact empty view.
-- `--ki-empty-state-heading-size`: Heading font size in a regular empty view.
-- `--ki-empty-state-heading-size-sm`: Heading font size in a compact empty view.
-- `--ki-empty-state-heading-weight`: Weight of the heading.
-- `--ki-empty-state-max-width`: Maximum inline size of the centered content.
-- `--ki-empty-state-tile-danger-bg`: Background of the danger decorative tile.
-- `--ki-empty-state-tile-danger-fg`: Glyph ink on the danger decorative tile.
-- `--ki-empty-state-tile-info-bg`: Background of the info decorative tile.
-- `--ki-empty-state-tile-info-fg`: Glyph ink on the info decorative tile.
-- `--ki-empty-state-tile-neutral-bg`: Background of the neutral decorative tile.
-- `--ki-empty-state-tile-neutral-fg`: Glyph ink on the neutral decorative tile.
-- `--ki-empty-state-tile-primary-bg`: Background of the primary decorative tile.
-- `--ki-empty-state-tile-primary-fg`: Glyph ink on the primary decorative tile.
-- `--ki-empty-state-tile-primary-light-bg`: Background of the primary-light decorative tile.
-- `--ki-empty-state-tile-primary-light-fg`: Glyph ink on the primary-light decorative tile.
-- `--ki-empty-state-tile-radius`: Corner radius of the regular fallback tile.
-- `--ki-empty-state-tile-radius-sm`: Corner radius of the compact fallback tile.
-- `--ki-empty-state-tile-size`: Regular FeatureIcon fallback tile size.
-- `--ki-empty-state-tile-size-sm`: Compact FeatureIcon fallback tile size.
-- `--ki-empty-state-tile-success-bg`: Background of the success decorative tile.
-- `--ki-empty-state-tile-success-fg`: Glyph ink on the success decorative tile.
-- `--ki-empty-state-tile-warning-bg`: Background of the warning decorative tile.
-- `--ki-empty-state-tile-warning-fg`: Glyph ink on the warning decorative tile.
-- `--ki-typography-family-body`: semantic font family for typography family body.
+- `--ki-empty-state-backdrop-filter`: Complete filter applied behind the empty view. Default: `var(--ki-effect-component-no-backdrop-filter)`.
+- `--ki-empty-state-bg`: Background behind the empty view. Default: `var(--ki-surface-s0)`.
+- `--ki-empty-state-bg-image`: Optional image above the background color. Default: `var(--ki-surface-image-none)`.
+- `--ki-empty-state-description-bg`: Background layer behind the supporting copy. Default: `var(--ki-surface-transparent)`.
+- `--ki-empty-state-description-fg`: Supporting text ink, strengthened in contrast-more mode. Default: `var(--ki-text-supporting)`.
+- `--ki-empty-state-description-line-height`: Line height of the supporting copy. Default: `var(--ki-typography-line-height-para)`.
+- `--ki-empty-state-description-size`: Font size of the supporting copy. Default: `var(--ki-typography-size-body-1)`.
+- `--ki-empty-state-fg`: Foreground ink for the heading. Default: `var(--ki-text-high-em)`.
+- `--ki-empty-state-gap`: Gap between the decorative media, message and action row. Default: `var(--ki-space-md)`.
+- `--ki-empty-state-gap-sm`: Gap between regions in a compact empty view. Default: `var(--ki-space-xs)`.
+- `--ki-empty-state-heading-font-family`: Typeface for the native heading. Default: `var(--ki-typography-family-heading)`.
+- `--ki-empty-state-heading-line-height`: Heading line height in a regular empty view. Default: `var(--ki-typography-line-height-heading-1)`.
+- `--ki-empty-state-heading-line-height-sm`: Heading line height in a compact empty view. Default: `var(--ki-typography-line-height-title-1)`.
+- `--ki-empty-state-heading-size`: Heading font size in a regular empty view. Default: `var(--ki-typography-size-heading-1)`.
+- `--ki-empty-state-heading-size-sm`: Heading font size in a compact empty view. Default: `var(--ki-typography-size-title-1)`.
+- `--ki-empty-state-heading-weight`: Weight of the heading. Default: onmars `var(--ki-typography-weight-body-semibold)`, material3 `var(--ki-typography-weight-body-medium)`.
+- `--ki-empty-state-max-width`: Maximum inline size of the centered content. Default: `var(--ki-empty-layout-max-width)`.
+- `--ki-empty-state-tile-danger-bg`: Background of the danger decorative tile. Default: `var(--ki-surface-danger-tint)`.
+- `--ki-empty-state-tile-danger-fg`: Glyph ink on the danger decorative tile. Default: `var(--ki-text-danger-high-em)`.
+- `--ki-empty-state-tile-info-bg`: Background of the info decorative tile. Default: `var(--ki-surface-info-tint)`.
+- `--ki-empty-state-tile-info-fg`: Glyph ink on the info decorative tile. Default: `var(--ki-text-info-high-em)`.
+- `--ki-empty-state-tile-neutral-bg`: Background of the neutral decorative tile. Default: `var(--ki-surface-s2)`.
+- `--ki-empty-state-tile-neutral-fg`: Glyph ink on the neutral decorative tile. Default: `var(--ki-text-high-em)`.
+- `--ki-empty-state-tile-primary-bg`: Background of the primary decorative tile. Default: `var(--ki-surface-primary-med-em)`.
+- `--ki-empty-state-tile-primary-fg`: Glyph ink on the primary decorative tile. Default: `var(--ki-text-primary-on-primary)`.
+- `--ki-empty-state-tile-primary-light-bg`: Background of the primary-light decorative tile. Default: `var(--ki-surface-primary-low-em)`.
+- `--ki-empty-state-tile-primary-light-fg`: Glyph ink on the primary-light decorative tile. Default: `var(--ki-text-primary-on-primary-light)`.
+- `--ki-empty-state-tile-radius`: Corner radius of the regular fallback tile. Default: `var(--ki-radius-component-lg)`.
+- `--ki-empty-state-tile-radius-sm`: Corner radius of the compact fallback tile. Default: `var(--ki-radius-component-md)`.
+- `--ki-empty-state-tile-size`: Regular FeatureIcon fallback tile size. Default: `var(--ki-empty-layout-tile-regular)`.
+- `--ki-empty-state-tile-size-sm`: Compact FeatureIcon fallback tile size. Default: `var(--ki-empty-layout-tile-compact)`.
+- `--ki-empty-state-tile-success-bg`: Background of the success decorative tile. Default: `var(--ki-surface-success-tint)`.
+- `--ki-empty-state-tile-success-fg`: Glyph ink on the success decorative tile. Default: `var(--ki-text-success-high-em)`.
+- `--ki-empty-state-tile-warning-bg`: Background of the warning decorative tile. Default: `var(--ki-surface-warning-tint)`.
+- `--ki-empty-state-tile-warning-fg`: Glyph ink on the warning decorative tile. Default: `var(--ki-text-warning-high-em)`.
+- `--ki-typography-family-body`: semantic font family for typography family body. Default: `var(--ki-font-family-body)`.

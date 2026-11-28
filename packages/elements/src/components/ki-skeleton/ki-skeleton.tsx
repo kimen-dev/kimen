@@ -1,4 +1,4 @@
-import { AttrDeserialize, Component, Element, h, Host, Prop } from '@stencil/core';
+import { Component, h, Host, Prop } from '@stencil/core';
 
 import { normalizeSkeletonLines } from './normalize-lines';
 
@@ -20,8 +20,6 @@ import { normalizeSkeletonLines } from './normalize-lines';
   shadow: true,
 })
 export class KiSkeleton {
-  @Element() private host!: HTMLElement;
-
   /**
    * Match the placeholder to the expected text, avatar, or rectangular content.
    * @default 'text'
@@ -61,22 +59,6 @@ export class KiSkeleton {
    * @default true
    */
   @Prop({ mutable: true }) animated = true;
-
-  @AttrDeserialize('animated')
-  protected deserializeAnimated(value: string | null): boolean {
-    return value !== 'false';
-  }
-
-  componentWillLoad(): void {
-    // The external custom-elements runtime skips AttrDeserialize and parses
-    // removal as false. Observe the host for its lifetime, including detaches.
-    const host = this.host;
-    new MutationObserver(() => {
-      if (!host.hasAttribute('animated') && !this.animated) {
-        this.animated = true;
-      }
-    }).observe(host, { attributeFilter: ['animated'] });
-  }
 
   render() {
     const shape = this.shape === 'circle' || this.shape === 'rect' ? this.shape : 'text';

@@ -102,7 +102,10 @@ Give the dialog an ID in the same document or shadow root as the icon button.
 | Token                                 | Controls                            |
 | ------------------------------------- | ----------------------------------- |
 | `--ki-icon-button-md-size`            | Square box of the `md` size         |
-| `--ki-icon-button-md-icon-size`       | Icon size of the `md` size          |
+| `--ki-icon-button-md-icon-size` | Slot box and ki-icon glyph size at `md` |
+| `--ki-icon-button-outline-hover-{bg,fg,border}` | Hover palette for outline actions and unselected outline toggles |
+| `--ki-icon-button-outline-selected-border` | Selected outline edge |
+| `--ki-icon-button-toggle-unselected-hover-overlay` | Hover wash for unselected filled and quiet toggles |
 | `--ki-button-primary-neutral-rest-bg` | Primary variant resting background  |
 | `--ki-button-md-radius`               | Corner radius of the `md` size      |
 | `--ki-button-focus-ring-color`        | Keyboard focus ring color           |
@@ -111,7 +114,9 @@ The square box and icon ramp use `--ki-icon-button-{size}-size` and
 `--ki-icon-button-{size}-icon-size`. Toggle selection uses
 `--ki-icon-button-{variant}-selected-bg`,
 `--ki-icon-button-{variant}-selected-fg` and
-`--ki-icon-button-toggle-selected-radius`.
+`--ki-icon-button-toggle-selected-radius`. The fill stays fixed on hover.
+The icon-size token takes precedence over an explicit `size` on a
+`ki-icon` in the default or `selected` slot.
 
 The original momentary variants use the same visual system as `ki-button`.
 This includes the matrix `--ki-button-{variant}-{tone}-{state}-{bg|border|fg}`,

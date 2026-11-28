@@ -32,6 +32,8 @@ badge and is announced as “Inbox, 125 unread”. A zero count hides the badge.
 - `@kimen/tokens/css/core` once per page and `@kimen/tokens/css/ki-mobile-nav-item`: the default, only the tokens ki-mobile-nav-item needs, including those of the components it renders. Load the sheet of every ki-* tag the page uses.
 - `@kimen/tokens/css`: every token, once per page, instead of the core and the tag sheets. The simple alternative.
 
+[Boolean attributes](boolean-attributes.md).
+
 ## Attributes
 
 - `count` (number | undefined): Optional count of new items. Only finite counts of at least one are shown. The painted count is abbreviated above 99.
@@ -60,22 +62,22 @@ None.
 
 ## CSS custom properties
 
-- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme.
-- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once.
-- `--ki-mobile-nav-border-width`: Bar border width.
-- `--ki-mobile-nav-font-family`: Typeface for the bar and its destination labels.
-- `--ki-mobile-nav-indicator-bg`: Fill behind the current destination icon.
-- `--ki-mobile-nav-indicator-block-size`: Current icon pill height.
-- `--ki-mobile-nav-indicator-fg`: Icon ink on the current destination fill.
-- `--ki-mobile-nav-indicator-inline-size`: Current icon pill width.
-- `--ki-mobile-nav-indicator-radius`: Current icon pill corner radius.
-- `--ki-mobile-nav-item-current-fg`: Label ink of the current destination on the fixed or floating bar.
-- `--ki-mobile-nav-item-fg`: Foreground ink of an inactive destination on the fixed or floating bar.
-- `--ki-mobile-nav-item-focus-radius`: Corner radius of the keyboard focus indication.
-- `--ki-mobile-nav-item-font-size`: Destination label font size.
-- `--ki-mobile-nav-item-font-weight`: Destination label font weight.
-- `--ki-mobile-nav-item-gap`: Gap between the glyph and its label.
-- `--ki-mobile-nav-item-icon-size`: Destination glyph size.
-- `--ki-mobile-nav-item-line-height`: Destination label line height.
-- `--ki-mobile-nav-item-target-min`: Minimum block and inline link target size.
-- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology.
+- `--ki-focus-ring-color`: Colour of the keyboard focus ring every focusable component draws: 3:1 or more against the page in every theme and scheme. Default: onmars `light-dark(#bb4e2a,#c5735a)`, material3 `var(--ki-outline-primary-high-em)`.
+- `--ki-focus-ring-width`: Thickness of the keyboard focus ring every focusable component draws (its outline). One token instead of one per component, so a mode or a theme changes every ring at once. Default: `var(--ki-space-xxs)`.
+- `--ki-mobile-nav-border-width`: Bar border width. Default: `var(--ki-spacing-action-hairline)`.
+- `--ki-mobile-nav-font-family`: Typeface for the bar and its destination labels. Default: `var(--ki-typography-family-body)`.
+- `--ki-mobile-nav-indicator-bg`: Fill behind the current destination icon. Default: `var(--ki-surface-primary-low-em)`.
+- `--ki-mobile-nav-indicator-block-size`: Current icon pill height. Default: `var(--ki-navigation-bar-indicator-block-size)`.
+- `--ki-mobile-nav-indicator-fg`: Icon ink on the current destination fill. Default: `var(--ki-text-primary-high-em)`.
+- `--ki-mobile-nav-indicator-inline-size`: Current icon pill width. Default: `var(--ki-navigation-bar-indicator-inline-size)`.
+- `--ki-mobile-nav-indicator-radius`: Current icon pill corner radius. Default: `var(--ki-radius-round)`.
+- `--ki-mobile-nav-item-current-fg`: Label ink of the current destination on the fixed or floating bar. Default: `var(--ki-text-primary-high-em)`.
+- `--ki-mobile-nav-item-fg`: Foreground ink of an inactive destination on the fixed or floating bar. Default: `var(--ki-text-supporting)`.
+- `--ki-mobile-nav-item-focus-radius`: Corner radius of the keyboard focus indication. Default: `var(--ki-corner-control)`.
+- `--ki-mobile-nav-item-font-size`: Destination label font size. Default: `var(--ki-typography-size-caption-1)`.
+- `--ki-mobile-nav-item-font-weight`: Destination label font weight. Default: `var(--ki-typography-weight-body-medium)`.
+- `--ki-mobile-nav-item-gap`: Gap between the glyph and its label. Default: `var(--ki-navigation-bar-destination-gap)`.
+- `--ki-mobile-nav-item-icon-size`: Destination glyph size. Default: `var(--ki-glyph-size-md)`.
+- `--ki-mobile-nav-item-line-height`: Destination label line height. Default: `var(--ki-typography-line-height-caption-1)`.
+- `--ki-mobile-nav-item-target-min`: Minimum block and inline link target size. Default: `var(--ki-navigation-bar-destination-target)`.
+- `--ki-typography-visually-hidden-size`: Nonzero edge for clipped text available to assistive technology. Default: `var(--ki-size-border-hairline)`.
